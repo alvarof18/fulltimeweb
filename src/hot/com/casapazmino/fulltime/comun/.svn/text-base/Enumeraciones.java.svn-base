@@ -1,0 +1,68 @@
+package com.casapazmino.fulltime.comun;
+
+import org.jboss.seam.annotations.Name;
+
+@Name("enumeraciones")
+public class Enumeraciones {
+	public enum tipoArchivo {
+		Pdf,
+		Xls,
+		Csv,
+		Xml,
+		Html;
+	}
+	
+	public tipoArchivo[] getTipoArchivo() {
+		return tipoArchivo.values();
+	}
+	
+	public enum tipoReporte {
+		Cargo,
+		Departamento,
+		Grupo,
+		Empleado;
+	}
+	
+	public tipoReporte[] getTipoReporte(){
+		return tipoReporte.values();
+	}
+	
+	public enum entradaSalida {
+		E,
+		S,
+		EA,
+		SA;
+	}
+	
+	public entradaSalida[] getEntradaSalida(){
+		return entradaSalida.values();
+	}
+	
+	public enum tipoAtraso {
+		Minutos,
+		Cantidad;
+	}
+	
+	public tipoAtraso[] getTipoAtraso(){
+		return tipoAtraso.values();
+	}	
+	
+	public enum tipoDescuento {
+		Valor,
+		Porcentaje;
+	}
+	
+	public tipoDescuento[] getTipoDescuento(){
+		return tipoDescuento.values();
+	}	
+	
+	public enum tipoDescuentoPermiso {
+		Ninguno,
+		Sueldo,
+		Vacaciones;
+	}
+	
+	public tipoDescuentoPermiso[] getTipoDescuentoPermiso(){
+		return tipoDescuentoPermiso.values();
+	}		
+}

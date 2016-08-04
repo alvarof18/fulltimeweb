@@ -1,0 +1,111 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Hora Extra</f:facet>
+
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">D&#237;a</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <s:decorate id="desde" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Desde</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.desde}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+<!--
+        <s:decorate id="diaLibre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Dia libre</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.diaLibre}"/>
+        </s:decorate>
+-->
+        <s:decorate id="hasta" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Hasta</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.hasta}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+        
+        <s:decorate id="desde1" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Desde</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.desde1}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+        <s:decorate id="hasta1" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Hasta</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.hasta1}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+        
+        <s:decorate id="desde2" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Desde</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.desde2}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+        <s:decorate id="hasta2" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Hasta</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.hasta2}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="desde3" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Desde</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.desde3}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+        <s:decorate id="hasta3" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Hasta</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.hasta3}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="desde4" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Desde</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.desde4}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+        <s:decorate id="hasta4" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Hasta</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.hasta4}">
+                <s:convertDateTime type="time" pattern="HH:mm"/>
+            </h:outputText>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/HoraExtraEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty horaExtraFrom ? 'HoraExtraList' : horaExtraFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

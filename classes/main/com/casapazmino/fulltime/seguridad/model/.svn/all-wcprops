@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/seguridad/model
+END
+Grupos.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/seguridad/model/Grupos.java
+END
+UsuariosRoles.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/seguridad/model/UsuariosRoles.java
+END
+Auditoria.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/seguridad/model/Auditoria.java
+END
+ItemMenu.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/seguridad/model/ItemMenu.java
+END
+Roles.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/seguridad/model/Roles.java
+END
+PermisosMenu.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/seguridad/model/PermisosMenu.java
+END
+Subgrupos.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/seguridad/model/Subgrupos.java
+END
+Usuarios.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/seguridad/model/Usuarios.java
+END
+ItemsMenuRoles.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/seguridad/model/ItemsMenuRoles.java
+END

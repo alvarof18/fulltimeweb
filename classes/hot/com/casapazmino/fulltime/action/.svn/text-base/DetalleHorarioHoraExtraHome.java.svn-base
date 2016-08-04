@@ -1,0 +1,59 @@
+package com.casapazmino.fulltime.action;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityHome;
+
+import com.casapazmino.fulltime.model.DetalleHorario;
+import com.casapazmino.fulltime.model.DetalleHorarioHoraExtra;
+import com.casapazmino.fulltime.model.HoraExtra;
+
+@Name("detalleHorarioHoraExtraHome")
+public class DetalleHorarioHoraExtraHome extends EntityHome<DetalleHorarioHoraExtra> {
+
+	private static final long serialVersionUID = -5264484514833622608L;
+	
+	@In(create = true)
+	DetalleHorarioHome detalleHorarioHome;
+	@In(create = true)
+	HoraExtraHome horaExtraHome;
+
+	public void setDetalleHorarioHoraExtraDhheId(Integer id) {
+		setId(id);
+	}
+
+	public Integer getDetalleHorarioHoraExtraDhheId() {
+		return (Integer) getId();
+	}
+
+	@Override
+	protected DetalleHorarioHoraExtra createInstance() {
+		DetalleHorarioHoraExtra detalleHorarioHoraExtra = new DetalleHorarioHoraExtra();
+		return detalleHorarioHoraExtra;
+	}
+
+	public void wire() {
+		getInstance();
+		DetalleHorario detalleHorario = detalleHorarioHome.getDefinedInstance();
+		if (detalleHorario != null) {
+			getInstance().setDetalleHorario(detalleHorario);
+		}
+		HoraExtra horaExtra = horaExtraHome.getDefinedInstance();
+		if (horaExtra != null) {
+			getInstance().setHoraExtra(horaExtra);
+		}
+	}
+
+	public boolean isWired() {
+/*		if (getInstance().getDetalleHorario() == null)
+			return false;
+		if (getInstance().getHoraExtra() == null)
+			return false;*/
+		return true;
+	}
+
+	public DetalleHorarioHoraExtra getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+}

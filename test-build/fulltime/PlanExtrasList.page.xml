@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{planExtrasList.firstResult}"/>
+   <param name="sort" value="#{planExtrasList.orderColumn}"/>
+   <param name="dir" value="#{planExtrasList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="mounth" value="#{planExtrasList.planExtras.mes}"/>
+   <param name="year" value="#{planExtrasList.planExtras.anio}"/>
+   <param name="cedula" value="#{planExtrasList.planExtras.empleado.cedula}"/>
+   <param name="codigo" value="#{planExtrasList.planExtras.empleado.codigoEmpleado}"/>
+   <param name="apellidos" value="#{planExtrasList.planExtras.empleado.apellido}"/>
+   <param name="nombres" value="#{planExtrasList.planExtras.empleado.nombre}"/>
+   <param name="autorizado" value="#{planExtrasList.autorizado}"/>
+   
+</page>

@@ -1,0 +1,59 @@
+package com.casapazmino.fulltime.action;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityHome;
+
+import com.casapazmino.fulltime.model.DetalleTipoParametro;
+import com.casapazmino.fulltime.model.Empleado;
+import com.casapazmino.fulltime.model.EmpleadoPeriodoVacacion;
+
+@Name("empleadoPeriodoVacacionHome")
+public class EmpleadoPeriodoVacacionHome extends EntityHome<EmpleadoPeriodoVacacion> {
+
+	private static final long serialVersionUID = 3843897807753672979L;
+	@In(create = true)
+	DetalleTipoParametroHome detalleTipoParametroHome;
+	@In(create = true)
+	EmpleadoHome empleadoHome;
+
+	public void setEmpleadoPeriodoVacacionEpvaId(Integer id) {
+		setId(id);
+	}
+
+	public Integer getEmpleadoPeriodoVacacionEpvaId() {
+		return (Integer) getId();
+	}
+
+	@Override
+	protected EmpleadoPeriodoVacacion createInstance() {
+		EmpleadoPeriodoVacacion empleadoPeriodoVacacion = new EmpleadoPeriodoVacacion();
+		return empleadoPeriodoVacacion;
+	}
+
+	public void wire() {
+		getInstance();
+		DetalleTipoParametro detalleTipoParametro = detalleTipoParametroHome
+				.getDefinedInstance();
+		if (detalleTipoParametro != null) {
+			getInstance().setDetalleTipoParametro(detalleTipoParametro);
+		}
+		Empleado empleado = empleadoHome.getDefinedInstance();
+		if (empleado != null) {
+			getInstance().setEmpleado(empleado);
+		}
+	}
+
+	public boolean isWired() {
+/*		if (getInstance().getDetalleTipoParametro() == null)
+			return false;
+		if (getInstance().getEmpleado() == null)
+			return false;*/
+		return true;
+	}
+
+	public EmpleadoPeriodoVacacion getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+}

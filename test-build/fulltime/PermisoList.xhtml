@@ -1,0 +1,197 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml"
+    xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<ui:define name="body">
+
+	<style>
+		.spinner{
+				font-weight: bold;
+				}
+	</style>
+
+		<h:form id="permisoSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Permiso - Criterios de B&#250;squeda" switchType="ajax">
+
+             <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">N&#250;mero de Permiso</ui:define>
+                <h:inputText id="NroPermisos" size="10" value="#{permisoNiveles.nroPermiso}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="codigo" value="#{permisoNiveles.empleado.codigoEmpleado}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#233;dula</ui:define>
+                <h:inputText id="cedula" value="#{permisoNiveles.empleado.cedula}"/>
+            </s:decorate>
+			
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Apellido</ui:define>
+                <h:inputText id="apellido" value="#{permisoNiveles.empleado.apellido}"/>
+            </s:decorate>
+            
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{permisoNiveles.empleado.nombre}"/>
+            </s:decorate>
+            
+			<s:decorate id="autorizado" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Autorizado</ui:define>
+					<h:selectOneRadio id="listaAutorizado" value="#{permisoNiveles.estado}" >
+						<f:selectItem itemValue="0" itemLabel="Pendiente" />
+   						<f:selectItem itemValue="1" itemLabel="Pre-Autorizado" />
+   						<f:selectItem itemValue="2" itemLabel="Autorizado" />
+   						<f:selectItem itemValue="3" itemLabel="No-Autorizado" />
+					</h:selectOneRadio>
+			</s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde" value="#{permisoNiveles.fechaDesde}" datePattern="dd/MM/yyyy"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">N&#250;mero de Registros</ui:define>
+                <rich:inputNumberSpinner id="Filas" value="#{permisoNiveles.filas}" inputClass="spinner" inputSize="1"/>  
+            </s:decorate>           
+            
+			</rich:simpleTogglePanel>			
+			
+			<table width="100%">
+				<tr>
+					<td width="70%">
+						<s:div styleClass="actionButtons" rendered="#{empty from}">
+						
+							<s:button view="/fulltime/PermisoEdit.xhtml" id="create" propagation="none" value="Crear" rendered="true">
+								<f:param name="permisoPermId"/>
+							</s:button>
+							
+							<h:commandButton id="search" value="Buscar" action="#{permisoNiveles.ConsultarPermisos()}"/>
+							
+							<h:commandButton id="reset" value="Cancelar" action="#{permisoNiveles.Cancelar()}"/>
+																			
+						</s:div>					
+					</td>
+				</tr>
+			</table>	
+
+		<rich:panel>
+			<f:facet name="header">Resultados B&#250;squeda</f:facet>
+			<h:outputText value="No existe resultados" rendered="#{empty permisoNiveles.listaPermiso}" />
+			<div class="results" id="ResultadoPermiso">
+		
+		<rich:dataTable id="SolPermisos" var="_permiso" value="#{permisoNiveles.listaPermiso}"
+				rendered="#{!empty permisoNiveles.listaPermiso}" columnClasses="center" rows="10" reRender="ds">
+				
+				<f:facet name="header">
+                	<h:outputText value="Solicitudes de Permisos"/>
+            	</f:facet>
+            	
+		   		<rich:column sortBy="#{_permiso.permId}" id="numero">
+		            <f:facet name="header">
+		            	<h:outputText value="N&#250;mero"/> 
+		            </f:facet>
+		          <h:outputLabel value="#{_permiso.permId}"/>    	            
+		   		</rich:column>
+
+            	<rich:column sortBy="#{_permiso.empleadoByEmplId.apellido}" id="ColEmpl">
+		            <f:facet name="header">
+		            	<h:outputText value="Empleado"/> 
+		            </f:facet>
+		            <h:outputText value="#{_permiso.empleadoByEmplId.apellido}  #{_permiso.empleadoByEmplId.nombre}"/>		            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_permiso.tipoPermiso.descripcion}" id="ColTip">
+		            <f:facet name="header">
+		            	<h:outputText value="Tipo permiso"/> 
+		            </f:facet>
+		            <h:outputText value="#{_permiso.tipoPermiso.descripcion}"/>		            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_permiso.fecha}" id="FecSol">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Solicitud"/> 
+		            </f:facet>
+		           <rich:calendar id="fecha" disabled="true" value="#{_permiso.fecha}" datePattern="dd/MM/yyyy HH:mm"/> 	            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_permiso.fechaDesde}" id="FecDes">
+		            <f:facet name="header">
+		            	<h:outputText value="Desde"/> 
+		            </f:facet>
+		           <rich:calendar id="fechaDesde" disabled="true" value="#{_permiso.fechaDesde}" datePattern="dd/MM/yyyy HH:mm"/> 	            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_permiso.fechaHasta}" id="FecHas">
+		            <f:facet name="header">
+		            	<h:outputText value="Hasta"/> 
+		            </f:facet>
+		          <rich:calendar id="fechaHasta" disabled="true" value="#{_permiso.fechaHasta}" datePattern="dd/MM/yyyy HH:mm"/>     	            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_permiso.nivelRequerido}" id="NivReq">
+		            <f:facet name="header">
+		            	<h:outputText value="N-Req"/> 
+		            </f:facet>
+		          <h:outputLabel value="#{_permiso.nivelRequerido}"/>    	            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_permiso.aprobacion}" id="NivApr">
+		            <f:facet name="header">
+		            	<h:outputText value="N-Apr"/> 
+		            </f:facet>
+		          <h:outputLabel value="#{_permiso.aprobacion}"/>    	            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_permiso.detalleTipoParametro.descripcion}" id="Aut">
+		            <f:facet name="header">
+		            	<h:outputText value="Autorizado"/> 
+		            </f:facet>
+		          <h:outputLabel value="#{_permiso.detalleTipoParametro.descripcion}"/>    	            
+		   		</rich:column>
+		   		
+		   		<rich:column id="Leg">
+		            <f:facet name="header">
+		            	<h:outputText value="Legalizado"/> 
+		            </f:facet>
+		          <h:selectBooleanCheckbox value="#{_permiso.legalizado}" disabled="true"/>    	            
+		   		</rich:column>
+		   		
+		   		<rich:column styleClass="action">
+					<f:facet name="header">Acci&#243;n</f:facet>
+					<s:link view="/fulltime/#{empty from ? 'Permiso' : from}.xhtml"
+						value="#{empty from ? 'Ver' : 'Seleccionar'}"
+						propagation="#{empty from ? 'none' : 'default'}" id="permiso"
+						rendered="true">
+						<f:param name="permisoPermId" value="#{_permiso.permId}" />
+					</s:link>
+                    #{' '}
+            		<s:link view="/fulltime/PermisoEdit.xhtml" value="Editar"
+						propagation="none" id="permisoEdit" rendered="#{empty from}">
+						<f:param name="permisoPermId" value="#{_permiso.permId}" />
+					</s:link>
+				</rich:column>
+				
+				<f:facet name="footer">
+                	<rich:datascroller id="ds"></rich:datascroller>
+            	</f:facet>
+				
+			</rich:dataTable>
+			</div>
+		</rich:panel>
+	</h:form>
+    
+	</ui:define>
+</ui:composition>

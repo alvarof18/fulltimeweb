@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd" 
+      login-required="true">
+
+   <action execute="#{timbreList.asignarCargo}"/>
+   
+   <param name="firstResult" value="#{timbreList.firstResult}"/>
+   <param name="sort" value="#{timbreList.orderColumn}"/>
+   <param name="dir" value="#{timbreList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="apellido" value="#{timbreList.empleado.apellido}"/>
+   <param name="nombre" value="#{timbreList.empleado.nombre}"/>
+   <param name="listaDepartamento" value="#{timbreList.empleado.departamento.descripcion}"/>
+   <param name="listaCargo" value="#{timbreList.empleado.cargo.descripcion}"/>
+   <param name="fechaDesde" value="#{timbreList.fechaDesde}" converterId="org.jboss.seam.ui.DateTimeConverter"/>
+   <param name="fechaHasta" value="#{timbreList.fechaHasta}" converterId="org.jboss.seam.ui.DateTimeConverter"/>
+
+</page>

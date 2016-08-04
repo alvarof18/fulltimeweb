@@ -1,0 +1,60 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Funciones</f:facet>
+
+        <s:decorate id="funcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Funcin&#243;n</ui:define>
+            <h:outputText value="#{funcionesHome.instance.func_resp}"/>
+        </s:decorate>
+        <s:decorate id="actividad" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Actividad</ui:define>
+            <h:outputText value="#{funcionesHome.instance.actividad}"/>
+        </s:decorate>
+        <s:decorate id="horaslaborales" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas Laborales</ui:define>
+            <h:outputText value="#{funcionesHome.instance.horas_laborales}"/>
+        </s:decorate>      
+        <s:decorate id="horassuplementarias" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas Suplementarias</ui:define>
+            <h:outputText value="#{funcionesHome.instance.horas_suplementarias}"/>
+        </s:decorate>  
+        <s:decorate id="horasextraordinarias" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas Extraordinarias</ui:define>
+            <h:outputText value="#{funcionesHome.instance.horas_extraordinarias}"/>
+        </s:decorate>  
+
+		<s:decorate id="justificacion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Justificaci&#243;n</ui:define>
+            <h:outputText value="#{funcionesHome.instance.justificacion}"/>
+        </s:decorate>  
+        
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/FuncionesEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty planExtrasFrom ? 'PlanExtras' : planExtrasFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+  
+</ui:define>
+
+</ui:composition>

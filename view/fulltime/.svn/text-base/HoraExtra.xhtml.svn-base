@@ -1,0 +1,76 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Hora Extra</f:facet>
+
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <s:decorate id="desde" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Desde</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.desde}">
+                <s:convertDateTime type="both" dateStyle="short" pattern="HH:MM"/>
+            </h:outputText>
+        </s:decorate>
+<!--
+        <s:decorate id="diaLibre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Dia libre</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.diaLibre}"/>
+        </s:decorate>
+-->
+        <s:decorate id="hasta" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Hasta</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.hasta}">
+                <s:convertDateTime type="both" dateStyle="short" pattern="HH:MM"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="maximoDia" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">M&#225;ximo D&#237;a</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.maximoDia}"/>
+        </s:decorate>
+
+        <s:decorate id="maximoMes" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">M&#225;ximo Mes</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.maximoMes}"/>
+        </s:decorate>
+
+        <s:decorate id="porcentaje" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Porcentaje</ui:define>
+            <h:outputText value="#{horaExtraHome.instance.porcentaje}">
+                <f:convertNumber/>
+            </h:outputText>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/HoraExtraEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty horaExtraFrom ? 'HoraExtraList' : horaExtraFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

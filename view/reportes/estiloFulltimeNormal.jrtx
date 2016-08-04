@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperTemplate PUBLIC "-//JasperReports//DTD Template//EN" "http://jasperreports.sourceforge.net/dtds/jaspertemplate.dtd">
+
+<jasperTemplate>
+	<style name="tNombreEmpresa" hAlign="Center" vAlign="Middle" fontName="Arial" fontSize="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica"/>
+	<style name="tNombreReporte" hAlign="Center" vAlign="Middle" fontName="Arial" fontSize="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica"/>
+	<style name="tParametros" hAlign="Left" vAlign="Middle" fontName="Arial" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica"/>
+	<style name="chEtiqueta" mode="Opaque" forecolor="#006699" backcolor="#E6E6E6" hAlign="Center" vAlign="Middle" fontName="Arial" fontSize="14" isBold="true" isItalic="false" pdfFontName="Helvetica"/>
+	<style name="dCampo" fontName="Arial" fontSize="12" isBold="false" pdfFontName="Helvetica"/>
+	<style name="pfFecha" hAlign="Left" vAlign="Middle" fontName="Arial" fontSize="10"/>
+	<style name="pfEtiqueta" hAlign="Left" vAlign="Middle" fontName="Arial" fontSize="10"/>
+	<style name="pfParametro" hAlign="Left" vAlign="Middle" fontName="Arial" fontSize="10"/>
+	<style name="pfNumPagina" hAlign="Center" vAlign="Middle" fontName="Arial" fontSize="10"/>
+	<style name="pfLinea" mode="Opaque" forecolor="#000000"/>
+	<style name="sVarNumRegistros" hAlign="Left" vAlign="Middle" fontName="Arial" fontSize="10"/>
+	<style name="sEtiqueta" hAlign="Left" vAlign="Middle" fontName="Arial" fontSize="10"/>
+	<style name="gh1Etiqueta" hAlign="Left" vAlign="Middle" rotation="None" fontName="Arial" fontSize="10" pdfFontName="Helvetica"/>
+	<style name="gh2Etiqueta" hAlign="Left" vAlign="Middle" fontName="Arial" fontSize="10"/>
+	<style name="gh1Campo" fontName="Arial" fontSize="10"/>
+	<style name="gh2Campo" fontName="Arial" fontSize="10"/>
+	<style name="gf1Etiqueta" fontName="Arial" fontSize="10"/>
+	<style name="gf2Etiqueta" fontName="Arial" fontSize="10"/>
+	<style name="gf1Campo" fontName="Arial" fontSize="10"/>
+	<style name="gf2Campo" fontName="Arial" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="linea"/>
+</jasperTemplate>

@@ -1,0 +1,79 @@
+8
+
+dir
+47
+https://server/svn/fulltime/bootstrap/conf
+https://server/svn/fulltime
+
+
+
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ed1cc5d6-6e7c-1946-840e-f2e39bd44d97
+
+bootstrap-beans.xml
+file
+
+
+
+
+2011-04-11T16:24:09.625130Z
+6cb4052cb411b037b694efed20242a05
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+props
+dir
+
+jbossjta-properties.xml
+file
+
+
+
+
+2011-04-11T16:24:09.625130Z
+0d798a8599c52601b73605369480ae29
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+login-config.xml
+file
+
+
+
+
+2011-04-11T16:24:09.640730Z
+270842d13e6ba17e689e1b42cb89c20d
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+jboss-service.xml
+file
+
+
+
+
+2011-04-11T16:24:09.640730Z
+be66835871bf448a9df06901ca5862e9
+2011-02-15T22:56:31.360665Z
+21
+esteban
+

@@ -1,0 +1,77 @@
+package com.casapazmino.fulltime.action;
+
+import com.casapazmino.fulltime.model.*;
+import java.util.ArrayList;
+import java.util.List;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+
+@Name("provinciaHome")
+public class ProvinciaHome extends EntityHome<Provincia> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@In(create = true)
+	RegionHome regionHome;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setProvinciaProvId(Long id) {
+		setId(id);
+	}
+
+	public Long getProvinciaProvId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Provincia createInstance() {
+		Provincia provincia = new Provincia();
+		return provincia;
+	}
+
+	public void wire() {
+		getInstance();
+		Region region = regionHome.getDefinedInstance();
+		if (region != null) {
+			getInstance().setRegion(region);
+		}
+	}
+
+	public boolean isWired() {
+//		if (getInstance().getRegion() == null)
+//			return false;
+		return true;
+	}
+	
+	public Provincia getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+	
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}	
+
+	public List<Ciudad> getCiudads() {
+		return getInstance() == null ? null : new ArrayList<Ciudad>(
+				getInstance().getCiudads());
+	}
+
+}

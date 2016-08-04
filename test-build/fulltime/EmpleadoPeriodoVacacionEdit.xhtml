@@ -1,0 +1,122 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="empleadoPeriodoVacacion" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{empleadoPeriodoVacacionHome.managed ? 'Editar' : 'A&#241;adir'} Empleado - Periodo Vacaciones</f:facet>
+
+	    	<s:decorate id="codigoEmpleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+	            <ui:define name="label">C&#243;digo</ui:define>
+            	<h:outputText value="#{empleadoHome.instance.codigoEmpleado}"/>
+        	</s:decorate>
+
+        	<s:decorate id="cedula" template="#{requestScope.contextPath}/layout/display.xhtml">
+	            <ui:define name="label">C&#233;dula</ui:define>
+            	<h:outputText value="#{empleadoHome.instance.cedula}"/>
+        	</s:decorate>
+
+        	<s:decorate id="apellido" template="#{requestScope.contextPath}/layout/display.xhtml">
+	            <ui:define name="label">Apellido</ui:define>
+    	        <h:outputText value="#{empleadoHome.instance.apellido}"/>
+        	</s:decorate>
+
+        	<s:decorate id="nombre" template="#{requestScope.contextPath}/layout/display.xhtml">
+	            <ui:define name="label">Nombre</ui:define>
+            	<h:outputText value="#{empleadoHome.instance.nombre}"/>
+        	</s:decorate>
+				
+			<s:decorate id="histLaboField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Historia laboral</ui:define>
+					<h:selectOneMenu id="listaHistLavo" required="true" value="#{empleadoPeriodoVacacionHome.instance.histLabo}">
+						<s:selectItems id="itemsHistLabo" value="#{empleadoPeriodoVacacionHome.instance.empleado.histLabos}" var="historiaLaboral"
+							label="#{historiaLaboral.fechaIngreso}"  noSelectionLabel="Seleccione Historia Laboral..." />
+						<s:convertEntity />
+					</h:selectOneMenu>
+			</s:decorate>
+
+            <s:decorate id="fechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde"
+                       required="true"
+                          value="#{empleadoPeriodoVacacionHome.instance.fechaDesde}" datePattern="dd/MM/yyyy"/>
+            </s:decorate>
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" required="true"
+                              value="#{empleadoPeriodoVacacionHome.instance.descripcion}" onkeypress="if(event.keyCode==32){return false;}" />
+            </s:decorate>
+
+            <s:decorate id="diasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Total D&#237;as</ui:define>
+                <h:inputText id="dias"
+                       required="true"
+                          value="#{empleadoPeriodoVacacionHome.instance.horas}">
+                    <a:support event="onblur" reRender="diasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="diasPerdidosField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">D&#237;as Perdidos</ui:define>
+                <h:inputText id="diasPerdidos"
+                       required="true"
+                          value="#{empleadoPeriodoVacacionHome.instance.diasPerdidos}">
+                    <a:support event="onblur" reRender="diasPerdidosField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{empleadoPeriodoVacacionHome.persist}"
+                       disabled="#{!empleadoPeriodoVacacionHome.wired}"
+                       rendered="#{!empleadoPeriodoVacacionHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{empleadoPeriodoVacacionHome.update}"
+                       rendered="#{empleadoPeriodoVacacionHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{empleadoPeriodoVacacionHome.remove}"
+                      immediate="true"
+                       rendered="#{empleadoPeriodoVacacionHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/EmpleadoPeriodoVacacion.xhtml"
+                rendered="#{empleadoPeriodoVacacionHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty empleadoPeriodoVacacionFrom ? 'EmpleadoPeriodoVacacionList' : empleadoPeriodoVacacionFrom}.xhtml"
+                rendered="#{!empleadoPeriodoVacacionHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

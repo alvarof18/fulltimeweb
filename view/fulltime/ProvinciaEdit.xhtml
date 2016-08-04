@@ -1,0 +1,151 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	template="#{requestScope.contextPath}/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="provincia" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{provinciaHome.managed ? 'Editar' : 'A&#241;adir'} Provincia</f:facet>
+
+				<s:decorate id="regionField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Regi&#243;n</ui:define>
+					<h:selectOneMenu id="listaRegiones" required="true"
+						value="#{provinciaHome.instance.region}">
+						<s:selectItems id="itemsRegion"
+							value="#{regionList.listaRegiones}" var="region"
+							label="#{region.descripcion}"
+							noSelectionLabel="Seleccione regi&#243;n..." />
+						<s:convertEntity />
+						<a:support id="regiones" event="onchange"
+							reRender="regionField,listaRegiones,regiones"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+
+
+				<s:decorate id="codigoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">C&#243;digo</ui:define>
+					<h:inputText id="codigo" required="true" size="30" maxlength="30"
+						value="#{provinciaHome.instance.codigo}">
+						<a:support event="onblur" reRender="codigoField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="descripcionField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Descripci&#243;n</ui:define>
+					<h:inputText id="descripcion" size="100"
+						required="true" value="#{provinciaHome.instance.descripcion}" />
+				</s:decorate>
+
+				<div style="clear: both"><span class="required">*</span>
+				Campos requeridos</div>
+
+			</rich:panel>
+
+			<div class="actionButtons"><h:commandButton id="save"
+				value="Grabar" action="#{provinciaHome.persist}"
+				disabled="#{!provinciaHome.wired}"
+				rendered="#{!provinciaHome.managed}" /> <h:commandButton id="update"
+				value="Grabar" action="#{provinciaHome.update}"
+				rendered="#{provinciaHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+				
+				<h:commandButton id="delete"
+				value="Eliminar" action="#{provinciaHome.remove}" immediate="true"
+				rendered="#{provinciaHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+				
+				<s:button id="cancelEdit"
+				value="Cancelar" propagation="end" view="/fulltime/Provincia.xhtml"
+				rendered="#{provinciaHome.managed}" /> <s:button id="cancelAdd"
+				value="Cancelar" propagation="end"
+				view="/fulltime/#{empty provinciaFrom ? 'ProvinciaList' : provinciaFrom}.xhtml"
+				rendered="#{!provinciaHome.managed}" /></div>
+		</h:form>
+
+<!--
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="Region *" labelClass="required">
+				<div class="association" id="regionParent"><h:outputText
+					value="No existe resultados"
+					rendered="#{provinciaHome.instance.region == null}" /> <rich:dataTable
+					var="_region" value="#{provinciaHome.instance.region}"
+					rendered="#{provinciaHome.instance.region != null}"
+					rowClasses="rvgRowOne,rvgRowTwo" id="regionTable">
+					<h:column>
+						<f:facet name="header">Regi id</f:facet>
+						<h:outputText value="#{_region.regiId}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">C&#243;digo</f:facet>
+						<h:outputText value="#{_region.codigo}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Descripci&#243;n</f:facet>
+						<h:outputText value="#{_region.descripcion}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button
+					value="#{provinciaHome.instance.region != null ? 'Change' : 'Select'} region"
+					view="/fulltime/RegionList.xhtml">
+					<f:param name="from" value="ProvinciaEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+
+			<rich:tab label="Ciudads">
+				<h:form styleClass="association" id="ciudadsChildren">
+
+					<h:outputText value="No existe resultados"
+						rendered="#{empty provinciaHome.ciudads}" />
+
+					<rich:dataTable value="#{provinciaHome.ciudads}" var="_ciudad"
+						rendered="#{not empty provinciaHome.ciudads}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="ciudadsTable">
+						<rich:column sortBy="#{_ciudad.ciudId}">
+							<f:facet name="header">Ciud id</f:facet>
+							<h:outputText value="#{_ciudad.ciudId}" />
+						</rich:column>
+						<rich:column sortBy="#{_ciudad.codigo}">
+							<f:facet name="header">C&#243;digo</f:facet>
+							<h:outputText value="#{_ciudad.codigo}" />
+						</rich:column>
+						<rich:column sortBy="#{_ciudad.descripcion}">
+							<f:facet name="header">Descripci&#243;n</f:facet>
+							<h:outputText value="#{_ciudad.descripcion}" />
+						</rich:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<f:subview rendered="#{provinciaHome.managed}" id="ciudads">
+					<div class="actionButtons"><s:button id="addciudad"
+						value="Crear" view="/fulltime/CiudadEdit.xhtml" propagation="none">
+						<f:param name="provinciaProvId"
+							value="#{provinciaHome.instance.provId}" />
+						<f:param name="ciudadFrom" value="Provincia" />
+					</s:button></div>
+				</f:subview>
+			</rich:tab>
+		</rich:tabPanel>
+		
+-->
+		
+	</ui:define>
+
+</ui:composition>

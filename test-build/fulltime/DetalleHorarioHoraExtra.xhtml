@@ -1,0 +1,172 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Horario - Hora Extra</f:facet>
+
+        <s:decorate id="Hora" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Hora</ui:define>
+            <h:outputText value="#{detalleHorarioHoraExtraHome.instance.detalleHorario.hora}"/>
+        </s:decorate>
+
+        <s:decorate id="tipo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Hora Extra</ui:define>
+            <h:outputText value="#{detalleHorarioHoraExtraHome.instance.horaExtra.descripcion}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/DetalleHorarioHoraExtraEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty detalleHorarioHoraExtraFrom ? 'DetalleHorarioHoraExtraList' : detalleHorarioHoraExtraFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <!--
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Detalle horario</h:panelGroup>
+        </f:facet>
+    <div class="association" id="detalleHorarioParent">
+
+        <h:outputText value="There is no detalleHorario associated with this detalleHorarioHoraExtra."
+                   rendered="#{detalleHorarioHoraExtraHome.instance.detalleHorario == null}"/>
+
+        <rich:dataTable var="_detalleHorario"
+                   value="#{detalleHorarioHoraExtraHome.instance.detalleHorario}"
+                rendered="#{detalleHorarioHoraExtraHome.instance.detalleHorario != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="detalleHorarioTable">
+            <h:column>
+                <f:facet name="header">Deho id</f:facet>
+                <h:outputText value="#{_detalleHorario.dehoId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Entrada salida</f:facet>
+                <h:outputText value="#{_detalleHorario.entradaSalida}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Hora</f:facet>
+                <h:outputText value="#{_detalleHorario.hora}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Horario hora id</f:facet>
+                <h:outputText value="#{_detalleHorario.horario.horaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Max minuto</f:facet>
+                <h:outputText value="#{_detalleHorario.maxMinuto}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nocturno</f:facet>
+                <h:outputText value="#{_detalleHorario.nocturno}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Orden</f:facet>
+                <h:outputText value="#{_detalleHorario.orden}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewdetalleHorario"
+                     value="View"
+                      view="/DetalleHorario.xhtml">
+                    <f:param name="detalleHorarioDehoId"
+                           value="#{_detalleHorario.dehoId}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Hora extra</h:panelGroup>
+        </f:facet>
+    <div class="association" id="horaExtraParent">
+
+        <h:outputText value="There is no horaExtra associated with this detalleHorarioHoraExtra."
+                   rendered="#{detalleHorarioHoraExtraHome.instance.horaExtra == null}"/>
+
+        <rich:dataTable var="_horaExtra"
+                   value="#{detalleHorarioHoraExtraHome.instance.horaExtra}"
+                rendered="#{detalleHorarioHoraExtraHome.instance.horaExtra != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="horaExtraTable">
+            <h:column>
+                <f:facet name="header">Hora extra id</f:facet>
+                <h:outputText value="#{_horaExtra.horaExtraId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_horaExtra.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Desde</f:facet>
+                <h:outputText value="#{_horaExtra.desde}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Dia libre</f:facet>
+                <h:outputText value="#{_horaExtra.diaLibre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Hasta</f:facet>
+                <h:outputText value="#{_horaExtra.hasta}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Maximo dia</f:facet>
+                <h:outputText value="#{_horaExtra.maximoDia}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Maximo mes</f:facet>
+                <h:outputText value="#{_horaExtra.maximoMes}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Porcentaje</f:facet>
+                <h:outputText value="#{_horaExtra.porcentaje}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewhoraExtra"
+                     value="View"
+                      view="/HoraExtra.xhtml">
+                    <f:param name="horaExtraHoraExtraId"
+                           value="#{_horaExtra.horaExtraId}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+-->
+</ui:define>
+
+</ui:composition>

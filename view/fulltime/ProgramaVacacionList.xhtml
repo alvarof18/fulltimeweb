@@ -1,0 +1,176 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="#{requestScope.contextPath}/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="programaVacacionSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Programa Vacaciones - Criterios de B&#250;squeda"
+				switchType="ajax">
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="cedula" value="#{programaVacacionList.programaVacacion.empleado.codigoEmpleado}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#233;dula</ui:define>
+                <h:inputText id="cedula" value="#{programaVacacionList.programaVacacion.empleado.cedula}"/>
+            </s:decorate>
+			
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Apellido</ui:define>
+                <h:inputText id="apellido" value="#{programaVacacionList.programaVacacion.empleado.apellido}"/>
+            </s:decorate>
+            
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{programaVacacionList.programaVacacion.empleado.nombre}"/>
+            </s:decorate>
+            
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <h:inputText id="nombre" value="#{programaVacacionList.programaVacacion.fechaInicio}"/>
+            </s:decorate>
+
+			</rich:simpleTogglePanel>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">Resultados B&#250;squeda</f:facet>
+			<div class="results" id="programaVacacionList"><h:outputText
+				value="No existe resultados"
+				rendered="#{empty programaVacacionList.resultList}" /> 
+				<rich:dataTable
+				id="programaVacacionList" var="_programaVacacion"
+				value="#{programaVacacionList.resultList}"
+				rendered="#{not empty programaVacacionList.resultList}">
+				<!--           
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{programaVacacionList}"/>
+                    <ui:param name="propertyLabel" value="Prva id"/>
+                    <ui:param name="propertyPath" value="programaVacacion.prvaId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_programaVacacion.prvaId}"/>
+        </h:column>
+-->
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{programaVacacionList}" />
+							<ui:param name="propertyLabel" value="Empleado Apellido" />
+							<ui:param name="propertyPath"
+								value="programaVacacion.empleado.apellido" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_programaVacacion.empleado.apellido}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{programaVacacionList}" />
+							<ui:param name="propertyLabel" value="Empleado Nombre" />
+							<ui:param name="propertyPath"
+								value="programaVacacion.empleado.nombre" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_programaVacacion.empleado.nombre}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{programaVacacionList}" />
+							<ui:param name="propertyLabel" value="Periodo" />
+							<ui:param name="propertyPath"
+								value="programaVacacion.detalleTipoParametro.descripcion" />
+						</ui:include>
+					</f:facet>
+					<h:outputText
+						value="#{_programaVacacion.detalleTipoParametro.descripcion}" />
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{programaVacacionList}" />
+							<ui:param name="propertyLabel" value="Fecha Inicial" />
+							<ui:param name="propertyPath"
+								value="programaVacacion.fechaInicio" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_programaVacacion.fechaInicio}">
+						<s:convertDateTime type="both" dateStyle="short" />
+					</h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{programaVacacionList}" />
+							<ui:param name="propertyLabel" value="Fecha Final" />
+							<ui:param name="propertyPath" value="programaVacacion.fechaFin" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_programaVacacion.fechaFin}">
+						<s:convertDateTime type="both" dateStyle="short" />
+					</h:outputText>
+				</h:column>
+				<rich:column styleClass="action">
+					<f:facet name="header">Acci&#243;n</f:facet>
+					<s:link
+						view="/fulltime/#{empty from ? 'ProgramaVacacion' : from}.xhtml"
+						value="#{empty from ? 'Ver' : 'Seleccionar'}"
+						propagation="#{empty from ? 'none' : 'default'}"
+						id="programaVacacion"
+						rendered="#{contexts.applicationContext.get('permisoVer')}">
+						<f:param name="programaVacacionPrvaId"
+							value="#{_programaVacacion.prvaId}" />
+					</s:link>
+            #{' '}
+            <s:link view="/fulltime/ProgramaVacacionEdit.xhtml"
+						value="Editar" propagation="none" id="programaVacacionEdit"
+						rendered="#{empty from}">
+						<f:param name="programaVacacionPrvaId"
+							value="#{_programaVacacion.prvaId}" />
+					</s:link>
+				</rich:column>
+			</rich:dataTable></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link
+			view="/fulltime/ProgramaVacacionList.xhtml"
+			rendered="#{programaVacacionList.previousExists}"
+			value="#{messages.left}#{messages.left} Primera P&#225;gina" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/fulltime/ProgramaVacacionList.xhtml"
+			rendered="#{programaVacacionList.previousExists}"
+			value="#{messages.left} P&#225;gina Anterior" id="previousPage">
+			<f:param name="firstResult"
+				value="#{programaVacacionList.previousFirstResult}" />
+		</s:link> <s:link view="/fulltime/ProgramaVacacionList.xhtml"
+			rendered="#{programaVacacionList.nextExists}"
+			value="P&#225;gina Siguiente #{messages.right}" id="nextPage">
+			<f:param name="firstResult"
+				value="#{programaVacacionList.nextFirstResult}" />
+		</s:link> <s:link view="/fulltime/ProgramaVacacionList.xhtml"
+			rendered="#{programaVacacionList.nextExists}"
+			value="Ultima P&#225;gina #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult"
+				value="#{programaVacacionList.lastFirstResult}" />
+		</s:link></div>
+
+	</ui:define>
+
+</ui:composition>

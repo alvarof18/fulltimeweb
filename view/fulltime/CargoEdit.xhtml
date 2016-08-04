@@ -1,0 +1,305 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="cargo" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{cargoHome.managed ? 'Editar' : 'A&#241;adir'} Cargo</f:facet>
+<!-- 
+				<s:decorate id="tipoCargoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Tipo Cargo</ui:define>
+					<h:selectOneMenu id="listaTipoCargo"
+						value="#{cargoHome.instance.tipoCargo}">
+						<s:selectItems id="itemsTipoCargo"
+							value="#{tipoCargoList.listaTipoCargo}" var="tipoCargo"
+							label="#{tipoCargo.descripcion}"
+							noSelectionLabel="Seleccione Tipo Cargo..." />
+						<s:convertEntity />
+						<a:support id="cargos" event="onchange"
+							reRender="tipoCargoField,listaTipoCargo,cargos"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+ -->
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{cargoHome.instance.descripcion}"/>
+            </s:decorate>
+
+            <s:decorate id="sueldoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Sueldo</ui:define>
+                <h:inputText id="sueldo"  required="true"
+                          value="#{cargoHome.instance.sueldo}"
+                           size="15">
+                    <a:support event="onblur" reRender="sueldoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+<!--            
+				<s:decorate id="horaExtraField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Horas Extras</ui:define>
+					<h:selectOneMenu id="listaDetalleTipoParametro"
+						value="#{cargoHome.instance.detalleTipoParametro}">
+						<s:selectItems id="itemsDetalleTipoParametro"
+							value="#{detalleTipoParametroList.listaDecision}" var="detalleTipoParametro"
+							label="#{detalleTipoParametro.descripcion}"
+							noSelectionLabel="Seleccione Opci&#243;n..." />
+						<s:convertEntity />
+						<a:support id="detalleTipoPatametros" event="onchange"
+							reRender="horaExtraField,listaDetalleTipoParametroHoraExtra,detalleTipoPatametros"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+-->
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{cargoHome.persist}"
+                       disabled="#{!cargoHome.wired}"
+                       rendered="#{!cargoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{cargoHome.update}"
+                       rendered="#{cargoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{cargoHome.remove}"
+                      immediate="true"
+                       rendered="#{cargoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Cargo.xhtml"
+                rendered="#{cargoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty cargoFrom ? 'CargoList' : cargoFrom}.xhtml"
+                rendered="#{!cargoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Tipo cargo">
+    <div class="association" id="tipoCargoParent">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{cargoHome.instance.tipoCargo == null}"/>
+
+        <rich:dataTable var="_tipoCargo"
+                   value="#{cargoHome.instance.tipoCargo}"
+                rendered="#{cargoHome.instance.tipoCargo != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="tipoCargoTable">
+            <h:column>
+                <f:facet name="header">Tica id</f:facet>
+                <h:outputText value="#{_tipoCargo.ticaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_tipoCargo.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{cargoHome.instance.tipoCargo != null ? 'Change' : 'Select'} tipoCargo"
+                       view="/fulltime/TipoCargoList.xhtml">
+                <f:param name="from" value="CargoEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Detalle tipo parametro">
+    <div class="association" id="detalleTipoParametroParent">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{cargoHome.instance.detalleTipoParametro == null}"/>
+
+        <rich:dataTable var="_detalleTipoParametro"
+                   value="#{cargoHome.instance.detalleTipoParametro}"
+                rendered="#{cargoHome.instance.detalleTipoParametro != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="detalleTipoParametroTable">
+            <h:column>
+                <f:facet name="header">Dtpa id</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.dtpaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tipo parametro tipa id</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.tipoParametro.tipaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Valor1</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.valor1}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Valor2</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.valor2}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Valor3</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.valor3}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Valor4</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.valor4}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{cargoHome.instance.detalleTipoParametro != null ? 'Change' : 'Select'} detalleTipoParametro"
+                       view="/fulltime/DetalleTipoParametroList.xhtml">
+                <f:param name="from" value="CargoEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Empleados">
+        <h:form styleClass="association" id="empleadosChildren">
+
+            <h:outputText value="No existe resultados"
+                       rendered="#{empty cargoHome.empleados}"/>
+
+            <rich:dataTable value="#{cargoHome.empleados}"
+                           var="_empleado"
+                      rendered="#{not empty cargoHome.empleados}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadosTable">
+                <rich:column sortBy="#{_empleado.emplId}">
+                    <f:facet name="header">Empl id</f:facet>
+                    <h:outputText value="#{_empleado.emplId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.cedula}">
+                    <f:facet name="header">Cedula</f:facet>
+                    <h:outputText value="#{_empleado.cedula}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.apellido}">
+                    <f:facet name="header">Apellido</f:facet>
+                    <h:outputText value="#{_empleado.apellido}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_empleado.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                    <f:facet name="header">Fecha nacimiento</f:facet>
+                    <h:outputText value="#{_empleado.fechaNacimiento}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_empleado.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaSalida}">
+                    <f:facet name="header">Fecha salida</f:facet>
+                    <h:outputText value="#{_empleado.fechaSalida}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaContrato}">
+                    <f:facet name="header">Fecha contrato</f:facet>
+                    <h:outputText value="#{_empleado.fechaContrato}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_empleado.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.horasTrabaja}">
+                    <f:facet name="header">Horas trabaja</f:facet>
+                    <h:outputText value="#{_empleado.horasTrabaja}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_empleado.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partida}">
+                    <f:facet name="header">Partida</f:facet>
+                    <h:outputText value="#{_empleado.partida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partidaIndividual}">
+                    <f:facet name="header">Partida individual</f:facet>
+                    <h:outputText value="#{_empleado.partidaIndividual}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.entradaSalida}">
+                    <f:facet name="header">Entrada salida</f:facet>
+                    <h:outputText value="#{_empleado.entradaSalida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.numeroTimbre}">
+                    <f:facet name="header">Numero timbre</f:facet>
+                    <h:outputText value="#{_empleado.numeroTimbre}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{cargoHome.managed}" id="empleados">
+        <div class="actionButtons">
+            <s:button id="addempleado"
+                   value="Crear"
+                    view="/fulltime/EmpleadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="cargoCargId"
+                         value="#{cargoHome.instance.cargId}"/>
+                 <f:param name="empleadoFrom" value="Cargo"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+-->
+</ui:define>
+
+</ui:composition>

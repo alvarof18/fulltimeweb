@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteAuditorias" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA[$P{rutaPlantilla}]]></template><parameter name="rutaPlantilla" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{rutaPlantilla}.substring( 0,($P{rutaPlantilla}.length() - 25) )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="empresa" class="java.lang.String"/>
+	<parameter name="ciudades" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     AUDITORIA."ID" AS AUDITORIA_ID,
+     AUDITORIA."TABLA" AS AUDITORIA_TABLA,
+     AUDITORIA."OPERACION" AS AUDITORIA_OPERACION,
+     AUDITORIA."FECHA" AS AUDITORIA_FECHA,
+     AUDITORIA."CADENA_ANTERIOR" AS AUDITORIA_CADENA_ANTERIOR,
+     AUDITORIA."CADENA_ACTUAL" AS AUDITORIA_CADENA_ACTUAL,
+     USUARIOS."USUARIO" AS USUARIOS_USUARIO,
+     CIUDAD."DESCRIPCION" AS CIUDAD_DESCRIPCION
+FROM
+     "USUARIOS" USUARIOS INNER JOIN "AUDITORIA" AUDITORIA ON USUARIOS."ID" = AUDITORIA."ID"
+     INNER JOIN "USUARIO_CIUDAD" USUARIO_CIUDAD ON USUARIOS."ID" = USUARIO_CIUDAD."ID"
+     INNER JOIN "CIUDAD" CIUDAD ON USUARIO_CIUDAD."CIUD_ID" = CIUDAD."CIUD_ID"
+WHERE
+     USUARIO_CIUDAD."CIUD_ID" IN ($P!{ciudades}) AND
+     date(AUDITORIA."FECHA") BETWEEN $P{fechaInicial} AND $P{fechaFinal}
+
+ORDER BY
+     AUDITORIA."FECHA"]]>
+	</queryString>
+	<field name="AUDITORIA_ID" class="java.lang.Integer"/>
+	<field name="AUDITORIA_TABLA" class="java.lang.String"/>
+	<field name="AUDITORIA_OPERACION" class="java.lang.String"/>
+	<field name="AUDITORIA_FECHA" class="java.sql.Timestamp"/>
+	<field name="AUDITORIA_CADENA_ANTERIOR" class="java.lang.String"/>
+	<field name="AUDITORIA_CADENA_ACTUAL" class="java.lang.String"/>
+	<field name="USUARIOS_USUARIO" class="java.lang.String"/>
+	<field name="CIUDAD_DESCRIPCION" class="java.lang.String"/>
+	<variable name="contRegi" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{contRegi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (1)]]></initialValueExpression>
+	</variable>
+	<group name="CIUDAD" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{CIUDAD_DESCRIPCION}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Justified" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[CIUDAD]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="103" y="0" width="321" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{CIUDAD_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="70" height="70"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement style="tNombreEmpresa" x="70" y="0" width="732" height="35"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{empresa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tNombreReporte" x="70" y="35" width="732" height="35"/>
+				<textElement/>
+				<text><![CDATA[Reporte - Auditoria Timbre]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="78" y="0" width="102" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[USUARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="180" y="0" width="90" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[OPERACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="270" y="0" width="532" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[REFERENCIA ANTERIOR / ACTUAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="0" y="0" width="78" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="75" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{AUDITORIA_FECHA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="179" y="0" width="91" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{AUDITORIA_OPERACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="77" y="0" width="102" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{USUARIOS_USUARIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="0" width="532" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{AUDITORIA_CADENA_ANTERIOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="20" width="532" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{AUDITORIA_CADENA_ACTUAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="18" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement style="pfEtiqueta" x="2" y="3" width="78" height="20" forecolor="#000000"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Impreso por:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pfParametro" x="78" y="3" width="168" height="20" forecolor="#000000"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="pfEtiqueta" x="427" y="3" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pfEtiqueta" x="344" y="3" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh.mm">
+				<reportElement style="pfEtiqueta" x="671" y="3" width="131" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement style="linea" x="2" y="2" width="800" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="sVarNumRegistros" x="80" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{contRegi}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="sVarNumRegistros" x="2" y="0" width="79" height="20"/>
+				<textElement/>
+				<text><![CDATA[No. Registros:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

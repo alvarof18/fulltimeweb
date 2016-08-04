@@ -1,0 +1,266 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="#{requestScope.contextPath}/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="permisoSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Par&#225;metros de B&#250;squeda" switchType="ajax">
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="codigo" value="#{permisoList.permiso.empleadoByEmplId.codigoEmpleado}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#233;dula</ui:define>
+                <h:inputText id="cedula" value="#{permisoList.permiso.empleadoByEmplId.cedula}"/>
+            </s:decorate>
+			
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Apellido</ui:define>
+                <h:inputText id="apellido" value="#{permisoList.permiso.empleadoByEmplId.apellido}"/>
+            </s:decorate>
+            
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{permisoList.permiso.empleadoByEmplId.nombre}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde" value="#{permisoList.permiso.fechaDesde}" datePattern="dd/MM/yyyy"/>
+            </s:decorate>
+            
+			</rich:simpleTogglePanel>
+
+			<table width="100%">
+				<tr>
+					<td width="70%">
+					<s:div styleClass="actionButtons" rendered="#{empty from}">
+						<s:button view="/fulltime/PermisoEdit.xhtml" id="create"
+							propagation="none" value="Crear"
+							rendered="#{contexts.applicationContext.get('permisoCrear')}">
+							<f:param name="permisoPermId" />
+						</s:button>
+
+						<h:commandButton id="search" value="Buscar" action="/fulltime/PermisoList.xhtml"/>
+						<s:button id="reset" value="Cancelar" includePageParams="false" />
+					</s:div>
+					
+					</td>
+				</tr>
+			</table>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">Resultados B&#250;squeda</f:facet>
+			<div class="results" id="permisoList"><h:outputText
+				value="No existe resultados"
+				rendered="#{empty permisoList.resultList}" />
+		
+		<rich:dataTable id="permisoList" var="_permiso" value="#{permisoList.resultList}"
+				rendered="#{not empty permisoList.resultList}">
+				<!--            
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisoList}"/>
+                    <ui:param name="propertyLabel" value="Perm id"/>
+                    <ui:param name="propertyPath" value="permiso.permId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permiso.permId}"/>
+        </h:column>
+         
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisoList}"/>
+                    <ui:param name="propertyLabel" value="Empleado by emp empl id empl id"/>
+                    <ui:param name="propertyPath" value="permiso.empleadoByEmpEmplId.emplId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permiso.empleadoByEmpEmplId.emplId}"/>
+        </h:column>
+        
+-->
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="Empleado Apellido" />
+							<ui:param name="propertyPath"
+								value="permiso.empleadoByEmplId.apellido" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_permiso.empleadoByEmplId.apellido}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="Empleado Nombre" />
+							<ui:param name="propertyPath"
+								value="permiso.empleadoByEmplId.nombre" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_permiso.empleadoByEmplId.nombre}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="Tipo permiso" />
+							<ui:param name="propertyPath"
+								value="permiso.tipoPermiso.descripcion" />
+						</ui:include>
+					</f:facet>
+					<h:outputText
+						value="#{_permiso.tipoPermiso.descripcion}" />
+				</h:column>
+				<!--                 
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisoList}"/>
+                    <ui:param name="propertyLabel" value="Empleado by empl id empl id"/>
+                    <ui:param name="propertyPath" value="permiso.empleadoByEmplId.emplId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permiso.empleadoByEmplId.emplId}"/>
+        </h:column>
+ -->
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="Fecha Pedido" />
+							<ui:param name="propertyPath" value="permiso.fecha" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_permiso.fecha}">
+						<s:convertDateTime type="both" dateStyle="short" />
+					</h:outputText>
+				</h:column>
+				<!--         
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisoList}"/>
+                    <ui:param name="propertyLabel" value="Lugar"/>
+                    <ui:param name="propertyPath" value="permiso.lugar"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permiso.lugar}"/>
+        </h:column>
+ -->
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="Fecha desde" />
+							<ui:param name="propertyPath" value="permiso.fechaDesde" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_permiso.fechaDesde}">
+						<s:convertDateTime type="both" dateStyle="short" />
+					</h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="Fecha hasta" />
+							<ui:param name="propertyPath" value="permiso.fechaHasta" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_permiso.fechaHasta}">
+						<s:convertDateTime type="both" dateStyle="short" />
+					</h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="Dias" />
+							<ui:param name="propertyPath" value="permiso.dias" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_permiso.dias}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="N&#250;mero horas" />
+							<ui:param name="propertyPath" value="permiso.numeroHoras" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_permiso.numeroHoras}" />
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{permisoList}" />
+							<ui:param name="propertyLabel" value="Autorizado" />
+							<ui:param name="propertyPath"
+								value="permiso.detalleTipoParametroByAutorizado.descripcion" />
+						</ui:include>
+					</f:facet>
+					<h:outputText
+						value="#{_permiso.detalleTipoParametroByAutorizado.descripcion}" />
+				</h:column>
+
+				<rich:column styleClass="action">
+					<f:facet name="header">Acci&#243;n</f:facet>
+					<s:link view="/fulltime/#{empty from ? 'Permiso' : from}.xhtml"
+						value="#{empty from ? 'Ver' : 'Seleccionar'}"
+						propagation="#{empty from ? 'none' : 'default'}" id="permiso"
+						rendered="#{contexts.applicationContext.get('permisoVer')}">
+						<f:param name="permisoPermId" value="#{_permiso.permId}" />
+					</s:link>
+            #{' '}
+            <s:link view="/fulltime/PermisoEdit.xhtml" value="Editar"
+						propagation="none" id="permisoEdit" rendered="#{empty from}">
+						<f:param name="permisoPermId" value="#{_permiso.permId}" />
+					</s:link>
+				</rich:column>
+			</rich:dataTable></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link
+			view="/fulltime/PermisoList.xhtml"
+			rendered="#{permisoList.previousExists}"
+			value="#{messages.left}#{messages.left} Primera P&#225;gina" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/fulltime/PermisoList.xhtml"
+			rendered="#{permisoList.previousExists}"
+			value="#{messages.left} P&#225;gina Anterior" id="previousPage">
+			<f:param name="firstResult"
+				value="#{permisoList.previousFirstResult}" />
+		</s:link> <s:link view="/fulltime/PermisoList.xhtml"
+			rendered="#{permisoList.nextExists}"
+			value="P&#225;gina Siguiente #{messages.right}" id="nextPage">
+			<f:param name="firstResult" value="#{permisoList.nextFirstResult}" />
+		</s:link> <s:link view="/fulltime/PermisoList.xhtml"
+			rendered="#{permisoList.nextExists}"
+			value="Ultima P&#225;gina #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult" value="#{permisoList.lastFirstResult}" />
+		</s:link></div>
+
+	</ui:define>
+
+</ui:composition>

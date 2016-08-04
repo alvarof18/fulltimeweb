@@ -1,0 +1,41 @@
+package com.casapazmino.fulltime.action;
+
+import javax.ejb.Local;
+
+@Local
+public interface ReportesFulltime {
+	void listadoAtrasos();
+	void listadoCargos();
+	void listadoCiudadFeriado();
+	void listadoCiudades();
+	void listadoDepartamentos();
+	void listadoDetalleGrupoContratados();
+	void listadoDetalleHorarios();
+	void listadoDetalleTipoParametros();
+	void listadoDiscapacidades();
+	void listadoEmpleadoDeclaraBienes();
+	void listadoEmpleados();
+	void listadoFeriados();
+	void listadoGrupoContratados();
+	void listadoHorasExtras();
+	void listadoHorarios();
+	void listadoPermisos();
+	void listadoProvincias();
+	void listadoRegiones();
+	void listadoRelojes();
+	void listadoSolicitudVacaciones();
+	void listadoTipoCargos();
+	void listadoTipoParametros();
+	void listadoTipoPermisos();
+	void listadoTitulos();
+	void listadoProgramacionVacaciones();
+	
+	void reporteAtrasos();
+	void reporteAsistenciaDetalle();
+	void reporteEntradasSalidas();
+	void reporteFaltas();
+	void reporteHorasExtras();
+	void reporteHorasTrabajadas();
+	void reporteSalidasAntes();
+	void reporteTimbresIncompletos();
+}

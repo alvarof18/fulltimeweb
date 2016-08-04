@@ -1,0 +1,76 @@
+8
+
+dir
+47
+https://server/svn/fulltime/bootstrap
+https://server/svn/fulltime
+
+
+
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ed1cc5d6-6e7c-1946-840e-f2e39bd44d97
+
+jndi.properties
+file
+
+
+
+
+2011-04-11T16:24:09.905930Z
+63f4f261e59c96b119a6401570b98239
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+META-INF
+dir
+
+conf
+dir
+
+deployers
+dir
+
+commons-logging.properties
+file
+
+
+
+
+2011-04-11T16:24:09.905930Z
+e8be150f1d90d50d169979ada29c3d82
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+deploy
+dir
+
+log4j.xml
+file
+
+
+
+
+2011-04-11T16:24:09.921530Z
+d5eee1df9969e5c3a4a96d1a04347704
+2011-02-15T22:56:31.360665Z
+21
+esteban
+

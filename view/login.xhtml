@@ -1,0 +1,84 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}layout/templateSinMenu.xhtml"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:define name="body">
+
+    <h:form id="login">
+
+        <rich:panel>
+            <f:facet name="header">Ingrese</f:facet>
+            <div align="center">
+				<h:graphicImage value="/img/logo.gif" align="center" alt="Seam logo"/>
+			</div>
+            <p align="center">Acceso al sistema</p>
+
+            <div align="center" class="dialog">
+                <h:panelGrid columns="2" rowClasses="prop" columnClasses="name,value">
+                    <h:outputLabel for="username">Usuario</h:outputLabel>
+                    <h:inputText id="username"
+                              value="#{credentials.username}"/>
+                    <h:outputLabel for="password">Clave</h:outputLabel>
+                    <h:inputSecret id="password"
+                                value="#{credentials.password}"/><!--
+                    <h:outputLabel for="rememberMe">Remember me</h:outputLabel>
+                    <h:selectBooleanCheckbox id="rememberMe"
+                                          value="#{identity.rememberMe}"/>
+                --></h:panelGrid>
+            </div>
+
+            <p>
+             <!--  <i>Note - </i> You may login with the username 'admin' and a blank password. -->
+            </p>
+
+        </rich:panel>
+
+        <div align="center" class="actionButtons">
+            <h:commandButton value="Ingresar" action="#{identity.login}"/>
+           	<br></br><br></br>
+           	<h:outputLink value="#" id="link" rendered="#{recuperar_contraseña.mostrar_enlace()}">
+	        	Recuperar Clave
+	        	<rich:componentControl for="panel" attachTo="link" operation="show" event="onclick"/>
+	    	</h:outputLink>
+        </div>
+        
+        </h:form>   	
+    	
+    		<rich:modalPanel id="panel" width="400" height="150">
+
+		    <h:form>
+		    <rich:simpleTogglePanel switchType="ajax" id="data" label="Recuperar Clave" >
+
+		            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+		                <ui:define name="label">C&#233;dula</ui:define>
+		                <h:inputText id="ced" value="#{recuperar_contraseña.cedula}"  onkeypress="if(event.keyCode==32){return false;}"/>
+		            </s:decorate>
+		            
+		            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+		                <ui:define name="label">Correo Electr&#243;nico</ui:define>
+		                <h:inputText id="correo" value="#{recuperar_contraseña.mail}"  onkeypress="if(event.keyCode==32){return false;}"/>
+	           		</s:decorate>  
+	             </rich:simpleTogglePanel> 	 
+	             
+	           	 <div class="actionButtons" align="center">  	        
+		            <h:commandButton id="process" value="Procesar" action="#{recuperar_contraseña.validacion_datos()}"/>
+		            
+		            <a:commandButton value="Cancelar" onclick="javascript:Richfaces.hideModalPanel('panel');">			            		
+		            		<a:support event="onclick" reRender="data,panel"  ajaxSingle="true"/>		
+		            </a:commandButton>     
+		          </div>  		       
+	        		        
+		    </h:form> 
+		    
+    	</rich:modalPanel>
+
+ </ui:define>
+</ui:composition>

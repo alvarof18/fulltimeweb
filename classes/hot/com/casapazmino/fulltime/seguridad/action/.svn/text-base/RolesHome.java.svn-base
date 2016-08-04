@@ -1,0 +1,303 @@
+package com.casapazmino.fulltime.seguridad.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.persistence.PersistenceProvider;
+
+import com.casapazmino.fulltime.seguridad.model.ItemsMenuRoles;
+import com.casapazmino.fulltime.seguridad.model.PermisosMenu;
+import com.casapazmino.fulltime.seguridad.model.Roles;
+import com.casapazmino.fulltime.seguridad.model.UsuariosRoles;
+
+@Name("rolesHome")
+public class RolesHome extends EntityHome<Roles> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Logger
+	Log log;
+	
+	@In 
+	private FacesMessages facesMessages;
+	
+	private PermisosMenuHome permisosHome;
+	private Boolean crear;
+	private Boolean editar;
+	private Boolean eliminar;
+	private Boolean ver;
+	private Boolean imprimir;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setRolesId(Long id) {
+		setId(id);
+	}
+
+	public Long getRolesId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Roles createInstance() {
+		Roles roles = new Roles();
+		return roles;
+	}
+
+	public void wire() {
+		getInstance();
+		log.info("ANTES DEL IF DE isWire");
+		if(this.getInstance().getId()!=null)
+		{
+			this.getChecksPermisos();
+		}
+	}
+
+	public boolean isWired() {
+		return true;
+	}
+	
+	public String guardar()
+	{
+		log.info("ENTRO EN GUARDAR EN ROLES");
+		try
+		{
+			this.persist();
+			return this.guardarPermisos(this);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private String guardarPermisos(RolesHome rh)
+	{
+		try
+		{
+			permisosHome= new PermisosMenuHome();
+			permisosHome.getInstance().setCrear(rh.crear);
+			permisosHome.getInstance().setModificar(rh.editar);
+			permisosHome.getInstance().setEliminar(rh.eliminar);
+			permisosHome.getInstance().setVer(rh.ver);
+			permisosHome.getInstance().setImprimir(rh.imprimir);
+			permisosHome.getInstance().setRoles(rh.getInstance());
+			return permisosHome.persist();
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String actualizar()
+	{
+		log.info("ENTRO EN ACTUALIZAR");
+		this.update();
+		return this.actualizarPermisos();
+	}
+	
+	public String actualizarPermisos()
+	{
+		try
+		{
+			PermisosMenu prm=new PermisosMenu();
+			this.permisosHome=new PermisosMenuHome();
+			for(PermisosMenu pr:this.getPermisosMenu())
+			{
+				log.info("ID DE PERMISOS MENU: "+pr.getId());
+				
+				prm.setId(pr.getId());
+				this.permisosHome.setId(pr.getId());
+			}
+			//this.permisosHome.setId(prm.getId());
+			log.info("VALOR DE CREAR: "+permisosHome.getInstance().getCrear());
+			log.info("VALOR DE EDITAR: "+permisosHome.getInstance().getModificar());
+			log.info("VALOR DE ELIMINAR: "+permisosHome.getInstance().getEliminar());
+			log.info("VALOR DE VER: "+permisosHome.getInstance().getVer());
+			log.info("VALOR DE IMPRIMIR: "+permisosHome.getInstance().getImprimir());
+			if(permisosHome.getInstance().getRoles()!=null)
+			{
+				log.info("ID DE ROL SETEADO EN PERMISOS: "+permisosHome.getInstance().getRoles().getId());
+			}
+			this.permisosHome.find();
+			permisosHome.getInstance().setCrear(this.getCrear());
+			permisosHome.getInstance().setModificar(this.getEditar());
+			permisosHome.getInstance().setEliminar(this.getEliminar());
+			permisosHome.getInstance().setVer(this.getVer());
+			permisosHome.getInstance().setImprimir(this.getImprimir());
+			return this.permisosHome.update();
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN ACTUALIZAR PERMISOS: ",e);
+		}
+		return null;
+	}
+	
+	public String eliminar(){
+		try {
+			this.remove();
+			return "removed";
+		} catch (Exception e) {
+			// REVISAR COMO FUNCIONA ESTO sirve para desplegar mensajes en las paginas
+			//StatusMessage.getBundleMessage("mensaje", "mensaje");
+			
+			// SE PUEDE PONER ASI Y NO HACE FALTA INYECTAR FacesMessages
+			//FacesMessages.instance().add("No puede eliminar rol, revise lista de permisos");
+			facesMessages.add("No puede eliminar rol, revise lista de permisos");
+			return null;
+		}
+	}
+	
+	public void getChecksPermisos()
+	{
+		try
+		{
+			for(PermisosMenu pr:this.getPermisosMenu())
+			{
+				log.info("valor de Check crear:"+pr.getCrear());
+				this.setCrear(pr.getCrear());
+				this.setEditar(pr.getModificar());
+				this.setEliminar(pr.getEliminar());
+				this.setVer(pr.getVer());
+				this.setImprimir(pr.getImprimir());
+			}
+		}
+		catch (Exception e) {
+			log.info("ERROR EN CHECKS PERMISOS: ",e);
+		}
+	}
+	
+	public List<PermisosMenu> getPermisosMenu()
+	{
+		try
+		{
+			log.info("ENTRO EN CHECKS PERMISOS");
+			log.info("ID de ROL: "+this.getInstance().getId());
+			String consulta="SELECT permisos FROM PermisosMenu permisos WHERE permisos.roles=?1";
+			Query query=this.getEntityManager().createQuery(consulta);
+			query.setParameter(1, this.getInstance());
+	
+			log.info("Antes del FOR EN CHEKS PERMISOS");
+			log.info("Tamano del resultado de la consulta: "+query.getResultList().size());
+			return (List<PermisosMenu>)query.getResultList();
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		return new ArrayList<PermisosMenu>();
+	}
+	
+	@Transactional
+	public String persist()
+	{
+		getEntityManager().persist(getInstance());
+		getEntityManager().flush();
+		assignId(PersistenceProvider.instance().getId(getInstance(),getEntityManager()));
+		raiseAfterTransactionSuccessEvent();
+		return "persisted";
+	}
+	
+	@Transactional
+	public String update()
+	{
+		joinTransaction();
+		getEntityManager().flush();
+		raiseAfterTransactionSuccessEvent();
+		return "updated";
+	}
+	
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}	
+	
+	/**
+	 * METODOS GET Y SET
+	 * 
+	 */
+
+	public Roles getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	public List<ItemsMenuRoles> getItemsMenuRoleses() {
+		return getInstance() == null ? null : new ArrayList<ItemsMenuRoles>(
+				getInstance().getItemsMenuRoleses());
+	}
+	public List<PermisosMenu> getPermisosMenus() {
+		return getInstance() == null ? null : new ArrayList<PermisosMenu>(
+				getInstance().getPermisosMenus());
+	}
+	public List<UsuariosRoles> getUsuariosRoleses() {
+		return getInstance() == null ? null : new ArrayList<UsuariosRoles>(
+				getInstance().getUsuariosRoleses());
+	}
+	
+	public Boolean getCrear() {
+		return crear;
+	}
+
+	public void setCrear(Boolean crear) {
+		this.crear = crear;
+	}
+	
+	public Boolean getEditar() {
+		return editar;
+	}
+
+	public void setEditar(Boolean editar) {
+		this.editar = editar;
+	}
+
+	public Boolean getEliminar() {
+		return eliminar;
+	}
+
+	public void setEliminar(Boolean eliminar) {
+		this.eliminar = eliminar;
+	}
+
+	public Boolean getVer() {
+		return ver;
+	}
+
+	public void setVer(Boolean ver) {
+		this.ver = ver;
+	}
+
+	public Boolean getImprimir() {
+		return imprimir;
+	}
+
+	public void setImprimir(Boolean imprimir) {
+		this.imprimir = imprimir;
+	}
+}

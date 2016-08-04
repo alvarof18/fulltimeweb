@@ -1,0 +1,136 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="grupoContratado" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{grupoContratadoHome.managed ? 'Editar' : 'A&#241;adir'} Grupo Contratado</f:facet>
+
+
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{grupoContratadoHome.instance.descripcion}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{grupoContratadoHome.persist}"
+                       disabled="#{!grupoContratadoHome.wired}"
+                       rendered="#{!grupoContratadoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{grupoContratadoHome.update}"
+                       rendered="#{grupoContratadoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{grupoContratadoHome.remove}"
+                      immediate="true"
+                       rendered="#{grupoContratadoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/GrupoContratado.xhtml"
+                rendered="#{grupoContratadoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty grupoContratadoFrom ? 'GrupoContratadoList' : grupoContratadoFrom}.xhtml"
+                rendered="#{!grupoContratadoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Detalle grupo contratados">
+        <h:form styleClass="association" id="detalleGrupoContratadosChildren">
+
+            <h:outputText value="No existe resultados"
+                       rendered="#{empty grupoContratadoHome.detalleGrupoContratados}"/>
+
+            <rich:dataTable value="#{grupoContratadoHome.detalleGrupoContratados}"
+                           var="_detalleGrupoContratado"
+                      rendered="#{not empty grupoContratadoHome.detalleGrupoContratados}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="detalleGrupoContratadosTable">
+                <rich:column sortBy="#{_detalleGrupoContratado.dgcoId}">
+                    <f:facet name="header">Dgco id</f:facet>
+                    <h:outputText value="#{_detalleGrupoContratado.dgcoId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_detalleGrupoContratado.descripcion}">
+                    <f:facet name="header">Descripci&#243;n</f:facet>
+                    <h:outputText value="#{_detalleGrupoContratado.descripcion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_detalleGrupoContratado.diasVacacion}">
+                    <f:facet name="header">Dias vacacion</f:facet>
+                    <h:outputText value="#{_detalleGrupoContratado.diasVacacion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_detalleGrupoContratado.diasIncremento}">
+                    <f:facet name="header">Dias incremento</f:facet>
+                    <h:outputText value="#{_detalleGrupoContratado.diasIncremento}"/>
+                </rich:column>
+                <rich:column sortBy="#{_detalleGrupoContratado.anios}">
+                    <f:facet name="header">Anios</f:facet>
+                    <h:outputText value="#{_detalleGrupoContratado.anios}"/>
+                </rich:column>
+                <rich:column sortBy="#{_detalleGrupoContratado.totalDias}">
+                    <f:facet name="header">Total dias</f:facet>
+                    <h:outputText value="#{_detalleGrupoContratado.totalDias}"/>
+                </rich:column>
+                <rich:column sortBy="#{_detalleGrupoContratado.maximoDias}">
+                    <f:facet name="header">Maximo dias</f:facet>
+                    <h:outputText value="#{_detalleGrupoContratado.maximoDias}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{grupoContratadoHome.managed}" id="detalleGrupoContratados">
+        <div class="actionButtons">
+            <s:button id="adddetalleGrupoContratado"
+                   value="Crear"
+                    view="/fulltime/DetalleGrupoContratadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="grupoContratadoGrcoId"
+                         value="#{grupoContratadoHome.instance.grcoId}"/>
+                 <f:param name="detalleGrupoContratadoFrom" value="GrupoContratado"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+
+-->
+
+</ui:define>
+
+</ui:composition>

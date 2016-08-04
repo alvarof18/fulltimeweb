@@ -1,0 +1,171 @@
+<?xml version="1.0" ?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+
+	<!-- RichFaces -->
+
+	<context-param>
+		<param-name>org.richfaces.SKIN</param-name>
+		<param-value>blueSky</param-value>
+	</context-param>
+
+	<!-- Suppress spurious stylesheets -->
+
+	<context-param>
+		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
+		<param-value>disable</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>org.richfaces.CONTROL_SKINNING_CLASSES</param-name>
+		<param-value>disable</param-value>
+	</context-param>
+
+	<!-- Change load strategy to DEFAULT to disable sending scripts/styles as 
+		packs -->
+
+	<context-param>
+		<param-name>org.richfaces.LoadStyleStrategy</param-name>
+		<param-value>ALL</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>org.richfaces.LoadScriptStrategy</param-name>
+		<param-value>ALL</param-value>
+	</context-param>
+
+	<!-- Seam -->
+
+	<listener>
+		<listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
+	</listener>
+
+	<!-- Controla tareas programadas -->
+	<!-- Opcion 1 -->
+	<!-- Se carga al iniciar el servidor -->
+	
+	<!-- 
+	<context-param> 
+		<param-name>quartz:config-file</param-name> 
+		<param-value>/some/path/my_quartz.properties</param-value> 
+	</context-param> 
+	
+	<context-param> 
+		<param-name>quartz:shutdown-on-unload</param-name> 
+		<param-value>true</param-value>
+	</context-param>
+	
+	<context-param> 
+		<param-name>quartz:wait-on-shutdown</param-name> 
+		<param-value>false</param-value>
+	</context-param> 
+	
+	<context-param> 
+		<param-name>quartz:start-scheduler-on-load</param-name> 
+		<param-value>true</param-value> 
+	</context-param> 
+	
+	<listener>
+		<listener-class>com.casapazmino.fulltime.quartz.ServletListener</listener-class>
+	</listener>
+	
+	
+	<listener>
+		<listener-class>com.casapazmino.fulltime.quartz.GeneraPeriodoControlador</listener-class>
+	</listener>
+	-->
+
+	<!-- Controla tareas programadas -->
+	<!-- Opcion 2 -->
+	<!-- Se carga cada vez al iniciar el servlet -->
+
+	<!-- 
+	<servlet>
+		<servlet-name>QuartzServlet</servlet-name>
+		<servlet-class>com.casapazmino.fulltime.quartz.QuartzServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>QuartzServlet</servlet-name>
+		<url-pattern>/QuartzServlet</url-pattern>
+	</servlet-mapping>
+
+ 	<servlet>
+		<servlet-name>QuartzServlet</servlet-name>
+		<servlet-class>com.casapazmino.fulltime.quartz.QuartzServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>QuartzServlet</servlet-name>
+		<url-pattern>/QuartzServlet</url-pattern>
+	</servlet-mapping>
+ 	-->
+ 		
+	<filter>
+		<filter-name>Seam Filter</filter-name>
+		<filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>Seam Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<servlet>
+		<servlet-name>Seam Resource Servlet</servlet-name>
+		<servlet-class>org.jboss.seam.servlet.SeamResourceServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Seam Resource Servlet</servlet-name>
+		<url-pattern>/seam/resource/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Facelets development mode (disable in production) -->
+
+	<context-param>
+		<param-name>facelets.DEVELOPMENT</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- JSF -->
+
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
+
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.seam</url-pattern>
+	</servlet-mapping>
+
+	<security-constraint>
+		<display-name>Restrict raw XHTML Documents</display-name>
+		<web-resource-collection>
+			<web-resource-name>XHTML</web-resource-name>
+			<url-pattern>*.xhtml</url-pattern>
+		</web-resource-collection>
+		<auth-constraint />
+	</security-constraint>
+
+	<servlet>
+		<servlet-name>Notificar</servlet-name>
+		<servlet-class>com.casapazmino.fulltime.procesos.Notificar</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Notificar</servlet-name>
+		<url-pattern>/Notificar</url-pattern>
+	</servlet-mapping>
+
+</web-app>

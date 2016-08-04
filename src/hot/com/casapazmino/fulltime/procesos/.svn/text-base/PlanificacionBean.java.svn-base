@@ -1,0 +1,427 @@
+package com.casapazmino.fulltime.procesos;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
+
+import javax.persistence.EntityManager;
+
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.Log;
+
+import com.casapazmino.fulltime.action.AsistenciaHome;
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.Asistencia;
+import com.casapazmino.fulltime.model.DetalleHorario;
+import com.casapazmino.fulltime.model.Empleado;
+import com.casapazmino.fulltime.model.Horario;
+
+@Name("planificacion")
+@Scope(ScopeType.SESSION)
+public class PlanificacionBean implements Planificacion {
+
+	private static final long serialVersionUID = 8750596808938047779L;
+
+	@In
+	EntityManager entityManager;
+
+	@In(create = true)
+	AsistenciaHome asistenciaHome;
+
+	@Logger
+	Log log;
+
+	private Empleado empleado;
+	private Horario horario;
+	private List<DetalleHorario> detalleHorarios;
+
+	private List<Empleado> empleados;
+	private List<Asistencia> asistencias;
+
+	private Date fechaSeleccionada;
+	private TreeSet<Date> listaFechas;
+	private List dataListFechas;
+
+	private ArrayList<Long> cargos;
+	private ArrayList<Long> ciudades;
+	private ArrayList<Long> detalleGrupoContratados;
+	private ArrayList<Long> departamentos;
+
+	private String tipoReporte;
+	
+	private int fila;
+
+	public PlanificacionBean() {
+		this.tipoReporte = "Cargo";
+	}
+
+/*	@SuppressWarnings("unchecked")
+	public List<Empleado> buscarEmpleados() {
+		List<Empleado> listaEmpleado = new ArrayList<Empleado>();
+		listaEmpleado.add(this.empleado);
+		return listaEmpleado;
+		
+		return (List<Empleado>) entityManager
+				.createQuery(
+						"select e from Empleado e where e.codigoEmpleado =#{planificacion.empleado.codigoEmpleado}")
+				.getResultList();
+	}*/
+
+	@SuppressWarnings("unchecked")
+	public List<Empleado> buscarEmpleadosCargo() {
+		return (List<Empleado>) entityManager
+				.createQuery(
+						"select e from Empleado e where e.cargo.cargId in (:cargos) and e.ciudad.ciudId in (:ciudades)")
+				.setParameter("cargos", getCargos())
+				.setParameter("ciudades", getCiudades())
+				.getResultList();
+	}
+		
+	@SuppressWarnings("unchecked")
+	public List<Empleado> buscarEmpleadosDepartamento() {
+		return (List<Empleado>) entityManager
+				.createQuery(
+						"select e from Empleado e where e.departamento.depaId in (:departamentos) and e.ciudad.ciudId in (:ciudades)")
+				.setParameter("departamentos", getDepartamentos())
+				.setParameter("ciudades", getCiudades())
+				.getResultList();
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	public List<Empleado> buscarEmpleadosGrupo() {
+		return (List<Empleado>) entityManager
+				.createQuery(
+						"select e from Empleado e where e.detalleGrupoContratado.dgcoId in (:grupos) and e.ciudad.ciudId in (:ciudades)")
+				.setParameter("grupos", getDetalleGrupoContratados())
+				.setParameter("ciudades", getCiudades())
+				.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<DetalleHorario> buscarDetalleHorario() {
+		return (List<DetalleHorario>) entityManager
+				.createQuery(
+						"select dh from DetalleHorario dh inner join dh.horario h where h.descripcion = #{planificacion.horario.descripcion}")
+				.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Asistencia> BuscarAsistencia(Date fechaHorario) {
+
+		return (List<Asistencia>) entityManager
+				.createQuery(
+						"select a from Asistencia a where date(a.fechaHoraHorario)=:fecha and a.estado = :estado")
+				.setParameter("fecha", fechaHorario)
+				.setParameter("estado",Constantes.ASISTENCIA_FALTA)
+				.getResultList();
+	}
+
+	public String buscarDatos() {
+		String ret = null;
+		try {
+			
+			empleados.clear();
+			if (getTipoReporte().equals("Cargo")){
+				empleados = buscarEmpleadosCargo();
+			} else if (getTipoReporte().equals("Departamento")){
+				empleados = buscarEmpleadosDepartamento();
+			} else if (getTipoReporte().equals("Grupo")) {
+				empleados = buscarEmpleadosGrupo();
+			} else if (getTipoReporte().equals("Empleado")) {
+				empleados.add(this.empleado);
+			}
+			
+			detalleHorarios = buscarDetalleHorario();
+
+			if (getEmpleados().size() == 0 || getDetalleHorarios().size() == 0) {
+				ret = null;
+			} else if (getEmpleados().size() != 0
+					&& getDetalleHorarios().size() != 0) {
+				ret = "ok";
+			}
+
+		} catch (Exception e) {
+			log.info(e);
+			ret = null;
+		}
+
+		return ret;
+
+	}
+
+	public String eliminar() {
+		Calendar fecha = Calendar.getInstance();
+
+		if (getListaFechas().size() == 0) {
+			FacesMessages.instance().add(
+					"No ha seleccionado fechas para eliminar");
+			return null;
+		}
+
+		List<Asistencia> asistencias =  new ArrayList<Asistencia>();
+		
+		Iterator it = getListaFechas().iterator();
+		while (it.hasNext()) {
+			Date fechaEliminar = (Date) it.next();
+			fecha.setTime(fechaEliminar);
+			asistencias.addAll(BuscarAsistencia(fecha.getTime()));
+		}
+		
+		asistenciaHome.eliminarAsistencias(asistencias);
+		borraListas();
+		return null;
+	}
+	
+	public String cancelar(){
+		borraListas();
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void agregarFecha() {
+		getListaFechas().add(getFechaSeleccionada());
+	}
+
+	public void eliminarFecha() {
+		getDataListFechas().remove(fila);
+		getListaFechas().clear();
+		getListaFechas().addAll(getDataListFechas());
+	}
+
+	public void borraListas() {
+		getListaFechas().clear();
+		getDataListFechas().clear();
+	}
+
+	public String asignarListaFechas() {
+		String ret = null;
+		try {
+			if (getListaFechas().size() == 0) {
+				ret = null;
+			} else {
+				getDataListFechas().clear();
+				getDataListFechas().addAll(listaFechas);
+				ret = "ok";
+			}
+
+		} catch (Exception e) {
+			log.info(e);
+			ret = null;
+		}
+
+		return ret;
+		/*
+		 * for (Iterator iterator = dataListFechas.iterator();
+		 * iterator.hasNext();) { Date fecha = (Date) iterator.next(); }
+		 */
+	}
+
+	public String verificar() {
+		String estado = null;
+
+		estado = asignarListaFechas();
+		if (estado != null) {
+			estado = buscarDatos();
+		}
+
+		if (estado == null) {
+			FacesMessages
+					.instance()
+					.add(
+							"No se ha seleccionado ninguna fecha, No Existe empleados o No existe Detalle Horario");
+		} else {
+			FacesMessages
+					.instance()
+					.add(
+							"Comprobación finalizada, presione Procesar para terminar proceso");
+			estado = "ok";
+		}
+		return estado;
+
+	}
+
+	@Override
+	public String procesarPlanificacion() {
+		List<Calendar> fechas = new ArrayList<Calendar>();
+
+		Iterator it = listaFechas.iterator();
+		while (it.hasNext()) {
+			Calendar fechaCalendar = Calendar.getInstance();
+			Date fecha = (Date) it.next();
+			fechaCalendar.setTime(fecha);
+			fechas.add(fechaCalendar);
+		}
+
+		String estado = null;
+		estado = verificar();
+
+		if (estado != null) {
+			// ELIMINA DATOS ANTES DE CREAR
+			// ACTUALIZA LISTAS Y EVITAR DUPLICADOS
+			// ELIMINAR LLAMA A borraListas()
+			this.eliminar();
+			
+			asistenciaHome.insertarAsistencia(empleados, fechas,
+					detalleHorarios, Constantes.ASISTENCIA_FALTA);
+		}
+
+		if (estado == null) {
+			FacesMessages.instance().add(
+					"Proceso no realizado, verifique selección de datos");
+		} else {
+			FacesMessages.instance()
+					.add("Proceso realizado satisfactoriamente");
+		}
+
+		return estado;
+	}
+
+	/*
+	 * GET - SET
+	 */
+
+	public Date getFechaSeleccionada() {
+		return fechaSeleccionada;
+	}
+
+	public void setFechaSeleccionada(Date fechasSeleccionadas) {
+		this.fechaSeleccionada = fechasSeleccionadas;
+	}
+
+	public Empleado getEmpleado() {
+		if (empleado == null) {
+			empleado = new Empleado();
+		}
+		return empleado;
+	}
+
+	public void setEmpleado(Empleado empleado) {
+		this.empleado = empleado;
+	}
+
+	public Horario getHorario() {
+		if (horario == null) {
+			horario = new Horario();
+		}
+		return horario;
+	}
+
+	public void setHorario(Horario horario) {
+		this.horario = horario;
+	}
+
+	public List<Empleado> getEmpleados() {
+		if (empleados == null) {
+			empleados = new ArrayList<Empleado>();
+		}
+		return empleados;
+	}
+
+	public void setEmpleados(List<Empleado> empleados) {
+		this.empleados = empleados;
+	}
+
+	public List<DetalleHorario> getDetalleHorarios() {
+		if (detalleHorarios == null) {
+			detalleHorarios = new ArrayList<DetalleHorario>();
+		}
+		return detalleHorarios;
+	}
+
+	public void setDetalleHorarios(List<DetalleHorario> detalleHorarios) {
+		this.detalleHorarios = detalleHorarios;
+	}
+
+	public List getDataListFechas() {
+		if (dataListFechas == null) {
+			dataListFechas = new ArrayList();
+		}
+
+		return dataListFechas;
+	}
+
+	public void setDataListFechas(ArrayList dataListFechas) {
+		this.dataListFechas = dataListFechas;
+	}
+
+	public List<Asistencia> getAsistencias() {
+		if (asistencias == null) {
+			asistencias = new ArrayList<Asistencia>();
+		}
+
+		return asistencias;
+	}
+
+	public void setAsistencias(List<Asistencia> asistencias) {
+		this.asistencias = asistencias;
+	}
+
+	public TreeSet getListaFechas() {
+		if (listaFechas == null) {
+			listaFechas = new TreeSet();
+		}
+		return listaFechas;
+	}
+
+	public void setListaFechas(TreeSet listaFechas) {
+		this.listaFechas = listaFechas;
+	}
+
+	public int getFila() {
+		return fila;
+	}
+
+	public void setFila(int fila) {
+		this.fila = fila;
+	}
+
+
+	public ArrayList<Long> getCargos() {
+		return cargos;
+	}
+
+	public void setCargos(ArrayList<Long> cargos) {
+		this.cargos = cargos;
+	}
+
+	public ArrayList<Long> getCiudades() {
+		return ciudades;
+	}
+
+	public void setCiudades(ArrayList<Long> ciudades) {
+		this.ciudades = ciudades;
+	}
+
+	public String getTipoReporte() {
+		return tipoReporte;
+	}
+
+	public void setTipoReporte(String tipoReporte) {
+		this.tipoReporte = tipoReporte;
+	}
+
+	public ArrayList<Long> getDetalleGrupoContratados() {
+		return detalleGrupoContratados;
+	}
+
+	public void setDetalleGrupoContratados(ArrayList<Long> detalleGrupoContratados) {
+		this.detalleGrupoContratados = detalleGrupoContratados;
+	}
+
+	public ArrayList<Long> getDepartamentos() {
+		return departamentos;
+	}
+
+	public void setDepartamentos(ArrayList<Long> departamentos) {
+		this.departamentos = departamentos;
+	}
+}

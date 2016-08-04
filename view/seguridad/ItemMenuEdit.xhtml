@@ -1,0 +1,104 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="itemMenu" styleClass="edit">
+    
+        <rich:panel>
+            <f:facet name="header">#{itemMenuHome.managed ? 'Editar' : 'A&#241;adir'} Item Men&#250;</f:facet>
+
+			<s:decorate id="gruposField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Submen&#250;</ui:define>
+				<!-- <h:selectOneMenu id="comboGrupos" required="true" value="#{itemMenuHome.instance.subgrupos}">
+					<s:selectItems id="itemsGrupos" var="grup" value="#{subgruposList.listaSubgrupo}"
+					label="#{grup.nombre}" noSelectionLabel="Seleccione Dato..">
+					
+					<a:support id="suportGrupos" event="onblur" reRender="gruposField" bypassUpdates="true" ajaxSingle="true"/>
+					</s:selectItems>
+				</h:selectOneMenu> -->
+				
+				<h:selectOneMenu id="slSubGrupos" required="true" value="#{itemMenuHome.idSubGrupo}"> 
+					<f:selectItem itemLabel="Seleccionar"/>
+					<f:selectItems value="#{itemMenuHome.subGrupoLista}"/>
+				</h:selectOneMenu>
+				
+			</s:decorate>
+			<s:decorate id="nombreField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" size="50" maxlength="50" value="#{itemMenuHome.instance.nombre}" required="true">
+                    <a:support event="onblur" reRender="nombreField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="etiquetaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Etiqueta</ui:define>
+                <h:inputText id="etiqueta" size="30" maxlength="30" value="#{itemMenuHome.instance.etiqueta}" required="true">
+                    <a:support event="onblur" reRender="etiquetaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100" maxlength="100" value="#{itemMenuHome.instance.descripcion}" required="true">
+                    <a:support event="onblur" reRender="descripcionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+			<s:decorate id="linkField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Link</ui:define>
+                <h:inputTextarea id="link" cols="80" rows="3" value="#{itemMenuHome.instance.link}" required="true"/>
+            </s:decorate>
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Guardar"
+                         action="#{itemMenuHome.guardar}"
+                       disabled="#{!itemMenuHome.wired}"
+                       rendered="#{!itemMenuHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{itemMenuHome.update}"
+                       rendered="#{itemMenuHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{itemMenuHome.remove}"
+                      immediate="true"
+                       rendered="#{itemMenuHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/ItemMenu.xhtml"
+                rendered="#{itemMenuHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/#{empty itemMenuFrom ? 'ItemMenuList' : itemMenuFrom}.xhtml"
+                rendered="#{!itemMenuHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

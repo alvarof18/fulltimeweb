@@ -1,0 +1,211 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="permiso" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{permisoHome.managed ? 'Editar' : 'A&#241;adir'} Permiso</f:facet>
+
+				<s:decorate id="periodoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Periodo</ui:define>
+					<h:selectOneMenu id="listaDetalleTipoParametroPeriodo" required="true"
+						value="#{permisoHome.instance.detalleTipoParametroByDtpaId}">
+						<s:selectItems id="itemsPeriodo"
+							value="#{detalleTipoParametroList.listaPeriodoVacacion}" var="detalleTipoParametroPeriodo"
+							label="#{detalleTipoParametroPeriodo.descripcion}"
+							noSelectionLabel="Seleccione Opci&#243;n..." />
+						<s:convertEntity />
+						<a:support id="periodo" event="onchange"
+							reRender="periodoField,listaDetalleTipoParametroPeriodo"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+            <s:decorate id="fechaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha</ui:define>
+                <rich:calendar id="fecha" disabled="true"
+                          value="#{permisoHome.instance.fecha}" datePattern="MM/dd/yyyy hh:mm a"/>
+            </s:decorate>
+
+				<s:decorate id="empleadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Empleado</ui:define>
+					<h:selectOneMenu id="listaEmpleados" required="true"
+						value="#{permisoHome.instance.empleadoByEmplId}">
+						<s:selectItems id="itemsEmpleado"
+							value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}"
+							noSelectionLabel="Seleccione Empleado..." />
+						<s:convertEntity />
+						<a:support id="empleados" event="onchange"
+							reRender="empleadoField,listaEmpleados"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="tipoPermisoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Motivo</ui:define>
+					<h:selectOneMenu id="listaTipoPermiso" required="true"
+						value="#{permisoHome.instance.tipoPermiso}">
+						<s:selectItems id="itemsTipoPermiso"
+							value="#{tipoPermisoList.listaTipoPermiso}" var="tipoPermiso"
+							label="#{tipoPermiso.descripcion}"
+							noSelectionLabel="Seleccione Tipo Permiso..." />
+						<s:convertEntity />
+						<a:support id="tipoPermiso" event="onchange"
+							reRender="tipoPermisoField,listaTipoPermiso,itemsTipoPermiso"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+
+            <s:decorate id="fechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha desde</ui:define>
+                <rich:calendar id="fechaDesde"
+                       required="true"
+                          value="#{permisoHome.instance.fechaDesde}" datePattern="MM/dd/yyyy HH:mm">
+                      	<a:support event="onchanged" reRender="numeroHorasField,diasField" ajaxSingle="true" />                          
+                </rich:calendar>         
+            </s:decorate>
+
+            <s:decorate id="fechaHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha hasta</ui:define>
+                <rich:calendar id="fechaHasta" 
+                       required="true"
+                          value="#{permisoHome.instance.fechaHasta}" datePattern="MM/dd/yyyy HH:mm">
+                      	<a:support action="#{permisoHome.diferenciaFechas}" event="onchanged" reRender="numeroHorasField,diasField" ajaxSingle="true" />
+                </rich:calendar>
+            </s:decorate>
+
+            <s:decorate id="diasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">D&#237;as</ui:define>
+                <h:inputText id="dias" disabled="true"
+                          value="#{permisoHome.instance.dias}">
+                          </h:inputText>
+            </s:decorate>
+
+<!-- 
+            <s:decorate id="horaSalidaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hora salida</ui:define>
+                <h:inputText id="horaSalida"
+                           size="5"
+                          value="#{permisoHome.instance.horaSalida}">
+                    <s:convertDateTime type="time"/>
+                    <a:support event="onblur" reRender="horaSalidaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="horaRetornoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hora retorno</ui:define>
+                <h:inputText id="horaRetorno"
+                           size="5"
+                          value="#{permisoHome.instance.horaRetorno}">
+                    <s:convertDateTime type="time"/>
+                    <a:support event="onblur" reRender="horaRetornoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+ -->
+
+            <s:decorate id="numeroHorasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">N&#250;mero horas</ui:define>
+                <h:inputText id="numeroHoras" disabled="true"
+                          value="#{permisoHome.instance.numeroHoras}">
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="lugarField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Lugar</ui:define>
+                <h:inputText id="lugar" size="100"
+                              value="#{permisoHome.instance.lugar}"/>
+            </s:decorate>
+            
+				<s:decorate id="autorizadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Autorizado</ui:define>
+					<h:selectOneMenu id="listaDetalleTipoParametroAutorizado" required="true"
+						value="#{permisoHome.instance.detalleTipoParametroByAutorizado}">
+						<s:selectItems id="itemsEmpleadoAutoriza" 
+							value="#{detalleTipoParametroList.listaDecision}" var="detalleTipoParametroAutoriza"
+							label="#{detalleTipoParametroAutoriza.descripcion}"
+							noSelectionLabel="Seleccione Opci&#243;n..." />
+						<s:convertEntity />
+						<a:support id="autorizacion" event="onchange"
+							reRender="autorizadoField,listaDetalleTipoParametroAutorizado,autorizacion"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+
+				<s:decorate id="jefeField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Autorizado Por</ui:define>
+					<h:selectOneMenu id="listaJefe"
+						value="#{permisoHome.instance.empleadoByEmpEmplId}">
+						<s:selectItems id="itemsJefe"
+							value="#{empleadoList.listaEmpleado}" var="empleadojefe"
+							label="#{empleadojefe.apellido}"
+							noSelectionLabel="Seleccione Jefe Superior..." />
+						<s:convertEntity />
+						<a:support id="jefes" event="onchange"
+							reRender="jefeField,listaJefe,jefes"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{permisoHome.persist}"
+                       disabled="#{!permisoHome.wired}"
+                       rendered="#{!permisoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{permisoHome.update}"
+                       rendered="#{permisoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{permisoHome.remove}"
+                      immediate="true"
+                       rendered="#{permisoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Permiso.xhtml"
+                rendered="#{permisoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty permisoFrom ? 'PermisoList' : permisoFrom}.xhtml"
+                rendered="#{!permisoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

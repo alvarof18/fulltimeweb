@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteAsistenciaDetalle" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<parameter name="cargos" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="jefeId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     empleado.CEDULA AS empleado_CEDULA,
+     empleado.APELLIDO AS empleado_APELLIDO,
+     empleado.NOMBRE AS empleado_NOMBRE,
+     asistencia.FECHA_HORA_HORARIO AS asistencia_FECHA_HORA_HORARIO,
+     asistencia.FECHA_HORA_TIMBRE AS asistencia_FECHA_HORA_TIMBRE,
+     asistencia.ENTRADA_SALIDA AS asistencia_ENTRADA_SALIDA,
+     asistencia.ASIS_ORDEN AS asistencia_ASIS_ORDEN,
+     asistencia.ESTADO AS asistencia_ESTADO,
+     cargo.DESCRIPCION AS cargo_DESCRIPCION,
+     empleado.CARG_ID AS empleado_CARG_ID
+FROM
+     empleado empleado INNER JOIN asistencia asistencia ON empleado.EMPL_ID = asistencia.EMPL_ID
+     INNER JOIN cargo cargo ON empleado.CARG_ID = cargo.CARG_ID
+WHERE
+     asistencia.FECHA_HORA_HORARIO BETWEEN $P{fechaInicial}AND$P{fechaFinal}
+ AND empleado.CARG_ID IN ($P!{cargos})
+ORDER BY
+     empleado.APELLIDO ASC,
+     asistencia.FECHA_HORA_HORARIO ASC]]>
+	</queryString>
+	<field name="empleado_CEDULA" class="java.lang.String"/>
+	<field name="empleado_APELLIDO" class="java.lang.String"/>
+	<field name="empleado_NOMBRE" class="java.lang.String"/>
+	<field name="asistencia_FECHA_HORA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="asistencia_FECHA_HORA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="asistencia_ENTRADA_SALIDA" class="java.lang.String"/>
+	<field name="asistencia_ASIS_ORDEN" class="java.lang.Integer"/>
+	<field name="asistencia_ESTADO" class="java.lang.Integer"/>
+	<field name="cargo_DESCRIPCION" class="java.lang.String"/>
+	<variable name="contRegi" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{contRegi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (1)]]></initialValueExpression>
+	</variable>
+	<variable name="nota" class="java.lang.String">
+		<variableExpression><![CDATA[($F{asistencia_ESTADO} == 0 ? "FALTA":
+    $F{asistencia_ESTADO} == 1 ? "" :
+        $F{asistencia_ESTADO} == 2 ? "VACACION" :
+            $F{asistencia_ESTADO} == 3 ? "PERMISO" :"SIN ESTADO")]]></variableExpression>
+	</variable>
+	<group name="cedula" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{empleado_CEDULA}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement x="181" y="0" width="220" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_APELLIDO} + " " + $F{empleado_NOMBRE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="81" y="0" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_CEDULA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Transparent" x="0" y="0" width="80" height="20"/>
+					<textElement textAlignment="Justified" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[EMPLEADO:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="12"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="59" splitType="Stretch">
+			<image>
+				<reportElement x="2" y="0" width="112" height="57"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="57" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Asistencia]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="29" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="0" width="554" height="21" forecolor="#FFFFFF" backcolor="#9999FF"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="280" y="0" width="88" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[NOTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="1" width="145" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="180" y="0" width="23" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[E/S]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField pattern="HH.mm">
+				<reportElement x="91" y="0" width="56" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{asistencia_FECHA_HORA_TIMBRE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm">
+				<reportElement x="2" y="0" width="78" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{asistencia_FECHA_HORA_HORARIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="0" width="88" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{nota}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="0" width="23" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{asistencia_ENTRADA_SALIDA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="11" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="3" width="78" height="20" forecolor="#000000"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Impreso por:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="78" y="3" width="168" height="20" forecolor="#000000"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="333" y="3" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="3" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh.mm">
+				<reportElement x="424" y="3" width="131" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="2" width="553" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="80" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{contRegi}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="0" width="79" height="20"/>
+				<textElement/>
+				<text><![CDATA[No. Registros:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="222" y="0" width="162" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{cargos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

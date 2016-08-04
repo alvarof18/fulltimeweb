@@ -1,0 +1,58 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+
+import com.casapazmino.fulltime.model.Permiso;
+import com.casapazmino.fulltime.model.TipoPermiso;
+
+@Name("tipoPermisoHome")
+public class TipoPermisoHome extends EntityHome<TipoPermiso> {
+
+	private static final long serialVersionUID = -8530207336733848086L;
+
+	public void setTipoPermisoTipeId(Integer id) {
+		setId(id);
+	}
+
+	public Integer getTipoPermisoTipeId() {
+		return (Integer) getId();
+	}
+
+	@Override
+	protected TipoPermiso createInstance() {
+		TipoPermiso tipoPermiso = new TipoPermiso();
+		return tipoPermiso;
+	}
+
+	public void wire() {
+		getInstance();
+	}
+
+	public boolean isWired() {
+		return true;
+	}
+
+	public TipoPermiso getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}
+	public List<Permiso> getPermisos() {
+		return getInstance() == null ? null : new ArrayList<Permiso>(
+				getInstance().getPermisos());
+	}
+
+}

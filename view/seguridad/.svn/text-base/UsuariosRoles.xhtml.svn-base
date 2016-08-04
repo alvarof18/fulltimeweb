@@ -1,0 +1,141 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Usuarios Roles</f:facet>
+		
+			<s:decorate id="usuarioFiel" template="#{requestScope.contextPath}/layout/display.xhtml">
+            	<ui:define name="label">Usuario</ui:define>
+            		<h:outputText value="#{usuariosRolesHome.instance.usuarios.usuario}"/>
+        	</s:decorate>
+			
+			<s:decorate id="rolesFiel" template="#{requestScope.contextPath}/layout/display.xhtml">
+            	<ui:define name="label">Roles</ui:define>
+            		<h:outputText value="#{usuariosRolesHome.instance.roles.descripcion}"/>
+        	</s:decorate>
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/seguridad/UsuariosRolesEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/seguridad/#{empty usuariosRolesFrom ? 'UsuariosRolesList' : usuariosRolesFrom}.xhtml"
+                    id="done"
+                 value="Salir"/>
+
+    </div>
+
+   <!-- <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Roles</h:panelGroup>
+        </f:facet>
+    <div class="association" id="rolesParent">
+
+        <h:outputText value="There is no roles associated with this usuariosRoles."
+                   rendered="#{usuariosRolesHome.instance.roles == null}"/>
+
+        <rich:dataTable var="_roles"
+                   value="#{usuariosRolesHome.instance.roles}"
+                rendered="#{usuariosRolesHome.instance.roles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_roles.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Usuarios</f:facet>
+                <h:outputText value="#{_roles.usuarios}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewroles"
+                     value="View"
+                      view="/seguridad/Roles.xhtml">
+                    <f:param name="rolesId"
+                           value="#{_roles.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Usuarios</h:panelGroup>
+        </f:facet>
+    <div class="association" id="usuariosParent">
+
+        <h:outputText value="There is no usuarios associated with this usuariosRoles."
+                   rendered="#{usuariosRolesHome.instance.usuarios == null}"/>
+
+        <rich:dataTable var="_usuarios"
+                   value="#{usuariosRolesHome.instance.usuarios}"
+                rendered="#{usuariosRolesHome.instance.usuarios != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="usuariosTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_usuarios.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Contrasena</f:facet>
+                <h:outputText value="#{_usuarios.contrasena}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Estado</f:facet>
+                <h:outputText value="#{_usuarios.estado}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha creacion</f:facet>
+                <h:outputText value="#{_usuarios.fechaCreacion}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha vencimiento</f:facet>
+                <h:outputText value="#{_usuarios.fechaVencimiento}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Usuario</f:facet>
+                <h:outputText value="#{_usuarios.usuario}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewusuarios"
+                     value="View"
+                      view="/seguridad/Usuarios.xhtml">
+                    <f:param name="usuariosId"
+                           value="#{_usuarios.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel> --> 
+</ui:define>
+
+</ui:composition>

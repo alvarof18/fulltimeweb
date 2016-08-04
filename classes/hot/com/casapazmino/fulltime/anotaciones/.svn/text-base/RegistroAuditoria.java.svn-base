@@ -1,0 +1,31 @@
+package com.casapazmino.fulltime.comun;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
+
+import org.jboss.seam.Component;
+import org.jboss.seam.annotations.Name;
+
+import com.casapazmino.fulltime.seguridad.action.AuditoriaHome;
+
+@Name("registroAuditoria")
+public class RegistroAuditoria {
+
+	private static final long serialVersionUID = 8101184227202181858L;
+	
+	@AroundInvoke
+	public Object logMethodEntry(InvocationContext invocationContext) throws Exception {
+		
+		System.out.println("=================================== Metodo: "+ invocationContext.getMethod().getName());
+		System.out.println("=================================== Metodo: "+ invocationContext.getMethod().getReturnType());
+				
+		if (invocationContext.getMethod().getName().equals("update")) {
+			AuditoriaHome auditoriaHome = (AuditoriaHome) Component.getInstance("auditoriaHome",true);
+			
+			auditoriaHome.asignarCampos(invocationContext.getTarget().getClass().getName(), invocationContext.getMethod().getName(), "c_ant", "c_act");
+			auditoriaHome.persist();
+		}
+		
+		return invocationContext.proceed();
+	}
+}

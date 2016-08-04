@@ -1,0 +1,117 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="departamentoAutorizacion" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{departamentoAutorizacionHome.managed ? 'Editar' : 'A&#241;adir'} Empleados designados para autorizar Solicitudes de Permisos y Vacaciones</f:facet>
+			
+			<s:decorate id="Departamento" template="#{requestScope.contextPath}/layout/display.xhtml">
+            	<ui:define name="label">Departamento</ui:define>
+            	<h:outputText value="#{departamentoAutorizacionHome.instance.departamento.descripcion}"/>
+       		</s:decorate>
+			
+			<s:decorate id="empleadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">			
+				<ui:define name="label">Empleado</ui:define>
+					<h:selectOneMenu id="listaEmpleados" 
+						value="#{departamentoAutorizacionHome.instance.empleado}">
+						<s:selectItems id="itemsEmpleado"
+							value="#{empleadoList.listaDeEmpleadosDepartamentoAdmin(departamentoAutorizacionHome.instance.departamento.depaId)}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}"
+							noSelectionLabel="Seleccione Personal a Autorizar..." />
+						<s:convertEntity />
+						<a:support id="empleados" event="onchange" reRender="empleadoField,listaEmpleado" bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+			</s:decorate>
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{departamentoAutorizacionHome.persist}"
+                       disabled="#{!departamentoAutorizacionHome.wired}"
+                       rendered="#{!departamentoAutorizacionHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{departamentoAutorizacionHome.update}"
+                       rendered="#{departamentoAutorizacionHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{departamentoAutorizacionHome.remove}"
+                      immediate="true"
+                       rendered="#{departamentoAutorizacionHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/DepartamentoAutorizacion.xhtml"
+                rendered="#{departamentoAutorizacionHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Departamento.xhtml"
+                rendered="#{!departamentoAutorizacionHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Horario">
+    <div class="association" id="horarioParent">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{detalleHorarioHome.instance.horario == null}"/>
+
+        <rich:dataTable var="_horario"
+                   value="#{detalleHorarioHome.instance.horario}"
+                rendered="#{detalleHorarioHome.instance.horario != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="horarioTable">
+            <h:column>
+                <f:facet name="header">Hora id</f:facet>
+                <h:outputText value="#{_horario.horaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_horario.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{detalleHorarioHome.instance.horario != null ? 'Change' : 'Select'} horario"
+                       view="/fulltime/HorarioList.xhtml">
+                <f:param name="from" value="DetalleHorarioEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+
+-->
+
+</ui:define>
+
+</ui:composition>

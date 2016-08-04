@@ -1,0 +1,150 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Permisos menu Details</f:facet>
+
+
+        <s:decorate id="crear" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Crear</ui:define>
+            <h:outputText value="#{permisosMenuHome.instance.crear}"/>
+        </s:decorate>
+
+        <s:decorate id="eliminar" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Eliminar</ui:define>
+            <h:outputText value="#{permisosMenuHome.instance.eliminar}"/>
+        </s:decorate>
+
+        <s:decorate id="imprimir" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Imprimir</ui:define>
+            <h:outputText value="#{permisosMenuHome.instance.imprimir}"/>
+        </s:decorate>
+
+        <s:decorate id="modificar" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Modificar</ui:define>
+            <h:outputText value="#{permisosMenuHome.instance.modificar}"/>
+        </s:decorate>
+
+        <s:decorate id="ver" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Ver</ui:define>
+            <h:outputText value="#{permisosMenuHome.instance.ver}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/seguridad/PermisosMenuEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/seguridad/#{empty permisosMenuFrom ? 'PermisosMenuList' : permisosMenuFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Items menu roles</h:panelGroup>
+        </f:facet>
+    <div class="association" id="itemsMenuRolesParent">
+
+        <h:outputText value="There is no itemsMenuRoles associated with this permisosMenu."
+                   rendered="#{permisosMenuHome.instance.itemsMenuRoles == null}"/>
+
+        <rich:dataTable var="_itemsMenuRoles"
+                   value="#{permisosMenuHome.instance.itemsMenuRoles}"
+                rendered="#{permisosMenuHome.instance.itemsMenuRoles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="itemsMenuRolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Grupos id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.grupos.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Item menu id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.itemMenu.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Roles id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Subgrupos id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.subgrupos.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewitemsMenuRoles"
+                     value="View"
+                      view="/seguridad/ItemsMenuRoles.xhtml">
+                    <f:param name="itemsMenuRolesId"
+                           value="#{_itemsMenuRoles.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Roles</h:panelGroup>
+        </f:facet>
+    <div class="association" id="rolesParent">
+
+        <h:outputText value="There is no roles associated with this permisosMenu."
+                   rendered="#{permisosMenuHome.instance.roles == null}"/>
+
+        <rich:dataTable var="_roles"
+                   value="#{permisosMenuHome.instance.roles}"
+                rendered="#{permisosMenuHome.instance.roles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_roles.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Usuarios</f:facet>
+                <h:outputText value="#{_roles.usuarios}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewroles"
+                     value="View"
+                      view="/seguridad/Roles.xhtml">
+                    <f:param name="rolesId"
+                           value="#{_roles.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

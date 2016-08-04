@@ -1,0 +1,223 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"    
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+<ui:define name="body">
+
+	<style type="text/css">
+			  					
+  		.divPopUpRemove {
+   				height: 50px;
+   				width:  300px;
+   				font-family : Arial;
+    			font-size : 130%;
+  				}	
+  			
+	</style>
+
+    <h:form id="planificacionRangoFechas" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Planificaci&#243;n Rango Fechas" switchType="ajax">
+				
+		<h:panelGrid columns="1" >
+			<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Seleccione Par&#225;metros</ui:define>
+					<h:selectOneRadio id="listaParametros" value="#{planificacionRangoFechas.tipoReporte}" >
+
+						<s:selectItems value="#{enumeraciones.tipoReporte}" var="tipoReporte"
+							label="#{tipoReporte}" />
+						<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,
+															departamentoField,listaDepartamento,itemsDepartamento,
+															detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+															empleadoField,listaEmpleado,itemsEmpleado"
+						 ajaxSingle="true" />
+					</h:selectOneRadio>
+			</s:decorate>
+
+			<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/edit.xhtml" >
+					<h:selectManyListbox id="listaCargo" value="#{planificacionRangoFechas.cargos}"
+						size="10" rendered="#{planificacionRangoFechas.tipoReporte != 'Departamento' and planificacionRangoFechas.tipoReporte != 'Grupo' and planificacionRangoFechas.tipoReporte != 'Empleado'}" >
+							<s:selectItems id="itemsCargo"  
+								value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+								itemValue="#{cargo.cargId}" >
+							</s:selectItems>
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/edit.xhtml" >
+					<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{planificacionRangoFechas.detalleGrupoContratados}"
+						size="10" rendered="#{planificacionRangoFechas.tipoReporte != 'Cargo' and planificacionRangoFechas.tipoReporte != 'Departamento' and planificacionRangoFechas.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDetalleGrupoContratado"  
+								value="#{detalleGrupoContratadoList.resultList}" 
+								var="detalleGrupoContratado" 
+								label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+								itemValue="#{detalleGrupoContratado.dgcoId}" >
+							</s:selectItems>
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/edit.xhtml"  >
+					<h:selectManyListbox id="listaDepartamento" value="#{planificacionRangoFechas.departamentos}"
+						size="10" rendered="#{planificacionRangoFechas.tipoReporte != 'Cargo' and planificacionRangoFechas.tipoReporte != 'Grupo' and planificacionRangoFechas.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDepartamento"  
+								value="#{departamentoList.listaDepartamentos}" 
+								var="departamento" 
+								label="#{departamento.descripcion}"
+								itemValue="#{departamento.depaId}" >
+							</s:selectItems>
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="empleadoField"
+				template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<h:selectOneMenu id="listaEmpleado" required="false" value="#{planificacionRangoFechas.empleado}" 
+					rendered="#{planificacionRangoFechas.tipoReporte != 'Cargo' and planificacionRangoFechas.tipoReporte != 'Grupo' and planificacionRangoFechas.tipoReporte != 'Departamento'}">
+						<s:selectItems id="itemsEmpleado"
+							value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}" />
+						<s:convertEntity />
+						<a:support id="empleados" event="onchange"
+							reRender="empleadoField,listaEmpleado,itemsEmpleado"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+			</s:decorate>
+		</h:panelGrid>			
+
+
+		<h:panelGrid columns="1" width="">
+							
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Ciudad</ui:define>
+					<h:selectManyListbox id="listaCiudades" value="#{planificacionRangoFechas.ciudades}" size="10">
+						<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad..." 
+							value="#{usuarioCiudadList.listaCiudadesUsuarios}" var="usuarioCiudad"
+							label="#{usuarioCiudad.ciudad.provincia.descripcion} -  #{usuarioCiudad.ciudad.descripcion}"
+							itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>			
+			
+			<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Horario</ui:define>					
+					<h:selectOneMenu id="horario" required="false" value="#{planificacionRangoFechas.horario}">
+						<s:selectItems id="itemsHorario" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" />
+						<s:convertEntity />
+					</h:selectOneMenu>					
+			</s:decorate>
+		</h:panelGrid>
+		
+		<h:panelGrid columns="1">
+            <s:decorate id="fechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde"
+                       required="true" showApplyButton="false"  
+                          value="#{planificacionRangoFechas.fechaDesde}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            </s:decorate>			
+
+            <s:decorate id="fechaHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Hasta</ui:define>
+                <rich:calendar id="fechaHasta"
+                       required="true" showApplyButton="false"  
+                          value="#{planificacionRangoFechas.fechaHasta}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            </s:decorate>
+
+			<rich:spacer width="30" />	
+			<h:outputText value="Seleccione D&#237;as Libres" />
+			
+			</h:panelGrid>
+			
+			<h:panelGrid columns="7" width="width:10px;">
+
+            <s:decorate id="lunesCheck" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <h:selectBooleanCheckbox id="lunes" 
+                	value="#{planificacionRangoFechas.lunes}"/>
+                <rich:spacer width="7"/>
+                <h:outputText value="Lunes" />
+            </s:decorate>
+            
+            <s:decorate id="martesCheck" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <h:selectBooleanCheckbox id="martes" 
+                	value="#{planificacionRangoFechas.martes}"/>
+                <rich:spacer width="7"/>
+                <h:outputText value="Martes" />
+            </s:decorate>
+
+            <s:decorate id="miercolesCheck" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <h:selectBooleanCheckbox id="miercoles" 
+                	value="#{planificacionRangoFechas.miercoles}"/>
+                <rich:spacer width="7"/>
+                <h:outputText value="Mi&#233;rcoles" />
+            </s:decorate>
+
+            <s:decorate id="juevesCheck" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <h:selectBooleanCheckbox id="jueves" 
+                	value="#{planificacionRangoFechas.jueves}"/>
+                <rich:spacer width="7"/>
+				<h:outputText value="Jueves" />                	
+            </s:decorate>
+
+            <s:decorate id="viernesCheck" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <h:selectBooleanCheckbox id="viernes" 
+                	value="#{planificacionRangoFechas.viernes}"/>
+                <rich:spacer width="7"/>
+				<h:outputText value="Viernes" />                
+            </s:decorate>
+
+            <s:decorate id="sabadoCheck" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <h:selectBooleanCheckbox id="sabado" 
+                	value="#{planificacionRangoFechas.sabado}"/>
+                <rich:spacer width="7"/>
+				<h:outputText value="S&#225;bado" />                	
+            </s:decorate>
+
+            <s:decorate id="domingoCheck" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <h:selectBooleanCheckbox id="domingo" 
+                	value="#{planificacionRangoFechas.domingo}"/>
+                <rich:spacer width="7"/>
+               	<h:outputText value="Domingo" />
+            </s:decorate>
+
+			</h:panelGrid>            
+            
+        </rich:simpleTogglePanel>
+  
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        
+        <h:commandButton id="procesar" value="Crear" rendered="true"
+				action="#{planificacionRangoFechas.crearPlanificacionRangoFechas}"/>
+
+		<rich:spacer width="7"/>
+		
+		<h:commandButton id="eliminar" value="Eliminar" action="#{planificacionRangoFechas.eliminarPlanificacion}"/>
+		
+		<rich:spacer width="7"/>
+		
+		<h:commandButton id="cargar" value="Cargar Timbres"
+				action="#{planificacionRangoFechas.cargarTimbres}"/>				
+		<rich:spacer width="7"/>
+		
+		<h:commandButton id="cancelar" value="Cancelar"
+				action="#{planificacionRangoFechas.cancelar}"/>
+
+    </s:div>
+    
+ 
+	<rich:spacer height="20px"/>
+    </h:form>
+    
+</ui:define>
+
+</ui:composition>

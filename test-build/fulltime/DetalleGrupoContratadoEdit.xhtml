@@ -1,0 +1,288 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="detalleGrupoContratado" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{detalleGrupoContratadoHome.managed ? 'Editar' : 'A&#241;adir'} Detalle Grupo Contratado</f:facet>
+<!-- 
+				<s:decorate id="grupoContratadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Grupo Contratado</ui:define>
+					<h:selectOneMenu id="listaGrupoContratados"
+						value="#{detalleGrupoContratadoHome.instance.grupoContratado}">
+						<s:selectItems id="itemsGrupoContratados"
+							value="#{grupoContratadoList.listaGrupoContratado}" var="grupoContratado"
+							label="#{grupoContratado.descripcion}"
+							noSelectionLabel="Seleccione Grupo Contratados..." />
+						<s:convertEntity />
+						<a:support id="gruposContratados" event="onchange"
+							reRender="grupoContratado,listaGrupoContratados,grupoContratados"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+ -->
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                              value="#{detalleGrupoContratadoHome.instance.descripcion}"/>
+            </s:decorate>
+
+            <s:decorate id="horasVacacionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">D&#237;as Vacaci&#243;n</ui:define>
+                <h:inputText id="horasVacacion"
+                          value="#{detalleGrupoContratadoHome.instance.horasVacacion}">
+                    <a:support event="onblur" reRender="horasVacacionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="diasIncrementoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">D&#237;as Incremento</ui:define>
+                <h:inputText id="diasIncremento"
+                          value="#{detalleGrupoContratadoHome.instance.diasIncremento}">
+                    <a:support event="onblur" reRender="diasIncrementoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="aniosField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">A&#241;os Laborables</ui:define>
+                <h:inputText id="anios"
+                          value="#{detalleGrupoContratadoHome.instance.anios}">
+                    <a:support event="onblur" reRender="aniosField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="maximoHorasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo Acumulaci&#243;n D&#237;as</ui:define>
+                <h:inputText id="maximoHoras"
+                          value="#{detalleGrupoContratadoHome.instance.maximoHoras}">
+                    <a:support event="onblur" reRender="maximoHorasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="totalHorasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo D&#237;as Mes</ui:define>
+                <h:inputText id="totalHoras"
+                          value="#{detalleGrupoContratadoHome.instance.totalHoras}">
+                    <a:support event="onblur" reRender="totalHorasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="mesesPeriodoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Meses Por Periodo</ui:define>
+                <h:inputText id="mesesPeriodo"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.mesesPeriodo}">
+                    <a:support event="onblur" reRender="mesesPeriodoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+<!--              
+            <s:decorate id="nivelField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Niveles de Aprobaci&#243;n</ui:define>
+                <h:inputText id="nivel"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.nivel}">
+                </h:inputText>
+            </s:decorate>
+            
+
+            <s:decorate id="porcentajeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Porcentaje de Horas Suplementarias</ui:define>
+                <h:inputText id="porcentaje"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.porcentaje}"
+                           size="11">
+                    <a:support event="onblur" reRender="porcentajeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="porcentajeField1" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Porcentaje de Horas Extraordinarias L-V</ui:define>
+                <h:inputText id="porcentaje1"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.porcentaje1}"
+                           size="11">
+                    <a:support event="onblur" reRender="porcentajeField1" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+           <s:decorate id="porcentajeField2" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Porcentaje de Horas Extraordinarias S-D</ui:define>
+                <h:inputText id="porcentaje2"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.porcentaje2}"
+                           size="11">
+                    <a:support event="onblur" reRender="porcentajeField2" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="porcentajeField3" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Porcentaje Adicional 1</ui:define>
+                <h:inputText id="porcentaje3"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.porcentaje3}"
+                           size="11">
+                    <a:support event="onblur" reRender="porcentajeField3" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="porcentajeField4" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Porcentaje Adicional 2</ui:define>
+                <h:inputText id="porcentaje4"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.porcentaje4}"
+                           size="11">
+                    <a:support event="onblur" reRender="porcentajeField4" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="labotablesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Laborables</ui:define>
+                <h:inputText id="laborables"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.horas_laborables}">
+                    <a:support event="onblur" reRender="labotablesField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="suplementariasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Suplementarias</ui:define>
+                <h:inputText id="suplementarias"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.horas_suplementarias}">
+                    <a:support event="onblur" reRender="suplementariasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="extraordinariasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Extraordinarias</ui:define>
+                <h:inputText id="extraordinarias"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.horas_extraordinarias}">
+                    <a:support event="onblur" reRender="extraordinariasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+-->            
+            <s:decorate id="maximoHorasExtraField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo Horas Extra Mensuales</ui:define>
+                <h:inputText id="maximoHorasExtra"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.maximo_hora_extra}">
+                    <a:support event="onblur" reRender="extraordinariasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="maximoHorassemanalesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo Horas Extra Semanales</ui:define>
+                <h:inputText id="maximohorassemanales"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.maximo_horas_semanales}">
+                    <a:support event="onblur" reRender="extraordinariasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="limiteAbisoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">L&#237;mite Aviso</ui:define>
+                <h:inputText id="limiteabiso"
+                       required="true"
+                          value="#{detalleGrupoContratadoHome.instance.limite_aviso}">
+                    <a:support event="onblur" reRender="extraordinariasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+        
+        <rich:simpleTogglePanel label="Informaci&#243;n Adicional" switchType="ajax" opened="false">        		
+			<h:panelGrid columns="1"> 	
+			
+			<s:decorate id="activarReglasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Activar Regla</ui:define>
+                <h:selectBooleanCheckbox id="activarRegla" value="#{detalleGrupoContratadoHome.instance.activarRegla}"/>
+            </s:decorate>
+            
+            <s:decorate id="diasLaborablesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Dias Laborables</ui:define>
+                <h:inputText id="diasLaborables" required="false" value="#{detalleGrupoContratadoHome.instance.diasLaborables}" size="4" maxlength="2"/>
+            </s:decorate>
+            
+            <s:decorate id="diasLibresField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Dias Libres</ui:define>
+                <h:inputText id="diasLibres" required="false" value="#{detalleGrupoContratadoHome.instance.diasLibres}" size="4" maxlength="2"/>
+            </s:decorate>
+            
+            <s:decorate id="activarFeriadosField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Coincidir Feriados</ui:define>
+                <h:selectBooleanCheckbox id="activaFeriados" value="#{detalleGrupoContratadoHome.instance.activarFeriados}"/>
+            </s:decorate>
+            
+            <s:decorate id="activarRecuperableField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Coincidir Recuperables</ui:define>
+                <h:selectBooleanCheckbox id="activaRecuperable" value="#{detalleGrupoContratadoHome.instance.activarRecuperable}"/>
+            </s:decorate>
+            
+            <s:decorate id="solicitudVacionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Solicitudes de Vacaci&#243;n</ui:define>
+                <h:selectBooleanCheckbox id="solicitudVacion" value="#{detalleGrupoContratadoHome.instance.solicitudVacacion}"/>
+            </s:decorate>
+            
+            <s:decorate id="permisoCargoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Solicitudes de Permiso con Cargo a Vacaci&#243;n</ui:define>
+                <h:selectBooleanCheckbox id="permisoCargo" value="#{detalleGrupoContratadoHome.instance.permisoCargo}"/>
+            </s:decorate>            
+				
+			</h:panelGrid>		
+		</rich:simpleTogglePanel>        
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{detalleGrupoContratadoHome.persist}"
+                       disabled="#{!detalleGrupoContratadoHome.wired}"
+                       rendered="#{!detalleGrupoContratadoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{detalleGrupoContratadoHome.update}"
+                       rendered="#{detalleGrupoContratadoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{detalleGrupoContratadoHome.remove}"
+                      immediate="true"
+                       rendered="#{detalleGrupoContratadoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/DetalleGrupoContratado.xhtml"
+                rendered="#{detalleGrupoContratadoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty detalleGrupoContratadoFrom ? 'DetalleGrupoContratadoList' : detalleGrupoContratadoFrom}.xhtml"
+                rendered="#{!detalleGrupoContratadoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

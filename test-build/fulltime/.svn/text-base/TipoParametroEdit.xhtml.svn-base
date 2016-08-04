@@ -1,0 +1,138 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="tipoParametro" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{tipoParametroHome.managed ? 'Editar' : 'A&#241;adir'} Tipo parametro</f:facet>
+
+
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{tipoParametroHome.instance.descripcion}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{tipoParametroHome.persist}"
+                       disabled="#{!tipoParametroHome.wired}"
+                       rendered="#{!tipoParametroHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{tipoParametroHome.update}"
+                       rendered="#{tipoParametroHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{tipoParametroHome.remove}"
+                      immediate="true"
+                       rendered="false"/>
+                       <!-- rendered="#{tipoParametroHome.managed}" -->
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/TipoParametro.xhtml"
+                rendered="#{tipoParametroHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty tipoParametroFrom ? 'TipoParametroList' : tipoParametroFrom}.xhtml"
+                rendered="#{!tipoParametroHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Detalle tipo parametros">
+        <h:form styleClass="association" id="detalleTipoParametrosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty tipoParametroHome.detalleTipoParametros}"/>
+
+            <rich:dataTable value="#{tipoParametroHome.detalleTipoParametros}"
+                           var="_detalleTipoParametro"
+                      rendered="#{not empty tipoParametroHome.detalleTipoParametros}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="detalleTipoParametrosTable">
+                <rich:column sortBy="#{_detalleTipoParametro.dtpaId}">
+                    <f:facet name="header">Dtpa id</f:facet>
+                    <h:outputText value="#{_detalleTipoParametro.dtpaId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_detalleTipoParametro.descripcion}">
+                    <f:facet name="header">Descripci&#243;n</f:facet>
+                    <h:outputText value="#{_detalleTipoParametro.descripcion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_detalleTipoParametro.valor1}">
+                    <f:facet name="header">Valor1</f:facet>
+                    <h:outputText value="#{_detalleTipoParametro.valor1}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_detalleTipoParametro.valor2}">
+                    <f:facet name="header">Valor2</f:facet>
+                    <h:outputText value="#{_detalleTipoParametro.valor2}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_detalleTipoParametro.valor3}">
+                    <f:facet name="header">Valor3</f:facet>
+                    <h:outputText value="#{_detalleTipoParametro.valor3}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_detalleTipoParametro.valor4}">
+                    <f:facet name="header">Valor4</f:facet>
+                    <h:outputText value="#{_detalleTipoParametro.valor4}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{tipoParametroHome.managed}" id="detalleTipoParametros">
+        <div class="actionButtons">
+            <s:button id="adddetalleTipoParametro"
+                   value="Crear"
+                    view="/fulltime/DetalleTipoParametroEdit.xhtml"
+             propagation="none">
+                 <f:param name="tipoParametroTipaId"
+                         value="#{tipoParametroHome.instance.tipaId}"/>
+                 <f:param name="detalleTipoParametroFrom" value="TipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+-->
+</ui:define>
+
+</ui:composition>

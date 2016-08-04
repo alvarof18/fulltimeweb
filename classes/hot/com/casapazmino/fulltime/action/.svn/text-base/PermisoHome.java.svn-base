@@ -1,0 +1,113 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.List;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.framework.EntityHome;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.comun.Fechas;
+import com.casapazmino.fulltime.model.DetalleTipoParametro;
+import com.casapazmino.fulltime.model.Empleado;
+import com.casapazmino.fulltime.model.Permiso;
+
+@Name("permisoHome")
+public class PermisoHome extends EntityHome<Permiso> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@In(create = true)
+	EmpleadoHome empleadoHome;
+	@In(create = true)
+	DetalleTipoParametroHome detalleTipoParametroHome;
+	
+	Fechas fechas = new Fechas();
+/*	
+	@In(create = true)
+	DetalleTipoParametroHome detalleTipoParametroHome;
+	@In(create = true)
+	EmpleadoHome empleadoHome;
+*/
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setPermisoPermId(Long id) {
+		setId(id);
+	}
+
+	public Long getPermisoPermId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Permiso createInstance() {
+		Permiso permiso = new Permiso();
+		return permiso;
+	}
+
+	public void wire() {
+		getInstance();
+		Empleado empleadoByEmpEmplId = empleadoHome.getDefinedInstance();
+		if (empleadoByEmpEmplId != null) {
+			getInstance().setEmpleadoByEmpEmplId(empleadoByEmpEmplId);
+		}
+		
+		DetalleTipoParametro detalleTipoParametroByAutorizado = detalleTipoParametroHome
+				.getDefinedInstance();
+		if (detalleTipoParametroByAutorizado != null) {
+			getInstance().setDetalleTipoParametroByAutorizado(
+					detalleTipoParametroByAutorizado);
+		}
+		Empleado empleadoByEmplId = empleadoHome.getDefinedInstance();
+		if (empleadoByEmplId != null) {
+			getInstance().setEmpleadoByEmplId(empleadoByEmplId);
+		}
+	}
+
+	public boolean isWired() {
+//		if (getInstance().getDetalleTipoParametroByDtpaId() == null)
+//			return false;
+//		if (getInstance().getDetalleTipoParametroByAutorizado() == null)
+//			return false;
+//		if (getInstance().getEmpleadoByEmplId() == null)
+//			return false;
+		return true;
+	}
+
+	public Permiso getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+	
+	public List<DetalleTipoParametro> getAutorizado()
+	{
+		Contexts.getApplicationContext().set("tParam", Constantes.DECISION);
+		DetalleTipoParametroList autorizado =new DetalleTipoParametroList();
+		return autorizado.getResultList();
+	}
+
+	public void diferenciaFechas(){ 
+		int dias = (int) fechas.numeroDias(this.instance.getFechaDesde(), this.instance.getFechaHasta());
+		int horas = (int) fechas.numeroHoras(this.instance.getFechaDesde(), this.instance.getFechaHasta());
+		
+		if (dias > 1) {
+			horas = 0;
+		}
+
+		if (dias == 1 && horas != 0) {
+			dias = 0;
+		}
+		
+		this.instance.setDias(dias);		
+		this.instance.setNumeroHoras(horas);
+	}
+}

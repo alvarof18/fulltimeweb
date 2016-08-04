@@ -1,0 +1,246 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="horaExtra" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{horaExtraHome.managed ? 'Editar' : 'A&#241;adir'} Hora extra</f:facet>
+            
+<!-- 
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion"
+                           required="true"
+                              value="#{horaExtraHome.instance.descripcion}"/>
+            </s:decorate>
+ -->
+
+            <h:panelGrid columns="1">
+            
+            <s:decorate id="codigoDiaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Codigo D&#237;a</ui:define>
+                <h:inputText id="codigiDia"
+                           required="true"
+                              value="#{horaExtraHome.instance.codigoDia}">
+                </h:inputText>
+			</s:decorate>
+			            
+  
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">D&#237;a</ui:define>
+                <h:selectOneMenu value="#{horaExtraHome.instance.descripcion}">
+					<s:selectItems value="#{enumeraciones.diasSemana}" var="diasSemana"
+						label="#{diasSemana}" />
+					<s:convertEnum />
+                </h:selectOneMenu>
+			</s:decorate>
+			
+			</h:panelGrid>
+			
+
+			<h:panelGrid columns="2">
+
+            <s:decorate id="desdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Rango 1 Desde</ui:define>
+                    <h:inputText id="desde"
+                           size="5"
+                       required="true"
+                          value="#{horaExtraHome.instance.desde}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="desdeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="hastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hasta</ui:define>
+                    <h:inputText id="hasta"
+                           size="5"
+                       required="true"
+                          value="#{horaExtraHome.instance.hasta}" >
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="hastaField" bypassUpdates="true" ajaxSingle="true"/>
+	                </h:inputText>                
+            </s:decorate>
+            
+            <s:decorate id="desde1Field" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Rango 2 Desde</ui:define>
+                    <h:inputText id="desde1"
+                           size="5"
+                       required="false"
+                          value="#{horaExtraHome.instance.desde1}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="desde1Field" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="hasta1Field" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hasta</ui:define>
+                    <h:inputText id="hasta1"
+                           size="5"
+                       required="false"
+                          value="#{horaExtraHome.instance.hasta1}" >
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="hasta1Field" bypassUpdates="true" ajaxSingle="true"/>
+	                </h:inputText>                
+            </s:decorate>
+
+            <s:decorate id="desde2Field" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Rango 3 Desde</ui:define>
+                    <h:inputText id="desde2"
+                           size="5"
+                       required="false"
+                          value="#{horaExtraHome.instance.desde2}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="desde2Field" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="hasta2Field" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hasta</ui:define>
+                    <h:inputText id="hasta2"
+                           size="5"
+                       required="false"
+                          value="#{horaExtraHome.instance.hasta2}" >
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="hasta2Field" bypassUpdates="true" ajaxSingle="true"/>
+	                </h:inputText>                
+            </s:decorate>
+
+            <s:decorate id="desde3Field" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Rango 4 Desde</ui:define>
+                    <h:inputText id="desde3"
+                           size="5"
+                       required="false"
+                          value="#{horaExtraHome.instance.desde3}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="desde3Field" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="hasta3Field" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hasta</ui:define>
+                    <h:inputText id="hasta3"
+                           size="5"
+                       required="false"
+                          value="#{horaExtraHome.instance.hasta3}" >
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="hasta3Field" bypassUpdates="true" ajaxSingle="true"/>
+	                </h:inputText>                
+            </s:decorate>
+
+            <s:decorate id="desde4Field" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Rango 5 Desde</ui:define>
+                    <h:inputText id="desde4"
+                           size="5"
+                       required="false"
+                          value="#{horaExtraHome.instance.desde4}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="desde4Field" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="hasta4Field" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hasta</ui:define>
+                    <h:inputText id="hasta4"
+                           size="5"
+                       required="false"
+                          value="#{horaExtraHome.instance.hasta4}" >
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="hasta4Field" bypassUpdates="true" ajaxSingle="true"/>
+	                </h:inputText>                
+            </s:decorate>
+            
+			</h:panelGrid>
+<!-- 
+            <s:decorate id="porcentajeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Valor Hora %</ui:define>
+                <h:inputText id="porcentaje"
+                       required="true"
+                          value="#{horaExtraHome.instance.porcentaje}"
+                           size="11">
+                    <a:support event="onblur" reRender="porcentajeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="maximoDiaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo D&#237;a</ui:define>
+                <h:inputText id="maximoDia"
+                       required="true"
+                          value="#{horaExtraHome.instance.maximoDia}">
+                    <a:support event="onblur" reRender="maximoDiaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="maximoMesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo Mes</ui:define>
+                <h:inputText id="maximoMes"
+                       required="true"
+                          value="#{horaExtraHome.instance.maximoMes}">
+                    <a:support event="onblur" reRender="maximoMesField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="diaLibreField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Dia libre</ui:define>
+                <h:selectBooleanCheckbox id="diaLibre"
+                                   required="true"
+                                      value="#{horaExtraHome.instance.diaLibre}"/>
+            </s:decorate>
+-->
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{horaExtraHome.persist}"
+                       disabled="#{!horaExtraHome.wired}"
+                       rendered="#{!horaExtraHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{horaExtraHome.update}"
+                       rendered="#{horaExtraHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{horaExtraHome.remove}"
+                      immediate="true"
+                       rendered="#{horaExtraHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/HoraExtra.xhtml"
+                rendered="#{horaExtraHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty horaExtraFrom ? 'HoraExtraList' : horaExtraFrom}.xhtml"
+                rendered="#{!horaExtraHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

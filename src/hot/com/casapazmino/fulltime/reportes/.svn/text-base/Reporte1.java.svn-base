@@ -1,0 +1,18 @@
+package com.casapazmino.fulltime.reportes;
+
+import javax.ejb.Local;
+
+import com.casapazmino.fulltime.action.AsistenciaList;
+import com.casapazmino.fulltime.action.EmpleadoList;
+import com.casapazmino.fulltime.action.RegionList;
+
+@Local
+public interface Reporte {
+	
+	public void imprimirReporteEmpleado(EmpleadoList listaEmpleado);
+	public void imprimirReporteRegion(RegionList regionList);
+	public void imprimirAsistenciaGeneral(AsistenciaList listaAsistencia);
+	public void imprimirAsistenciaDetalle(AsistenciaList listaAsistencia);
+	public void imprimirAtrasos(AsistenciaList listaAsistencia);
+	public void imprimirHorasExtras(AsistenciaList listaAsistencia);
+}

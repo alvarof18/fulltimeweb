@@ -1,0 +1,1414 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.persistence.Query;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.log.Log;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.Asistencia;
+import com.casapazmino.fulltime.model.Cargo;
+import com.casapazmino.fulltime.model.Ciudad;
+import com.casapazmino.fulltime.model.Contacto;
+import com.casapazmino.fulltime.model.DeclaraBienes;
+import com.casapazmino.fulltime.model.Departamento;
+import com.casapazmino.fulltime.model.DetalleGrupoContratado;
+import com.casapazmino.fulltime.model.DetalleTipoParametro;
+import com.casapazmino.fulltime.model.Discapacidad;
+import com.casapazmino.fulltime.model.Empleado;
+import com.casapazmino.fulltime.model.EmpleadoTitulo;
+import com.casapazmino.fulltime.model.Permiso;
+import com.casapazmino.fulltime.model.ProgramaVacacion;
+import com.casapazmino.fulltime.model.Provincia;
+import com.casapazmino.fulltime.model.Reloj;
+import com.casapazmino.fulltime.model.SolicitudVacacion;
+import com.casapazmino.fulltime.model.Titulo;
+
+@Name("empleadoHome")
+public class EmpleadoHome extends EntityHome<Empleado> {
+
+	private static final long serialVersionUID = 1L;
+
+	@Logger
+	Log log;
+	
+	@In(create = true)
+	EmpleadoHome empleadoHome;
+	@In(create = true)
+	CargoHome cargoHome;
+	@In(create = true)
+	RelojHome relojHome;
+	@In(create = true)
+	DepartamentoHome departamentoHome;
+	@In(create = true)
+	DetalleTipoParametroHome detalleTipoParametroHome;
+	@In(create = true)
+	HorarioHome horarioHome;
+	@In(create = true)
+	DetalleGrupoContratadoHome detalleGrupoContratadoHome;
+	@In(create = true)
+	CiudadHome ciudadHome;	
+	
+	private boolean primeraVez=true;
+	private boolean mostrarError=false;
+	ProvinciaList listadoProvincia;
+	private List<Empleado> empleados=new ArrayList<Empleado>();
+	private Long provincia;
+	private List<SelectItem> listaProvincia;
+	private List<Ciudad> ciudades;
+	private TituloList listadoTitulos;
+	private Long idTitulo;
+	private List<SelectItem> listaTitulos;
+	private Long idNivel;
+	private List<SelectItem> listaNivel;
+	private EmpleadoTitulo empleadoTitulos=new EmpleadoTitulo();
+	private Long idEmpleadoTitulo;
+	private Long idTmpEmpleadoTitulo;
+	private TituloHome tituloHome;
+	private DetalleTipoParametroHome nivelHome;
+	EmpleadoTituloHome empleadoTituloHome;
+	DiscapacidadHome discapacidadHome;
+	private boolean estadoBtActualizar=false;
+	private boolean estadoBtAgregar=true;
+	private String carnetDiscapacidad;
+	private String discapacidad;
+	private String nivelDiscapacidad;
+	private boolean discapacidaBtAgregar=true;
+	private boolean discapacidaBtActualizar=false;
+	private Discapacidad discapacida;
+	private Long idDiscapacidad;
+	private Long idTmpDiscapacidad;
+	private Long auxIdDiscapacidad;
+	private Long auxIdTitulo;
+	
+	private String contacto;
+	private List<SelectItem>tipoContacto;
+	private Long idContacto;
+	private Long idTipoContacto;
+	private Long idTmpContacto;
+	private Long auxIdContacto;
+	private boolean contactoBtAgregar=true;
+	private boolean contactoBtActualizar=false;
+	private Contacto contactoEmpleados=new Contacto();
+	private DetalleTipoParametroHome tipoContactoHome;
+	private ContactoHome contactoHome;
+
+	Titulo titulo;
+	DetalleTipoParametro niveles;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setEmpleadoEmplId(Long id) {
+		setId(id);
+	}
+
+	public Long getEmpleadoEmplId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Empleado createInstance() {
+		Empleado empleado = new Empleado();
+		return empleado;
+	}
+
+	public void wire() {
+		getInstance();
+		log.info("VALOR DE PRIMERA VEZ: "+this.primeraVez);
+		log.info("VALOR DE IS MANAGER: "+isManaged());
+		if(this.primeraVez)
+		{
+			log.info("ENTRO SI ES MANAGED Y SI ES PRIMERA VEZ");
+			//this.obtenerUltimoIdEmpleadoTitulo();
+			//this.obtenerUltimoIdDiscapacidad();
+			//this.obtenerUltimoIdContactos();
+			this.primeraVez=false;
+			log.info("VALOR DE PRIMERA VEZ: "+this.primeraVez);
+		}
+		//this.llenarListaProvincia();
+		//this.llenarListaTitulos();
+		//this.llenarListaNivel();
+		//this.llenarTipoContacto();
+		
+		this.eliminarVariablesSession();
+		Cargo cargo = cargoHome.getDefinedInstance();
+		/*if(isManaged()) {
+			this.verProvincia();	
+		}*/
+		
+		if (cargo != null) {
+			getInstance().setCargo(cargo);
+		}
+		Reloj reloj = relojHome.getDefinedInstance();
+		if (reloj != null) {
+			getInstance().setReloj(reloj);
+		}
+		Departamento departamento = departamentoHome.getDefinedInstance();
+		if (departamento != null) {
+			getInstance().setDepartamento(departamento);
+		}
+		DetalleTipoParametro detalleTipoParametroByEstadoCivil = detalleTipoParametroHome
+				.getDefinedInstance();
+		if (detalleTipoParametroByEstadoCivil != null) {
+			getInstance().setDetalleTipoParametroByEstadoCivil(
+					detalleTipoParametroByEstadoCivil);
+		}
+		DetalleTipoParametro detalleTipoParametroBySexo = detalleTipoParametroHome
+				.getDefinedInstance();
+		if (detalleTipoParametroBySexo != null) {
+			getInstance().setDetalleTipoParametroBySexo(
+					detalleTipoParametroBySexo);
+		}
+		DetalleTipoParametro detalleTipoParametroByEstado = detalleTipoParametroHome
+				.getDefinedInstance();
+		if (detalleTipoParametroByEstado != null) {
+			getInstance().setDetalleTipoParametroByEstado(
+					detalleTipoParametroByEstado);
+		}
+
+		DetalleGrupoContratado detalleGrupoContratado = detalleGrupoContratadoHome
+				.getDefinedInstance();
+		if (detalleGrupoContratado != null) {
+			getInstance().setDetalleGrupoContratado(detalleGrupoContratado);
+		}
+		Ciudad ciudad = ciudadHome.getDefinedInstance();
+		if (ciudad != null) {
+			getInstance().setCiudad(ciudad);
+		}
+	}
+
+	public boolean isWired() {
+//		if (getInstance().getCargo() == null)
+//			return false;
+//		if (getInstance().getReloj() == null)
+//			return false;
+//		if (getInstance().getDepartamento() == null)
+//			return false;
+//		if (getInstance().getDetalleTipoParametroByEstadoCivil() == null)
+//			return false;
+//		if (getInstance().getDetalleTipoParametroBySexo() == null)
+//			return false;
+//		if (getInstance().getDetalleTipoParametroByEstado() == null)
+//			return false;
+//		if (getInstance().getHorario() == null)
+//			return false;
+//		if (getInstance().getDetalleGrupoContratado() == null)
+//			return false;
+//		if (getInstance().getCiudad() == null)
+//			return false;
+		return true;
+	}
+	
+	public List<DetalleTipoParametro> getEstados()
+	{
+		log.info("ENTRO EN GET ESTADO");
+		Contexts.getApplicationContext().set("tParam", Constantes.ESTADO);
+		DetalleTipoParametroList estado=new DetalleTipoParametroList();
+		return estado.getResultList();
+	}
+	
+	public List<DetalleTipoParametro> getSexo()
+	{
+		log.info("ENTRO EN GET ESTADO");
+		
+		Contexts.getApplicationContext().set("tParam", Constantes.SEXO);
+		
+		DetalleTipoParametroList sexo=new DetalleTipoParametroList();
+		return sexo.getResultList();
+	}
+	
+	public List<DetalleTipoParametro> getEstadoCivil()
+	{
+		log.info("ENTRO EN GET ESTADO");
+		Contexts.getApplicationContext().set("tParam", Constantes.ESTADO_CIVIL);
+		DetalleTipoParametroList civil=new DetalleTipoParametroList();
+		return civil.getResultList();
+	}
+	
+	public List<Empleado> getJefes()
+	{
+		this.empleados=new ArrayList<Empleado>();
+		if(this.empleados.isEmpty() && this.getInstance().getDepartamento()!=null
+				&& this.getInstance().getDepartamento().getDepaId()!=null)
+		{
+			this.empleados.addAll(this.listaEmpleadoXDepartamento(this.getInstance().getDepartamento()));
+		}
+		
+		return this.empleados;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Empleado> listaEmpleadoXDepartamento(Departamento depart)
+	{
+		List<Empleado> result=new ArrayList<Empleado>();
+		try
+		{
+			String consulta="SELECT empleado FROM Empleado empleado " +
+					"WHERE empleado.departamento.depaId=?1";
+			Query query=this.getEntityManager().createQuery(consulta) ;
+			query.setParameter(1,depart.getDepaId());
+			result.addAll(query.getResultList());
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.error("ERROR EN LISTA EMPLEADO POR DEPARTAMENTO", e);
+		}
+		return result;
+	}
+	
+	private void llenarListaProvincia()
+	{
+		log.info("ENTRO EN LLENAR LISTA PROVINCIAS");
+		this.listaProvincia=new ArrayList<SelectItem>();
+		this.listadoProvincia=new ProvinciaList();
+		try
+		{
+			if(listaProvincia.isEmpty())
+			{
+				for(Provincia prov:this.listadoProvincia.getResultList())
+				{
+					this.listaProvincia.add(new SelectItem(prov.getProvId(),prov.getDescripcion()));
+				}
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN LLENAR LISTA PROVINCIAS",e);
+		}
+	}
+	
+	public List<Ciudad> getCiudad()
+	{
+		log.info("ENTRO EN METODO CIUDAD   " + provincia);
+		this.ciudades=new ArrayList<Ciudad>();
+		
+		
+		
+		if (this.provincia!=null) {
+			this.ciudades.clear(); 
+			this.ciudades.addAll(this.ciudadHome.listaCiudadXProvincia(this.getProvincia()));
+		}
+		return ciudades;
+	}
+	
+	public void verProvincia()
+	{
+		log.info("ENTRO EN VER PROVINCIA");
+		this.setProvincia(this.getInstance().getCiudad().getProvincia().getProvId());
+	}
+	
+	/**
+	 * 	TITULOS
+	 */
+	public void llenarListaTitulos()
+	{
+		log.info("ENTRO EN LLENAR TITULOS");
+		this.listaTitulos=new ArrayList<SelectItem>();
+		this.listadoTitulos=new TituloList();
+		try
+		{
+			if(listaTitulos.isEmpty())
+			{
+				for(Titulo titulo:listadoTitulos.getResultList())
+				{
+					this.listaTitulos.add(new SelectItem(titulo.getTituId(),titulo.getDescripcion()));
+				}
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN LLENAR TITULOS: ",e);
+		}
+	}
+	
+	public void llenarListaNivel()
+	{
+		log.info("ENTRO EN LLENAR NIVELES");
+		this.listaNivel=new ArrayList<SelectItem>();
+		try
+		{
+			if(listaNivel.isEmpty())
+			{
+				Contexts.getApplicationContext().set("tParam", Constantes.NIVEL_ACADEMICO);
+				DetalleTipoParametroList nivel=new DetalleTipoParametroList();
+				for(DetalleTipoParametro niveles:nivel.getResultList())
+				{
+					this.listaNivel.add(new SelectItem(niveles.getDtpaId(),niveles.getDescripcion()));
+				}
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN LLENAR NIVELES: ",e);
+		}
+	}
+	
+	private void obtenerUltimoIdEmpleadoTitulo()
+	{
+		log.info("ENTRO EN OBTENER EL ULTIMO IDE DE EMPLEADO TITULO");
+		String consulta="SELECT max(empleadoTitul.emtiId) FROM EmpleadoTitulo empleadoTitul ";
+		Query query=this.getEntityManager().createQuery(consulta);
+		if(query.getSingleResult()!=null)
+		{
+			this.setIdEmpleadoTitulo(new Long(query.getSingleResult().toString()));
+		}
+		else
+		{
+			this.setIdEmpleadoTitulo(new Long(0));
+		}
+	}
+	
+	private void eliminarVariablesSession()
+	{
+		Contexts.getApplicationContext().remove("tParam");
+	}
+	
+	/**
+	 * METODO PARA AGREGAR TITULOS
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public String agregarTitulos()
+	{
+		log.info("ENTRO EN AGREGAR TITULOS");
+		this.mostrarError=true;
+		
+		if(this.getIdTitulo()!=null && this.getIdNivel()!=null)
+		{	
+			if(this.getIdTmpEmpleadoTitulo()==null)
+			{
+				if(this.auxIdTitulo!=null)
+				{
+					for(EmpleadoTitulo emp:this.getInstance().getEmpleadoTitulos())
+					{
+						if(emp.getEmtiId()==this.auxIdTitulo)
+						{
+							this.auxIdTitulo=emp.getEmtiId();
+							break;
+						}
+					}
+					this.setIdEmpleadoTitulo(this.auxIdTitulo);
+					this.auxIdTitulo=null;
+				}
+				this.setIdEmpleadoTitulo((this.getIdEmpleadoTitulo()+1));
+			}
+			else
+			{
+				this.setIdEmpleadoTitulo(this.getIdTmpEmpleadoTitulo());
+				this.setIdTmpEmpleadoTitulo(null);
+			}
+			this.empleadoTitulos=new EmpleadoTitulo();
+			this.tituloHome=new TituloHome();
+			tituloHome.setId(this.getIdTitulo());
+		
+			this.nivelHome=new DetalleTipoParametroHome();
+			nivelHome.setId(this.getIdNivel());
+		
+			empleadoTitulos.setTitulo(tituloHome.getInstance());
+			empleadoTitulos.setDetalleTipoParametro(nivelHome.getInstance());
+			empleadoTitulos.setEmtiId(this.getIdEmpleadoTitulo());
+
+			this.getInstance().getEmpleadoTitulos().add(empleadoTitulos);
+			this.limpiarTitulos();
+		}
+		else
+		{
+			if(this.getIdTitulo()==null)
+			{
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_TITULO, ""));
+			}
+			if(this.getIdNivel()==null)
+			{
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_NIVEL_TITULO, ""));
+			}
+			return null;
+		}
+		return null;
+	}
+	
+	/**
+	 * METODO PARA ACTUALIZAR TITULOS
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public String actualizarTitulos()
+	{
+		log.info("ENTRO EN ACTUALIZAR TITULO");
+		this.mostrarError=true;
+		if(this.getIdTmpEmpleadoTitulo()!=null)
+		{
+			this.tituloHome=new TituloHome();
+			this.tituloHome.setId(this.getIdTitulo());
+			
+			this.nivelHome=new DetalleTipoParametroHome();
+			this.nivelHome.setId(this.getIdNivel());
+			
+			this.empleadoTitulos=new EmpleadoTitulo();
+			this.empleadoTitulos.setEmtiId(this.getIdEmpleadoTitulo());
+			this.empleadoTitulos.setTitulo(this.tituloHome.getInstance());
+			this.empleadoTitulos.setDetalleTipoParametro(this.nivelHome.getInstance());
+			for(EmpleadoTitulo emt:this.getInstance().getEmpleadoTitulos())
+			{
+				if(emt.getEmtiId().equals(this.getIdEmpleadoTitulo()))
+				{
+					this.getInstance().getEmpleadoTitulos().remove(emt);
+					this.getInstance().getEmpleadoTitulos().add(empleadoTitulos);
+					break;
+				}
+			}
+			this.setIdTmpEmpleadoTitulo(null);
+			this.limpiarTitulos();
+		}
+		else
+		{
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_ACTUALIZAR_TITULO, ""));
+			return null;
+		}
+		
+		this.setEstadoBtActualizar(false);
+		this.setEstadoBtAgregar(true);
+		return null;
+	}
+	
+	/**
+	 * METODO PARA ELIMINAR TITULOS
+	 * @param titulo
+	 */
+	public void eliminarTitulo(EmpleadoTitulo titulo)
+	{
+		log.info("ENTRO EN ELIMINAR TITULO");
+		this.setIdTmpEmpleadoTitulo(titulo.getEmtiId());
+		this.auxIdTitulo=titulo.getEmtiId();
+		for(EmpleadoTitulo emt:this.getInstance().getEmpleadoTitulos())
+		{
+			if(emt.getEmtiId().equals(titulo.getEmtiId()))
+			{
+				this.getInstance().getEmpleadoTitulos().remove(emt);
+				break;
+			}
+		}
+		limpiarTitulos();
+		this.setEstadoBtActualizar(false);
+		this.setEstadoBtAgregar(true);
+	}
+	
+	public void seleccionarTitulos(EmpleadoTitulo titulos)
+	{
+		this.empleadoTitulos=(EmpleadoTitulo)titulos;
+		this.setIdTitulo(titulos.getTitulo().getTituId());
+		this.setIdNivel(titulos.getDetalleTipoParametro().getDtpaId());
+		this.setIdTmpEmpleadoTitulo(titulos.getEmtiId());
+		//this.setIdEmpleadoTitulo(titulos.getEmtiId());
+		this.setEstadoBtActualizar(true);
+		this.setEstadoBtAgregar(false);
+	}
+	
+	public void limpiarTitulos()
+	{
+		this.setIdTitulo(null);
+		this.setIdNivel(null);
+	}
+	
+	/**
+	 * DISCAPACIDADES
+	 */
+	private void obtenerUltimoIdDiscapacidad()
+	{
+		String consulta="SELECT MAX(disc.discId) FROM Discapacidad disc";
+		Query query=this.getEntityManager().createQuery(consulta);
+		if(query.getSingleResult()!=null)
+		{
+			this.setIdDiscapacidad(new Long(query.getSingleResult().toString()));
+		}
+		else
+		{
+			this.setIdDiscapacidad(new Long(0));
+		}
+	}
+	
+	private void limpiarDiscapacidad()
+	{
+		this.setCarnetDiscapacidad(null);
+		this.setNivelDiscapacidad(null);
+		this.setDiscapacidad(null);
+	}
+	/**
+	 * METODO AGREGAR DISCAPACIDAD
+	 */
+	@SuppressWarnings("unchecked")
+	public String agregarDiscapacidad()
+	{
+		log.info("ENTRO EN AGREGAR DISCAPACIDAD");
+		this.mostrarError=true;
+		if(!this.getCarnetDiscapacidad().isEmpty() && !this.getDiscapacidad().isEmpty() && !this.getNivelDiscapacidad().isEmpty())
+		{
+			if(this.getIdTmpDiscapacidad()==null)
+			{
+				if(this.auxIdDiscapacidad!=null)
+				{
+					for(Discapacidad dis:this.getInstance().getDiscapacidads())
+					{
+						if(dis.getDiscId()==this.auxIdDiscapacidad)
+						{
+							this.auxIdDiscapacidad=dis.getDiscId();
+							break;
+						}
+					}
+					this.setIdDiscapacidad(this.auxIdDiscapacidad);
+					this.auxIdDiscapacidad=null;
+				}
+				this.setIdDiscapacidad(this.getIdDiscapacidad()+1);
+			}
+			else
+			{
+				this.setIdDiscapacidad(this.getIdTmpDiscapacidad());
+				this.setIdTmpDiscapacidad(null);
+			}
+			this.discapacida=new Discapacidad();
+			this.discapacida.setDiscId(this.getIdDiscapacidad());
+			this.discapacida.setTipo(this.getDiscapacidad());
+			this.discapacida.setPorcentaje(this.getNivelDiscapacidad());
+			this.discapacida.setCarnetConadis(this.getCarnetDiscapacidad());
+			this.discapacida.setEmpleado(this.getInstance());
+			
+			this.getInstance().getDiscapacidads().add(discapacida);
+			
+			this.limpiarDiscapacidad();
+		}
+		else
+		{
+			if(this.getCarnetDiscapacidad().isEmpty())
+			{
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_CARNET_CONADIS, ""));
+			}
+			if(this.getDiscapacidad().isEmpty())
+			{
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_DISCAPACIDAD, ""));
+			}
+			if(this.getNivelDiscapacidad().isEmpty())
+			{
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_PORCENTAJE_DISCAPACIDAD, ""));
+			}
+			return null;
+		}
+		return null;
+	}
+	
+	/**
+	 * METODO ACTUALIZAR DISCAPACIDADES
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public String actualizarDiscapacidad()
+	{
+		log.info("ENTRO EN ACTUALIZAR DISCAPACIDAD");
+		if(this.getIdTmpDiscapacidad()!=null)
+		{
+			this.discapacida=new Discapacidad();
+			this.discapacida.setDiscId(this.getIdTmpDiscapacidad());
+			this.discapacida.setCarnetConadis(this.getCarnetDiscapacidad());
+			this.discapacida.setTipo(this.getDiscapacidad());
+			this.discapacida.setPorcentaje(this.getNivelDiscapacidad());
+			
+			for(Discapacidad discp:this.getInstance().getDiscapacidads())
+			{
+				if(discp.getDiscId().equals(this.getIdTmpDiscapacidad()))
+				{
+					this.getInstance().getDiscapacidads().remove(discp);
+					this.getInstance().getDiscapacidads().add(discapacida);
+					break;
+				}
+			}
+			this.setIdDiscapacidad(null);
+			this.limpiarDiscapacidad();
+		}
+		else
+		{
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_ACTUALIZAR_DISCAPACIDAD, ""));
+			return null;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * ELIMINAR DISCAPACIDADES
+	 */
+	@SuppressWarnings("unchecked")
+	public void eliminarDiscapacidad(Discapacidad discp)
+	{
+		log.info("ENTRO EN ELIMINAR DISCAPACIDAD");
+		this.setIdTmpDiscapacidad(discp.getDiscId());
+		this.auxIdDiscapacidad=discp.getDiscId();
+		for(Discapacidad disc:this.getInstance().getDiscapacidads())
+		{
+			if(disc.getDiscId().equals(discp.getDiscId()))
+			{
+				this.getInstance().getDiscapacidads().remove(disc);
+				break;
+			}
+		}
+		this.limpiarDiscapacidad();
+		this.setDiscapacidaBtActualizar(false);
+		this.setDiscapacidaBtAgregar(true);
+	}
+	
+	/**
+	 * METODO PARA SELECCIONAR DISCAPACIDAD A ACTUALIZAR
+	 */
+	public void seleccionarDiscapacidad(Discapacidad discapacida)
+	{
+		log.info("ENTRO EN SELECCIONAR DISCAPACIDAD");
+		this.discapacida=(Discapacidad)discapacida;
+		this.setCarnetDiscapacidad(discapacida.getCarnetConadis());
+		this.setDiscapacidad(discapacida.getTipo());
+		this.setNivelDiscapacidad(discapacida.getPorcentaje());
+		this.setIdTmpDiscapacidad(discapacida.getDiscId());
+		
+		this.setDiscapacidaBtActualizar(true);
+		this.setDiscapacidaBtAgregar(false);
+	}
+	
+	
+	@Transactional
+	public String guardar()
+	{
+		log.info("ENTRO EN GUARDAR");
+		String proceso="";
+		try
+		{	
+			this.persist();
+			
+			List<EmpleadoTitulo> listaAuxEmpleadoTitulo=new ArrayList<EmpleadoTitulo>();
+			listaAuxEmpleadoTitulo.addAll(this.getInstance().getEmpleadoTitulos());
+			
+			List<Discapacidad> listaAuxDiscapacidad=new ArrayList<Discapacidad>();
+			listaAuxDiscapacidad.addAll(this.getInstance().getDiscapacidads());
+			
+			List<Contacto> listaAuxContactos=new ArrayList<Contacto>();
+			listaAuxContactos.addAll(this.getInstance().getContactos());
+			
+			//proceso=this.guardarContactos(listaAuxContactos);
+			//proceso=this.guargarTitulos(listaAuxEmpleadoTitulo);
+			//proceso=this.guardarDiscapacidad(listaAuxDiscapacidad);
+
+			return proceso;
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN GUARDAR", e);
+		}
+		return null;
+	}
+	
+	public String actualizar()
+	{
+		log.info("ENTRO EN ACTUALIZAR");
+		try
+		{
+			String proceso="";
+			proceso=this.update();
+			
+			List<EmpleadoTitulo> listaAuxEmpleadoTitulo=new ArrayList<EmpleadoTitulo>();
+			listaAuxEmpleadoTitulo.addAll(this.getInstance().getEmpleadoTitulos());
+			
+			List<Discapacidad> listaAuxDiscapacidad=new ArrayList<Discapacidad>();
+			listaAuxDiscapacidad.addAll(this.getInstance().getDiscapacidads());
+			
+			List<Contacto> listaAuxContacto=new ArrayList<Contacto>();
+			listaAuxContacto.addAll(this.getInstance().getContactos());
+			
+			if(!this.getInstance().getContactos().isEmpty())
+			{
+				this.eliminarContactos(this.getInstance());
+			}
+			if(!this.getInstance().getEmpleadoTitulos().isEmpty())
+			{
+				this.eliminarTitulos(this.getInstance());
+			}
+			if(!this.getInstance().getDiscapacidads().isEmpty())
+			{
+				this.eliminarDiscapacidades(this.getInstance());
+			}
+			//this.guardarContactos(listaAuxContacto);
+			//this.guargarTitulos(listaAuxEmpleadoTitulo);
+			//this.guardarDiscapacidad(listaAuxDiscapacidad);
+			return proceso;
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN ACTUALIZAR",e);
+		}
+		return null;
+	}
+	
+	public boolean verificarEmpleadoTitulo(EmpleadoTitulo empt)
+	{
+		String consulta="SELECT emp FROM EmpleadoTitulo emp " +
+				"WHERE emp.emtiId=?1";
+		Query query=this.getEntityManager().createQuery(consulta);
+		query.setParameter(1,empt.getEmtiId());
+		if(!query.getResultList().isEmpty())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean verificarDiscapacidad(Discapacidad disc)
+	{
+		String consulta="SELECT discp FROM Discapacidad discp " +
+				"WHERE discp.discId=?1";
+		Query query=this.getEntityManager().createQuery(consulta);
+		query.setParameter(1,disc.getDiscId());
+		
+		if(!query.getResultList().isEmpty())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean verificarContacto(Contacto disc)
+	{
+		String consulta="SELECT discp FROM Contacto discp " +
+				"WHERE discp.contId=?1";
+		Query query=this.getEntityManager().createQuery(consulta);
+		query.setParameter(1,disc.getContId());
+		
+		if(!query.getResultList().isEmpty())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public String guargarTitulos(List<EmpleadoTitulo> lista)
+	{
+		log.info("ENTRO EN GUARDAR TITULOS");
+		String proceso="";
+		EmpleadoHome empleadosHome=new EmpleadoHome();
+		empleadosHome.setId(this.getInstance().getEmplId());
+
+		for(EmpleadoTitulo empti:lista)
+		{	
+			if(!this.verificarEmpleadoTitulo(empti))
+			{
+				EmpleadoTitulo empts=new EmpleadoTitulo();
+				empts.setEmpleado(empleadosHome.getInstance());
+
+				empts.setTitulo(empti.getTitulo());
+				empts.setDetalleTipoParametro(empti.getDetalleTipoParametro());
+				
+				this.empleadoTituloHome=new EmpleadoTituloHome();
+				this.empleadoTituloHome.setInstance(empts);
+				proceso=this.empleadoTituloHome.persist();
+			}
+		}
+		return proceso;
+	}
+	
+	public String guardarDiscapacidad(List<Discapacidad> lista)
+	{
+		String proceso="";
+		EmpleadoHome empleadosHome=new EmpleadoHome();
+		empleadosHome.setId(this.getInstance().getEmplId());
+		for(Discapacidad discp:lista)
+		{
+			this.discapacidadHome=new DiscapacidadHome();
+			if(!this.verificarDiscapacidad(discp))
+			{
+				Discapacidad discapacida=new Discapacidad();
+				discapacida.setEmpleado(empleadosHome.getInstance());
+				discapacida.setCarnetConadis(discp.getCarnetConadis());
+				discapacida.setPorcentaje(discp.getPorcentaje());
+				discapacida.setTipo(discp.getTipo());
+				
+				this.discapacidadHome=new DiscapacidadHome();
+				this.discapacidadHome.setInstance(discapacida);
+				proceso=this.discapacidadHome.persist();
+			}
+		}
+		return proceso;
+	}
+	
+	public void eliminarTitulos(Empleado emp)
+	{
+		log.info("ENTRO EN BORRAR TITULOS");
+		try
+		{
+			String consulta="DELETE FROM empleado_titulo WHERE empleado_titulo.EMPL_ID=?1";
+			Query q=this.getEntityManager().createNativeQuery(consulta);
+			q.setParameter(1,emp.getEmplId());
+			q.executeUpdate();
+				log.info("DESPUES DEL REMOVE"); 
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN ELIMINAR TITULOS: ",e);
+		}
+	}
+	
+	public void eliminarDiscapacidades(Empleado emp)
+	{
+		log.info("ENTRO EN ELIMINAR DISCAPACIDAD");
+		try
+		{
+			String consulta="DELETE FROM discapacidad WHERE discapacidad.EMPL_ID=?1";
+			Query q=this.getEntityManager().createNativeQuery(consulta);
+			q.setParameter(1,emp.getEmplId());
+			q.executeUpdate();
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * CONTACTOS
+	 */
+	public void llenarTipoContacto()
+	{
+		log.info("ENTRO EN LLENAR TIPO CONTACTO");
+		this.tipoContacto= new ArrayList<SelectItem>();
+		try
+		{
+			if(tipoContacto.isEmpty())
+			{
+				Contexts.getApplicationContext().set("tParam", Constantes.TIPO_CONTACTO);
+				DetalleTipoParametroList tipoContactos=new DetalleTipoParametroList();
+				for(DetalleTipoParametro contactos:tipoContactos.getResultList())
+				{
+					this.tipoContacto.add(new SelectItem(contactos.getDtpaId(),contactos.getDescripcion()));
+				}
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN LLENAR CONTACTO: ", e);
+		}
+	}
+	
+	private void obtenerUltimoIdContactos()
+	{
+		String consulta="SELECT MAX(disc.contId) FROM Contacto disc";
+		Query query=this.getEntityManager().createQuery(consulta);
+		if(query.getSingleResult()!=null)
+		{
+			this.setIdContacto(new Long(query.getSingleResult().toString()));
+		}
+		else
+		{
+			this.setIdContacto(new Long(0));
+		}
+	}
+	/**
+	 * SELECCIONAR CONTACTO
+	 */
+	public void seleccionarContactos(Contacto contactos)
+	{
+		log.info("ENTRO EN SELECCIONAR CONTACTO");
+		this.contactoEmpleados=(Contacto)contactos;
+		this.setIdTipoContacto(contactos.getDetalleTipoParametro().getDtpaId());
+		this.setContacto(contactos.getDescripcion());
+		this.setIdTmpContacto(contactos.getContId());
+		//this.setIdEmpleadoTitulo(titulos.getEmtiId());
+		this.setContactoBtActualizar(true);
+		this.setContactoBtAgregar(false);
+	}
+	/**
+	 * ELIMINAR CONTACTO
+	 */
+	public void eliminarContacto(Contacto contactos)
+	{
+		log.info("ENTRO EN ELIMINAR CONTACTO");
+		this.setIdTmpContacto(contactos.getContId());
+		this.auxIdContacto=contactos.getContId();
+		for(Contacto emt:this.getInstance().getContactos())
+		{
+			if(emt.getContId().equals(contactos.getContId()))
+			{
+				this.getInstance().getContactos().remove(emt);
+				break;
+			}
+		}
+		limpiarContactos();
+		this.setContactoBtActualizar(false);
+		this.setContactoBtAgregar(true);
+	}
+	
+	public void limpiarContactos()
+	{
+		this.setIdTipoContacto(null);
+		this.setContacto(null);
+	}
+	/**
+	 * AGREGAR CONTACTOS
+	 */
+	@SuppressWarnings("unchecked")
+	public String agregarContactos()
+	{
+		log.info("ENTRO EN AGREGAR CONTACTOS");
+		this.mostrarError=true;
+		
+		if(this.getIdTipoContacto()!=null && this.getContacto()!=null)
+		{	
+			if(this.getIdTmpContacto()==null)
+			{
+				if(this.auxIdContacto!=null)
+				{
+					for(Contacto emp:this.getInstance().getContactos())
+					{
+						if(emp.getContId()==this.auxIdContacto)
+						{
+							this.auxIdContacto=emp.getContId();
+							break;
+						}
+					}
+					this.setIdContacto(this.auxIdContacto);
+					this.auxIdContacto=null;
+				}
+				this.setIdContacto((this.getIdContacto()+1));
+			}
+			else
+			{
+				this.setIdContacto(this.getIdTmpContacto());
+				this.setIdTmpContacto(null);
+			}
+			this.contactoEmpleados=new Contacto();
+			this.tipoContactoHome=new DetalleTipoParametroHome();
+			tipoContactoHome.setId(this.getIdTipoContacto());
+		
+			/*this.nivelHome=new DetalleTipoParametroHome();
+			nivelHome.setId(this.getIdNivel());*/
+			log.info("CONTACTO: ",this.getContacto());
+			contactoEmpleados.setDescripcion(this.getContacto());
+			contactoEmpleados.setDetalleTipoParametro(tipoContactoHome.getInstance());
+			contactoEmpleados.setContId(this.getIdContacto());
+
+			this.getInstance().getContactos().add(contactoEmpleados);
+			this.limpiarContactos();
+		}
+		else
+		{
+			if(this.getIdTitulo()==null)
+			{
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_TIPO_TITULO, ""));
+			}
+			if(this.getIdNivel()==null)
+			{
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_CONTACTO, ""));
+			}
+			return null;
+		}
+		return null;
+	}
+
+	/**
+	 * ACTUALIZAR CONTACTOS
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public String actualizarContactos()
+	{
+		log.info("ENTRO EN ACTUALIZAR CONTACTOS");
+		this.mostrarError=true;
+		if(this.getIdTmpContacto()!=null)
+		{
+			this.tipoContactoHome=new DetalleTipoParametroHome();
+			this.tipoContactoHome.setId(this.getIdTipoContacto());
+			
+			this.contactoEmpleados=new Contacto();
+			this.contactoEmpleados.setContId(this.getIdTmpContacto());
+			this.contactoEmpleados.setDetalleTipoParametro(this.tipoContactoHome.getInstance());
+			this.contactoEmpleados.setDescripcion(this.getContacto());
+			
+			for(Contacto emt:this.getInstance().getContactos())
+			{
+				if(emt.getContId().equals(this.getIdContacto()))
+				{
+					this.getInstance().getContactos().remove(emt);
+					this.getInstance().getContactos().add(contactoEmpleados);
+					break;
+				}
+			}
+			this.setIdTmpContacto(null);
+			this.limpiarContactos();
+		}
+		else
+		{
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Constantes.MENSAJE_ACTUALIZAR_CONTACTO, ""));
+			return null;
+		}
+		
+		this.setContactoBtActualizar(false);
+		this.setContactoBtAgregar(true);
+		return null;
+	}
+	
+	/**
+	 * GUARDAR CONTACTOS
+	 * @param lista
+	 * @return
+	 */
+	public String guardarContactos(List<Contacto> lista)
+	{
+		String proceso="";
+		EmpleadoHome empleadosHome=new EmpleadoHome();
+		empleadosHome.setId(this.getInstance().getEmplId());
+		for(Contacto discp:lista)
+		{
+			this.contactoHome=new ContactoHome();
+			if(!this.verificarContacto(discp))
+			{
+				Contacto contacto=new Contacto();
+				contacto.setEmpleado(empleadosHome.getInstance());
+				contacto.setDescripcion(discp.getDescripcion());
+				contacto.setDetalleTipoParametro(discp.getDetalleTipoParametro());
+				
+				this.contactoHome=new ContactoHome();
+				this.contactoHome.setInstance(contacto);
+				proceso=this.contactoHome.persist();
+			}
+		}
+		return proceso;
+	}
+	
+	/**
+	 * ELIMINAR CONTACTOS
+	 * @param emp
+	 */
+	public void eliminarContactos(Empleado emp)
+	{
+		log.info("ENTRO EN ELIMINAR CONTACTO");
+		try
+		{
+			String consulta="DELETE FROM contacto WHERE contacto.EMPL_ID=?1";
+			Query q=this.getEntityManager().createNativeQuery(consulta);
+			q.setParameter(1,emp.getEmplId());
+			q.executeUpdate();
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	public void partidaIndividual()
+	{
+		log.info("ENTRO EN METODO PARA TENER PARTIDA INDIVIDUAL");
+		try
+		{
+			String texto=this.getInstance().getPartida();
+			String textoObtenido="";
+			String textoFinal="";
+			int tamano=this.getInstance().getPartida().length();
+			
+			for(int i=(tamano-1);i>=0;i--)
+			{
+				log.info("CARACTERES: "+texto.charAt(i));
+				if(texto.charAt(i)!='-')
+				{
+					textoObtenido=textoObtenido+""+texto.charAt(i);
+				}
+				else
+				{
+					break;
+				}
+			}
+			tamano=textoObtenido.length();
+			for(int i=(tamano-1);i>=0;i--)
+			{
+				textoFinal=textoFinal+""+textoObtenido.charAt(i);
+			}
+		
+			this.getInstance().setPartidaIndividual(textoFinal);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}	
+	
+	/**
+	 * GET AND SET
+	 * @return
+	 */
+	public Empleado getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	public List<DeclaraBienes> getDeclaraBieneses() {
+		return getInstance() == null ? null : new ArrayList<DeclaraBienes>(
+				getInstance().getDeclaraBieneses());
+	}
+
+	public List<Asistencia> getAsistencias() {
+		return getInstance() == null ? null : new ArrayList<Asistencia>(
+				getInstance().getAsistencias());
+	}
+
+	public List<Permiso> getPermisosForEmpEmplId() {
+		return getInstance() == null ? null : new ArrayList<Permiso>(
+				getInstance().getPermisosForEmpEmplId());
+	}
+
+	public List<Discapacidad> getDiscapacidads() {
+		return getInstance() == null ? null : new ArrayList<Discapacidad>(
+				getInstance().getDiscapacidads());
+	}
+
+	public List<EmpleadoTitulo> getEmpleadoTitulos() {
+		return getInstance() == null ? null : new ArrayList<EmpleadoTitulo>(
+				getInstance().getEmpleadoTitulos());
+	}
+
+	public List<ProgramaVacacion> getProgramaVacacions() {
+		return getInstance() == null ? null : new ArrayList<ProgramaVacacion>(
+				getInstance().getProgramaVacacions());
+	}
+
+	public List<SolicitudVacacion> getSolicitudVacacions() {
+		return getInstance() == null ? null : new ArrayList<SolicitudVacacion>(
+				getInstance().getSolicitudVacacions());
+	}
+
+	public List<Permiso> getPermisosForEmplId() {
+		return getInstance() == null ? null : new ArrayList<Permiso>(
+				getInstance().getPermisosForEmplId());
+	}
+
+	public List<Contacto> getContactos() {
+		return getInstance() == null ? null : new ArrayList<Contacto>(
+				getInstance().getContactos());
+	}
+	
+	public Long getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(Long provincia) {
+		this.provincia = provincia;
+	}
+	
+	public List<SelectItem> getListaProvincia() {
+		return listaProvincia;
+	}
+
+	public void setListaProvincia(List<SelectItem> listaProvincia) {
+		this.listaProvincia = listaProvincia;
+	}
+	
+	public List<Ciudad> getCiudades() {
+		return ciudades;
+	}
+
+	public void setCiudades(List<Ciudad> ciudades) {
+		this.ciudades = ciudades;
+	}
+	
+	public Long getIdTitulo() {
+		return idTitulo;
+	}
+
+	public void setIdTitulo(Long idTitulo) {
+		this.idTitulo = idTitulo;
+	}
+
+	public List<SelectItem> getListaTitulos() {
+		return listaTitulos;
+	}
+
+	public void setListaTitulos(List<SelectItem> listaTitulos) {
+		this.listaTitulos = listaTitulos;
+	}
+	
+	public Long getIdNivel() {
+		return idNivel;
+	}
+
+	public void setIdNivel(Long idNivel) {
+		this.idNivel = idNivel;
+	}
+
+	public List<SelectItem> getListaNivel() {
+		return listaNivel;
+	}
+
+	public void setListaNivel(List<SelectItem> listaNivel) {
+		this.listaNivel = listaNivel;
+	}
+	
+	public Long getIdEmpleadoTitulo() {
+		return idEmpleadoTitulo;
+	}
+
+	public void setIdEmpleadoTitulo(Long idEmpleadoTitulo) {
+		this.idEmpleadoTitulo = idEmpleadoTitulo;
+	}
+	
+	public Long getIdTmpEmpleadoTitulo() {
+		return idTmpEmpleadoTitulo;
+	}
+
+	public void setIdTmpEmpleadoTitulo(Long idTmpEmpleadoTitulo) {
+		this.idTmpEmpleadoTitulo = idTmpEmpleadoTitulo;
+	}
+	
+	public boolean isEstadoBtActualizar() {
+		return estadoBtActualizar;
+	}
+
+	public void setEstadoBtActualizar(boolean estadoBtActualizar) {
+		this.estadoBtActualizar = estadoBtActualizar;
+	}
+
+	public boolean isEstadoBtAgregar() {
+		return estadoBtAgregar;
+	}
+
+	public void setEstadoBtAgregar(boolean estadoBtAgregar) {
+		this.estadoBtAgregar = estadoBtAgregar;
+	}
+	
+	public String getCarnetDiscapacidad() {
+		return carnetDiscapacidad;
+	}
+
+	public void setCarnetDiscapacidad(String carnetDiscapacidad) {
+		this.carnetDiscapacidad = carnetDiscapacidad;
+	}
+
+	public String getDiscapacidad() {
+		return discapacidad;
+	}
+
+	public void setDiscapacidad(String discapacidad) {
+		this.discapacidad = discapacidad;
+	}
+
+	public String getNivelDiscapacidad() {
+		return nivelDiscapacidad;
+	}
+
+	public void setNivelDiscapacidad(String nivelDiscapacidad) {
+		this.nivelDiscapacidad = nivelDiscapacidad;
+	}
+	
+	public boolean isDiscapacidaBtAgregar() {
+		return discapacidaBtAgregar;
+	}
+
+	public void setDiscapacidaBtAgregar(boolean discapacidaBtAgregar) {
+		this.discapacidaBtAgregar = discapacidaBtAgregar;
+	}
+
+	public boolean isDiscapacidaBtActualizar() {
+		return discapacidaBtActualizar;
+	}
+
+	public void setDiscapacidaBtActualizar(boolean discapacidaBtActualizar) {
+		this.discapacidaBtActualizar = discapacidaBtActualizar;
+	}
+	
+	public Long getIdDiscapacidad() {
+		return idDiscapacidad;
+	}
+
+	public void setIdDiscapacidad(Long idDiscapacidad) {
+		this.idDiscapacidad = idDiscapacidad;
+	}
+
+	public Long getIdTmpDiscapacidad() {
+		return idTmpDiscapacidad;
+	}
+
+	public void setIdTmpDiscapacidad(Long idTmpDiscapacidad) {
+		this.idTmpDiscapacidad = idTmpDiscapacidad;
+	}
+	
+	public String getContacto() {
+		return contacto;
+	}
+
+	public void setContacto(String contacto) {
+		this.contacto = contacto;
+	}
+
+	public List<SelectItem> getTipoContacto() {
+		return tipoContacto;
+	}
+
+	public void setTipoContacto(List<SelectItem> tipoContacto) {
+		this.tipoContacto = tipoContacto;
+	}
+	
+	public Long getIdContacto() {
+		return idContacto;
+	}
+
+	public void setIdContacto(Long idContacto) {
+		this.idContacto = idContacto;
+	}
+	
+	public Long getIdTipoContacto() {
+		return idTipoContacto;
+	}
+
+	public void setIdTipoContacto(Long idTipoContacto) {
+		this.idTipoContacto = idTipoContacto;
+	}
+	
+	public boolean isContactoBtAgregar() {
+		return contactoBtAgregar;
+	}
+
+	public void setContactoBtAgregar(boolean contactoBtAgregar) {
+		this.contactoBtAgregar = contactoBtAgregar;
+	}
+
+	public boolean isContactoBtActualizar() {
+		return contactoBtActualizar;
+	}
+
+	public void setContactoBtActualizar(boolean contactoBtActualizar) {
+		this.contactoBtActualizar = contactoBtActualizar;
+	}
+	
+	public Long getIdTmpContacto() {
+		return idTmpContacto;
+	}
+
+	public void setIdTmpContacto(Long idTmpContacto) {
+		this.idTmpContacto = idTmpContacto;
+	}
+}

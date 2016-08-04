@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteKardexVacacionesCargo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA[$P{rutaPlantilla}]]></template><parameter name="rutaPlantilla" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<parameter name="cargos" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="rutaPlantilla" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{rutaPlantilla}.substring( 0,($P{rutaPlantilla}.length() - 25) )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="empresa" class="java.lang.String"/>
+	<parameter name="ciudades" class="java.lang.String"/>
+	<parameter name="estado" class="java.lang.String"/>
+	<parameter name="jefeId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     ifnull(DATEDIFF(solicitud_vacacion.fecha_hasta, solicitud_vacacion.fecha_desde) + 1,0) as dias_vacacion,
+     empleado.CEDULA AS empleado_CEDULA,
+     empleado.APELLIDO AS empleado_APELLIDO,
+     empleado.NOMBRE AS empleado_NOMBRE,
+     cargo.DESCRIPCION AS cargo_DESCRIPCION,
+     tipo_cargo.DESCRIPCION AS tipo_cargo_DESCRIPCION,
+     ciudad.DESCRIPCION AS ciudad_DESCRIPCION,
+     detalle_grupo_contratado.DESCRIPCION AS detalle_grupo_DESCRIPCION,
+     detalle_grupo_contratado.TOTAL_HORAS AS detalle_grupo_TOTAL_HORAS,
+     empleado.CODIGO_EMPLEADO AS empleado_CODIGO_EMPLEADO,
+     empleado_periodo_vacacion.HORAS AS empleado_periodo_vacacion_HORAS,
+     solicitud_vacacion.FECHA_DESDE AS solicitud_vacacion_FECHA_DESDE,
+     solicitud_vacacion.FECHA_HASTA AS solicitud_vacacion_FECHA_HASTA,
+     empleado.EMPL_ID AS empleado_EMPL_ID,
+     empleado_periodo_vacacion.EPVA_ID AS empleado_periodo_vacacion_EPVA_ID,
+     empleado_periodo_vacacion.DESCRIPCION AS empleado_periodo_vacacion_DESCRIPCION,
+     empleado_periodo_vacacion.DIAS_PERDIDOS AS empleado_periodo_vacacion_DIAS_PERDIDOS,
+     solicitud_vacacion.AUTORIZADO AS solicitud_vacacion_AUTORIZADO,
+     empleado.FECHA_INGRESO AS empleado_FECHA_INGRESO,
+     empleado_periodo_vacacion.FECHA_DESDE AS empleado_periodo_vacacion_FECHA_DESDE
+FROM
+     empleado empleado INNER JOIN cargo cargo ON empleado.CARG_ID = cargo.CARG_ID
+     INNER JOIN detalle_grupo_contratado detalle_grupo_contratado ON empleado.DGCO_ID = detalle_grupo_contratado.DGCO_ID
+     INNER JOIN ciudad ciudad ON empleado.CIUD_ID = ciudad.CIUD_ID
+     INNER JOIN empleado_periodo_vacacion empleado_periodo_vacacion ON empleado.EMPL_ID = empleado_periodo_vacacion.EMPL_ID
+     LEFT OUTER JOIN solicitud_vacacion solicitud_vacacion ON empleado_periodo_vacacion.EPVA_ID = solicitud_vacacion.EPVA_ID
+     INNER JOIN tipo_cargo tipo_cargo ON cargo.TICA_ID = tipo_cargo.TICA_ID
+     INNER JOIN grupo_contratado grupo_contratado ON grupo_contratado.GRCO_ID = detalle_grupo_contratado.GRCO_ID
+WHERE
+     empleado.CARG_ID IN ($P!{cargos})
+ AND empleado.CIUD_ID IN ($P!{ciudades})
+ AND empleado_periodo_vacacion.ESTADO <= $P{estado}
+ AND (empleado.EMP_EMPL_ID like $P{jefeId} OR empleado.EMPL_ID like $P{jefeId})
+ORDER BY
+     empleado.APELLIDO ASC]]>
+	</queryString>
+	<field name="dias_vacacion" class="java.lang.Integer"/>
+	<field name="empleado_CEDULA" class="java.lang.String"/>
+	<field name="empleado_APELLIDO" class="java.lang.String"/>
+	<field name="empleado_NOMBRE" class="java.lang.String"/>
+	<field name="cargo_DESCRIPCION" class="java.lang.String"/>
+	<field name="tipo_cargo_DESCRIPCION" class="java.lang.String"/>
+	<field name="ciudad_DESCRIPCION" class="java.lang.String"/>
+	<field name="empleado_CODIGO_EMPLEADO" class="java.lang.String"/>
+	<field name="empleado_periodo_vacacion_HORAS" class="java.lang.Double"/>
+	<field name="solicitud_vacacion_FECHA_DESDE" class="java.sql.Timestamp"/>
+	<field name="solicitud_vacacion_FECHA_HASTA" class="java.sql.Timestamp"/>
+	<field name="empleado_EMPL_ID" class="java.lang.Integer"/>
+	<field name="empleado_periodo_vacacion_EPVA_ID" class="java.lang.Integer"/>
+	<field name="empleado_periodo_vacacion_DESCRIPCION" class="java.lang.String"/>
+	<field name="empleado_periodo_vacacion_DIAS_PERDIDOS" class="java.lang.Double"/>
+	<field name="solicitud_vacacion_AUTORIZADO" class="java.lang.Integer"/>
+	<field name="empleado_periodo_vacacion_FECHA_DESDE" class="java.sql.Timestamp"/>
+	<field name="empleado_FECHA_INGRESO" class="java.sql.Timestamp"/>
+	<field name="detalle_grupo_DESCRIPCION" class="java.lang.String"/>
+	<field name="detalle_grupo_TOTAL_HORAS" class="java.lang.Double"/>
+	<variable name="contRegi" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{contRegi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (1)]]></initialValueExpression>
+	</variable>
+	<variable name="sumDiasVacacion" class="java.lang.Double" resetType="Group" resetGroup="periodo" calculation="Sum">
+		<variableExpression><![CDATA[$F{dias_vacacion}]]></variableExpression>
+	</variable>
+	<variable name="saldoDiasVacacion" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{empleado_periodo_vacacion_HORAS} - $V{sumDiasVacacion} - $F{empleado_periodo_vacacion_DIAS_PERDIDOS}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="sumPermisoDias" class="java.lang.Double" resetType="Group" resetGroup="periodo">
+		<variableExpression><![CDATA[$V{sumPermisoDias}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double (0)]]></initialValueExpression>
+	</variable>
+	<variable name="saldoFinalVacacion" class="java.lang.Float">
+		<variableExpression><![CDATA[$V{saldoDiasVacacion}]]></variableExpression>
+	</variable>
+	<variable name="sumPermisoHoras" class="java.lang.Double" resetType="Group" resetGroup="periodo">
+		<variableExpression><![CDATA[$V{sumPermisoHoras}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double (0)]]></initialValueExpression>
+	</variable>
+	<variable name="valorHorasVacacion" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{valorHorasVacacion}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double (8)]]></initialValueExpression>
+	</variable>
+	<variable name="contadorPermisos" class="java.lang.Integer"/>
+	<variable name="saldoInicialVacacion" class="java.lang.Float">
+		<initialValueExpression><![CDATA[$F{empleado_periodo_vacacion_HORAS} - $F{empleado_periodo_vacacion_DIAS_PERDIDOS}]]></initialValueExpression>
+	</variable>
+	<variable name="saldoCambioHoras" class="java.lang.Float">
+		<variableExpression><![CDATA[((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="anio" class="java.lang.Integer">
+		<variableExpression><![CDATA[($P{fechaFinal}.getYear() - $F{empleado_periodo_vacacion_FECHA_DESDE}.getYear()) * 12]]></variableExpression>
+	</variable>
+	<variable name="meses" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[($P{fechaFinal}.getMonth() - $F{empleado_periodo_vacacion_FECHA_DESDE}.getMonth()).abs() -  $V{anio}]]></variableExpression>
+	</variable>
+	<variable name="saldoProrrateado" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{meses}.abs() * $F{detalle_grupo_TOTAL_HORAS}]]></variableExpression>
+	</variable>
+	<group name="CIUDAD" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{ciudad_DESCRIPCION}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Justified" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[CIUDAD]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="103" y="0" width="452" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{ciudad_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="tipoCargo" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{tipo_cargo_DESCRIPCION}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement style="gh1Campo" x="103" y="0" width="452" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{tipo_cargo_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[TIPO CARGO]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="cargo" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{cargo_DESCRIPCION}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement style="gh2Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[CARGO]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="gh2Campo" x="103" y="0" width="452" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{cargo_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20"/>
+		</groupFooter>
+	</group>
+	<group name="empleado" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{empleado_EMPL_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[EMPLEADO]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="gh1Campo" x="103" y="1" width="230" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_APELLIDO} + " " + $F{empleado_NOMBRE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="gh1Campo" x="373" y="1" width="80" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_CEDULA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="gh1Campo" x="495" y="1" width="60" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{empleado_CODIGO_EMPLEADO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="335" y="0" width="38" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[C.C.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="457" y="0" width="38" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[COD.]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="21"/>
+		</groupFooter>
+	</group>
+	<group name="periodo">
+		<groupExpression><![CDATA[$F{empleado_periodo_vacacion_EPVA_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="39">
+				<staticText>
+					<reportElement x="0" y="0" width="103" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[F.CARGA]]></text>
+				</staticText>
+				<textField pattern="###0.00;(###0.00)">
+					<reportElement x="271" y="19" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{empleado_periodo_vacacion_DIAS_PERDIDOS}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;(###0.00)">
+					<reportElement x="103" y="19" width="68" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_periodo_vacacion_HORAS}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;(###0.00)">
+					<reportElement x="493" y="19" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{empleado_periodo_vacacion_HORAS} - $F{empleado_periodo_vacacion_DIAS_PERDIDOS}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="271" y="0" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{empleado_FECHA_INGRESO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="19" width="103" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[DIAS.ACUM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="171" y="19" width="100" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top"/>
+					<text><![CDATA[DIAS.PERDIDOS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="373" y="19" width="103" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top"/>
+					<text><![CDATA[TOTAL DIAS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="171" y="0" width="100" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top"/>
+					<text><![CDATA[F.INGRESO]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="103" y="0" width="68" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_periodo_vacacion_FECHA_DESDE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<printWhenExpression><![CDATA[$V{contadorPermisos} != 0]]></printWhenExpression>
+				<subreport runToBottom="false">
+					<reportElement x="103" y="0" width="292" height="20"/>
+					<subreportParameter name="emplId">
+						<subreportParameterExpression><![CDATA[$F{empleado_EMPL_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="periodo">
+						<subreportParameterExpression><![CDATA[$F{empleado_periodo_vacacion_EPVA_ID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="subSumPermisoDias" toVariable="sumPermisoDias"/>
+					<returnValue subreportVariable="subSumPermisoHoras" toVariable="sumPermisoHoras"/>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SubReporteKardexVacaciones.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement x="0" y="0" width="103" height="20"/>
+					<textElement/>
+					<text><![CDATA[PERMISOS]]></text>
+				</staticText>
+			</band>
+			<band height="113">
+				<textField>
+					<reportElement x="333" y="3" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{sumPermisoDias}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.0000;(-###0.0000)">
+					<reportElement key="" x="493" y="3" width="62" height="20" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement style="linea" x="0" y="2" width="553" height="1"/>
+				</line>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="206" y="3" width="97" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[TOTALES]]></text>
+				</staticText>
+				<textField pattern="###0.0000;(-###0.0000)">
+					<reportElement x="413" y="3" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{sumPermisoHoras}.intValue() +":"+ Math.round( (($V{sumPermisoHoras} - ($V{sumPermisoHoras}).intValue()) * 60))]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement key="" x="495" y="52" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[((((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion} -
+(((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue() -
+((((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion} -
+(((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue()).intValue()) * 60]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement key="" x="337" y="52" width="60" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}).intValue()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="337" y="32" width="60" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[Días]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="171" y="92" width="132" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[LIQUIDACION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="495" y="32" width="62" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[Minutos]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement key="" x="415" y="52" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[((((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion} -
+(((($V{saldoFinalVacacion} - $V{sumPermisoDias}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue()).intValue()]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="415" y="93" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[((((($V{saldoFinalVacacion} - $V{sumPermisoDias} + $V{saldoProrrateado}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion} -
+(((($V{saldoFinalVacacion} - $V{sumPermisoDias} + $V{saldoProrrateado}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue()).intValue()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="171" y="52" width="132" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[SALDO ACTUAL]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="495" y="93" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[((((($V{saldoFinalVacacion} - $V{sumPermisoDias} + $V{saldoProrrateado}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion} -
+(((($V{saldoFinalVacacion} - $V{sumPermisoDias} + $V{saldoProrrateado}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue() -
+((((($V{saldoFinalVacacion} - $V{sumPermisoDias} + $V{saldoProrrateado}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion} -
+(((($V{saldoFinalVacacion} - $V{sumPermisoDias} + $V{saldoProrrateado}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue()).intValue()) * 60]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="337" y="72" width="60" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(((($V{saldoProrrateado}) * $V{valorHorasVacacion})) / $V{valorHorasVacacion}).intValue()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="415" y="32" width="62" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[Horas]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="495" y="72" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[((((($V{saldoProrrateado}) * $V{valorHorasVacacion})) / $V{valorHorasVacacion} -
+(((($V{saldoProrrateado}) * $V{valorHorasVacacion})) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue() -
+((((($V{saldoProrrateado}) * $V{valorHorasVacacion})) / $V{valorHorasVacacion} -
+(((($V{saldoProrrateado}) * $V{valorHorasVacacion})) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue()).intValue()) * 60]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="171" y="72" width="132" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[SALDO PRORRATEADO]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement key="" x="337" y="93" width="60" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(((($V{saldoFinalVacacion} - $V{sumPermisoDias} + $V{saldoProrrateado}) * $V{valorHorasVacacion})- $V{sumPermisoHoras}) / $V{valorHorasVacacion}).intValue()]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="415" y="72" width="62" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[((((($V{saldoProrrateado}) * $V{valorHorasVacacion})) / $V{valorHorasVacacion} -
+(((($V{saldoProrrateado}) * $V{valorHorasVacacion})) / $V{valorHorasVacacion}).intValue()) * $V{valorHorasVacacion}.intValue()).intValue()]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="70" height="70"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement style="tNombreEmpresa" x="70" y="0" width="485" height="35"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{empresa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tNombreReporte" x="70" y="35" width="485" height="35"/>
+				<textElement/>
+				<text><![CDATA[Reporte - Kardex Vacaciones]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="103" y="0" width="97" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[DESDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="200" y="0" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[HASTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="333" y="0" width="62" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[DIAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="0" y="0" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[TIPO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="390" y="0" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[HORAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="493" y="0" width="62" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[SALDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="303" y="0" width="30" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[AUT]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<printWhenExpression><![CDATA[$F{dias_vacacion} != 0]]></printWhenExpression>
+			<textField>
+				<reportElement x="203" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{solicitud_vacacion_FECHA_HASTA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="103" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{solicitud_vacacion_FECHA_DESDE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0;(###0)" isBlankWhenNull="false">
+				<reportElement x="333" y="0" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dias_vacacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;(###0.00)">
+				<reportElement x="493" y="0" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{saldoDiasVacacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="413" y="0" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[0]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="103" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[S.VACACION]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="303" y="0" width="30" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{solicitud_vacacion_AUTORIZADO} == 3 ? "SI":"NO" )]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="1">
+			<subreport>
+				<reportElement x="100" y="0" width="100" height="0"/>
+				<subreportParameter name="emplId">
+					<subreportParameterExpression><![CDATA[$F{empleado_EMPL_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="periodo">
+					<subreportParameterExpression><![CDATA[$F{empleado_periodo_vacacion_EPVA_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="subContadorPermisos" toVariable="contadorPermisos"/>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SubReporteContadorPermisos.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="18" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement style="pfEtiqueta" x="2" y="3" width="78" height="20" forecolor="#000000"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Impreso por:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pfParametro" x="78" y="3" width="168" height="20" forecolor="#000000"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="pfEtiqueta" x="333" y="3" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pfEtiqueta" x="250" y="3" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh.mm">
+				<reportElement style="pfEtiqueta" x="424" y="3" width="131" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement style="linea" x="2" y="2" width="553" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch"/>
+	</summary>
+</jasperReport>

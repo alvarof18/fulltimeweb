@@ -1,0 +1,249 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="tipoPermiso" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{tipoPermisoHome.managed ? 'Editar' : 'A&#241;adir'} Tipo permiso</f:facet>
+
+			<h:panelGrid columns="1">
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" 
+                           required="true"
+                              value="#{tipoPermisoHome.instance.descripcion}"/>
+            </s:decorate>
+
+<!--             <s:decorate id="factorHorasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Factor Horas</ui:define>
+                <h:inputText id="factorHoras"
+                       required="true"
+                          value="#{tipoPermisoHome.instance.factorHoras}"
+                           size="13">
+                    <a:support event="onblur" reRender="factorHorasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+ -->            
+            <s:decorate id="maximoDiasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo D&#237;as</ui:define>
+                <h:inputText id="maximoDias"
+                       required="true"
+                          value="#{tipoPermisoHome.instance.maximoDias}">
+                    <a:support event="onblur" reRender="maximoDiasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="maximoHorasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo Horas</ui:define>
+                <h:inputText id="maximoHoras"
+                       required="true"
+                          value="#{tipoPermisoHome.instance.maximoHoras}">
+                    <a:support event="onblur" reRender="maximoHorasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="diasJustificacionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">D&#237;as Justificaci&#243;n</ui:define>
+                <h:inputText id="diasJustificacion"
+                       required="true"
+                          value="#{tipoPermisoHome.instance.diasJustificacion}">
+                    <a:support event="onblur" reRender="diasJustificacionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>            
+
+            <s:decorate id="descuentoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descuento</ui:define>
+                <h:selectOneMenu value="#{tipoPermisoHome.instance.descuento}">
+					<s:selectItems value="#{enumeraciones.tipoDescuentoPermiso}" var="tipoDescuentoPermiso"
+						label="#{tipoDescuentoPermiso}" />
+					<s:convertEnum />
+                </h:selectOneMenu>
+			</s:decorate>
+			
+			
+            <s:decorate id="nivelField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Niveles de Aprobaci&#243;n</ui:define>
+                <h:inputText id="nivel"
+                	required="true"
+                	value="#{tipoPermisoHome.instance.nivel}">                 
+                </h:inputText>
+            </s:decorate>    
+
+			<s:decorate id="incluirAlmuerzoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">No Incluir Tiempo Almuerzo</ui:define>
+                <h:selectBooleanCheckbox id="incluirAlmuerzo"
+                                   required="true"
+                                      value="#{tipoPermisoHome.instance.incluirAlmuerzo}"/>
+            </s:decorate>
+
+            			
+			</h:panelGrid>
+
+            <h:panelGrid columns="2" style="width:700px;">
+            
+            <s:decorate id="afectaFechaVacacionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Afecta Fecha Vacaci&#243;n</ui:define>
+                <h:selectBooleanCheckbox id="afectaFechaVacacion"
+                                   required="false"
+                                      value="#{tipoPermisoHome.instance.afectaFechaVacacion}"/>
+            </s:decorate>
+            
+            <s:decorate id="acumulaAniosField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Acumula A&#241;os</ui:define>
+                <h:selectBooleanCheckbox id="acumulaAnios"
+                                   required="false"
+                                      value="#{tipoPermisoHome.instance.acumulaAnios}"/>
+            </s:decorate>             
+                        
+            <s:decorate id="generaJustField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Genera Justificaci&#243;n</ui:define>
+                <h:selectBooleanCheckbox id="generaJust"
+                                   required="false"
+                                      value="#{tipoPermisoHome.instance.generaJust}"/>
+            </s:decorate>
+            
+            <s:decorate id="validaFechasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Controla Fechas</ui:define>
+                <h:selectBooleanCheckbox id="validaFechas"
+                                   required="false"
+                                      value="#{tipoPermisoHome.instance.validaFechas}"/>
+            </s:decorate>
+
+            </h:panelGrid>
+                  
+            <rich:dataTable id="gestionCorreo" var="_gc" value="#{tipoPermisoHome.listaGestionaCorreo}">
+				
+				<f:facet name="header">
+                	<h:outputText value="Notificaciones de Correo Electr&#243;nico"/>
+            	</f:facet>
+            	
+            	<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Crear"/> 
+			            </f:facet>
+			           <h:selectBooleanCheckbox id="cre" value="#{_gc.crear}"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Actualizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="act" value="#{_gc.actualizar}"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Eliminar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="eli" value="#{_gc.eliminar}"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Pre-Autorizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="pre" value="#{_gc.preAutorizar}"/>	
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="No-Autorizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="not" value="#{_gc.noAutorizar}"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Autorizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="aut" value="#{_gc.autorizar}"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Legalizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="leg" value="#{_gc.legalizar}"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   	</rich:dataTable>
+            
+            <h:panelGrid columns="1" style="width:700px;">	
+			<s:decorate id="acesoEmpleados" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Acceso Empleados</ui:define>
+					<h:selectOneRadio id="listaAcceso" value="#{tipoPermisoHome.instance.accesoEmpleados}" >
+						<f:selectItem itemValue="1" itemLabel="Si" />
+   						<f:selectItem itemValue="0" itemLabel="No" />
+					</h:selectOneRadio>
+			</s:decorate>
+			</h:panelGrid>                                   	
+                        
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{tipoPermisoHome.persist}"
+                       disabled="#{!tipoPermisoHome.wired}"
+                       rendered="#{!tipoPermisoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{tipoPermisoHome.update}"
+                       rendered="#{tipoPermisoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{tipoPermisoHome.remove}"
+                      immediate="true"
+                       rendered="#{tipoPermisoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/TipoPermiso.xhtml"
+                rendered="#{tipoPermisoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty tipoPermisoFrom ? 'TipoPermisoList' : tipoPermisoFrom}.xhtml"
+                rendered="#{!tipoPermisoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

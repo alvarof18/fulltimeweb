@@ -1,0 +1,368 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+        <!-- new -->
+       
+	<h:form>
+    <rich:panel id="info">
+     <f:facet name="header">Empleado</f:facet>
+    
+    <h:panelGrid columns="1" >
+	
+	    <s:decorate id="codigoEmpleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo</ui:define>
+            <h:outputText value="#{empleadoHome.instance.codigoEmpleado}" style="font-weight:bold; font-size: 15px" />
+        </s:decorate>
+
+		<rich:spacer/>
+
+        <s:decorate id="apellido" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Apellido</ui:define>
+            <h:outputText value="#{empleadoHome.instance.apellido}"/>
+        </s:decorate>
+
+        <s:decorate id="nombre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Nombre</ui:define>
+            <h:outputText value="#{empleadoHome.instance.nombre}"/>
+        </s:decorate>
+
+        <s:decorate id="departamento" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Departamento</ui:define>
+            <h:outputText value="#{empleadoHome.instance.departamento.descripcion}"/>
+        </s:decorate>
+        
+        <s:decorate id="cargo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Cargo</ui:define>
+            <h:outputText value="#{empleadoHome.instance.cargo.descripcion}"/>
+        </s:decorate>
+        
+        <s:decorate id="grupoContratado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Grupo Contratado</ui:define>
+            <h:outputText value="#{empleadoHome.instance.detalleGrupoContratado.descripcion}"/>
+        </s:decorate>
+        
+        </h:panelGrid>
+        
+		
+    </rich:panel>  
+  
+  	</h:form>
+  	
+  	 <!-- end new -->
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/#{empty empleadoFrom ? 'EmpleadoList' : empleadoFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+    </div>
+    
+    
+
+    <rich:tabPanel switchType="ajax">
+    
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Atrasos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoAtrasosChildren">
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.atrasos}"/>
+
+        <rich:dataTable value="#{empleadoHome.atrasos.keySet().toArray()}" rowKeyVar="index" var = "asistencia"  
+                  rendered="#{not empty empleadoHome.atrasos}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadoAtrasosTable">
+           
+           <rich:column>
+              <div align="center">
+			    <f:facet name="header">
+			    	<h:outputText value="Nro."/> 
+			    </f:facet>		            	
+		    	<h:outputText value="#{index + 1}"/>		        
+		   	 </div>    
+           </rich:column>
+
+           <rich:column sortBy="#{asistencia.fechaHorario}">
+                <f:facet name="header">Fecha</f:facet>
+                 <rich:calendar id="fechaHorario" disabled="true" 
+                          value="#{asistencia.fechaHorario}" datePattern="dd/MM/yyyy"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{asistencia.fechaHoraHorario}">
+                <f:facet name="header">Hora Horario</f:facet>
+                 <rich:calendar id="fechaHoraHorario" disabled="true" 
+                          value="#{asistencia.fechaHoraHorario}" datePattern="HH:mm"/>
+            </rich:column>
+            
+             <rich:column sortBy ="#{asistencia.fechaHoraTimbre}">
+                <f:facet name="header">Hora Timbre</f:facet>
+                 <rich:calendar id="fechaHoratimbre" disabled="true" 
+                          value="#{asistencia.fechaHoraTimbre}" datePattern="HH:mm"/>
+            </rich:column>
+            
+              <rich:column sortBy = "#{asistencia.fechaHoraTimbre}">
+                  <div align="center">
+			    	<f:facet name="header">
+			    		<h:outputText value="Diferencia"/> 
+			    	</f:facet>		            	
+		    		<h:outputText value="#{empleadoHome.atrasos.get(asistencia)}"/>		        
+		   	 </div>    
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    </rich:tab>
+    
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Salidas Anticipadas</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoSalidaAnticipadasChildren">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.salidasAnticipadas}"/>
+
+        <rich:dataTable value="#{empleadoHome.salidasAnticipadas.keySet().toArray()}" rowKeyVar="index" var = "asistencia"
+                        rendered="#{not empty empleadoHome.salidasAnticipadas}"
+                		rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadoSalidasAnticipadaTable">
+
+            <rich:column>
+              <div align="center">
+			    <f:facet name="header">
+			    	<h:outputText value="Nro."/> 
+			    </f:facet>		            	
+		    	<h:outputText value="#{index + 1}"/>		        
+		   	 </div>    
+           </rich:column>
+
+           <rich:column sortBy="#{asistencia.fechaHorario}">
+                <f:facet name="header">Fecha</f:facet>
+                 <rich:calendar id="fechaHorario" disabled="true" 
+                          value="#{asistencia.fechaHorario}" datePattern="dd/MM/yyyy"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{asistencia.fechaHoraHorario}">
+                <f:facet name="header">Hora Horario</f:facet>
+                 <rich:calendar id="fechaHoraHorario" disabled="true" 
+                          value="#{asistencia.fechaHoraHorario}" datePattern="HH:mm"/>
+            </rich:column>
+            
+             <rich:column sortBy ="#{asistencia.fechaHoraTimbre}">
+                <f:facet name="header">Hora Timbre</f:facet>
+                 <rich:calendar id="fechaHoratimbre" disabled="true" 
+                          value="#{asistencia.fechaHoraTimbre}" datePattern="HH:mm"/>
+            </rich:column>
+            
+              <rich:column sortBy = "#{asistencia.fechaHoraTimbre}">
+                  <div align="center">
+			    	<f:facet name="header">
+			    		<h:outputText value="Diferencia"/> 
+			    	</f:facet>		            	
+		    		<h:outputText value="#{empleadoHome.salidasAnticipadas.get(asistencia)}"/>		        
+		   	 </div>    
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+    
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Permisos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoPermisosChildren">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.permisos}"/>
+
+        <rich:dataTable value="#{empleadoHome.permisos.keySet().toArray()}" rowKeyVar="index" var = "_permisos"
+                        rendered="#{not empty empleadoHome.permisos}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadoPermisosTable">
+             
+             <rich:column sortBy ="#{index}">
+              <div align="center">
+			    <f:facet name="header">
+			    	<h:outputText value="Nro."/> 
+			    </f:facet>		            	
+		    	<h:outputText value="#{index + 1}"/>		        
+		   	 </div>    
+           </rich:column>
+
+            <rich:column sortBy="#{_permisos.tipoPermiso.descripcion}">
+                <f:facet name="header">Tipo permiso</f:facet>
+                <h:outputText value="#{_permisos.tipoPermiso.descripcion}"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_permisos.fecha}">
+                <f:facet name="header">Fecha Solicitud</f:facet>
+                <rich:calendar id="fechasol" disabled="true" 
+                          value="#{_permisos.fecha}" datePattern="dd/MM/yyyy HH:mm"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_permisos.fechaDesde}">
+                <f:facet name="header">Fecha Desde</f:facet>
+                <rich:calendar id="fechaini" disabled="true" 
+                          value="#{_permisos.fechaDesde}" datePattern="dd/MM/yyyy HH:mm"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_permisos.fechaHasta}">
+                <f:facet name="header">Fecha Hasta</f:facet>
+                <rich:calendar id="fechafin" disabled="true" 
+                          value="#{_permisos.fechaHasta}" datePattern="dd/MM/yyyy HH:mm"/>                
+            </rich:column>
+            
+            <rich:column sortBy="#{_permisos.nivelRequerido}">
+                <f:facet name="header">N-Requerido</f:facet>
+                <h:outputText value="#{_permisos.nivelRequerido}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_permisos.aprobacion}">
+                <f:facet name="header">N-aprobacion</f:facet>
+                <h:outputText value="#{_permisos.aprobacion}"/>
+            </rich:column>
+			
+			<rich:column sortBy="#{_permisos.legalizado}">
+                <f:facet name="header">Legalizado</f:facet>
+                <h:selectBooleanCheckbox value="#{_permisos.legalizado}" disabled="true"/> 
+            </rich:column>
+            
+            <rich:column sortBy="#{empleadoHome.permisos.get(_permisos)}">
+                <f:facet name="header">Estado</f:facet>
+                 <h:outputText value="#{empleadoHome.permisos.get(_permisos)}"/>
+            </rich:column>
+			
+        </rich:dataTable>
+    </h:form>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Vacaciones</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoVacacionesChildren">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.vacaciones}"/>
+
+        <rich:dataTable value="#{empleadoHome.vacaciones.keySet().toArray()}" rowKeyVar="index" var = "_vacaciones"
+                rendered="#{not empty empleadoHome.vacaciones}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadoVacacionesTable">
+           <rich:column>
+              <div align="center">
+			    <f:facet name="header">
+			    	<h:outputText value="Nro."/> 
+			    </f:facet>		            	
+		    	<h:outputText value="#{index + 1}"/>		        
+		   	 </div>    
+           </rich:column>
+           
+            <rich:column sortBy="#{_vacaciones.sova}">
+                <f:facet name="header">Nro. Solicitud</f:facet>
+             	<h:outputText value="#{_vacaciones.sova}"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_vacaciones.fechaDesde}">
+                <f:facet name="header">Fecha Desde</f:facet>
+                <rich:calendar id="fechaini" disabled="true" 
+                          value="#{_vacaciones.fechaDesde}" datePattern="dd/MM/yyyy"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_vacaciones.fechaHasta}">
+                <f:facet name="header">Fecha Hasta</f:facet>
+                <rich:calendar id="fechafin" disabled="true" 
+                          value="#{_vacaciones.fechaHasta}" datePattern="dd/MM/yyyy"/>                
+            </rich:column>
+            
+            <rich:column sortBy="#{_vacaciones.nivelRequerido}">
+                <f:facet name="header">N-Requerido</f:facet>
+                <h:outputText value="#{_vacaciones.nivelRequerido}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_vacaciones.aprobacion}">
+                <f:facet name="header">N-aprobacion</f:facet>
+                <h:outputText value="#{_vacaciones.aprobacion}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{empleadoHome.vacaciones.get(_vacaciones)}">
+                <f:facet name="header">Estado</f:facet>
+                 <h:outputText value="#{empleadoHome.vacaciones.get(_vacaciones)}"/>
+            </rich:column>               
+           
+        </rich:dataTable>
+
+    </h:form>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Faltas</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoFaltas">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.inasistencia}"/>
+
+        <rich:dataTable value="#{empleadoHome.inasistencia}" rowKeyVar="index"
+                       var="_inasistencia"
+                  rendered="#{not empty empleadoHome.inasistencia}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadofaltasTable">
+            
+             <rich:column sortBy ="#{index}">
+              <div align="center">
+			    <f:facet name="header">
+			    	<h:outputText value="Nro."/> 
+			    </f:facet>		            	
+		    	<h:outputText value="#{index + 1}"/>		        
+		   	 </div>    
+           </rich:column>
+                        
+           <rich:column sortBy="#{_inasistencia.fechaHorario}" id ="fechaHorario">
+                <f:facet name="header">Fecha Horario</f:facet>
+                <rich:calendar id="fechahor" disabled="true" 
+                          value="#{_inasistencia.fechaHorario}" datePattern="dd/MM/yyyy"/>                
+            </rich:column>
+                        
+            <rich:column>
+                <f:facet name="header">Hora Horario</f:facet>
+                <rich:calendar id="horaHor" disabled="true" 
+                          value="#{_inasistencia.horaHorario}" datePattern="HH:mm"/>                
+            </rich:column>
+            
+             <rich:column>
+                <f:facet name="header">E / S</f:facet>
+                 <h:outputText value="#{_inasistencia.entradaSalida}"/>
+            </rich:column>   
+            
+             <rich:column>
+             
+                <f:facet name="header">Estado</f:facet>
+                 <h:outputText value="#{_inasistencia.estado}"/>
+            </rich:column> 
+ 
+              
+        </rich:dataTable>
+
+      </h:form>
+    </rich:tab>
+
+</rich:tabPanel>
+
+</ui:define>
+
+</ui:composition>

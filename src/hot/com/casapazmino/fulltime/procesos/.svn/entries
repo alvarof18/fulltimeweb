@@ -1,0 +1,88 @@
+8
+
+dir
+65
+https://server/svn/fulltime/src/hot/com/casapazmino/fulltime/procesos
+https://server/svn/fulltime
+
+
+
+2011-06-23T14:38:43.298521Z
+65
+sandro
+
+
+svn:special svn:externals svn:needs-lock
+
+Planificacion.java
+file
+76
+
+
+
+2011-07-18T14:42:46.442751Z
+c0b2128b342e055ae4d30cb024c99bc8
+2011-07-27T18:05:40.731508Z
+76
+sandro
+
+DemoInventoryItem.java
+file
+80
+
+
+
+2011-06-23T15:38:05.691447Z
+67ba70af50c7265279bb3a1fc80a25e4
+2011-07-27T18:09:43.842413Z
+80
+sandro
+
+Facet.java
+file
+80
+
+
+
+2011-06-23T15:50:28.541936Z
+2a0dbf6b3da673dc5c1234b9962a37f8
+2011-07-27T18:09:43.842413Z
+80
+sandro
+
+PlanificacionBean.java
+file
+110
+
+
+
+2011-11-10T18:27:59.012103Z
+72feb2b401ec5869c57a58e36c808bc6
+2011-11-16T18:23:59.265760Z
+110
+sandro
+
+DataTableScroller.java
+file
+80
+
+
+
+2011-06-23T16:04:00.033350Z
+74023100750780ca695e7c87e6e3cb18
+2011-07-27T18:09:43.842413Z
+80
+sandro
+
+DataTableScrollerBean.java
+file
+80
+
+
+
+2011-07-15T15:25:24.258291Z
+fa08361afcab1d6828b69cc89ed90bc7
+2011-07-27T18:09:43.842413Z
+80
+sandro
+

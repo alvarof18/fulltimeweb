@@ -1,0 +1,108 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Solicitud Vacaci&#243;n</f:facet>
+
+        <s:decorate id="sovaId" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">N&#250;mero</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.sova}"  />
+        </s:decorate>
+
+        <s:decorate id="empleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Empleado</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.empleadoByEmplId.apellido} - #{solicitudVacacionHome.instance.empleadoByEmplId.nombre}"  />
+        </s:decorate>
+
+        <s:decorate id="fechaDesde" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Desde</ui:define>
+            
+			<rich:calendar id="calFechaDesde" value="#{solicitudVacacionHome.instance.fechaDesde}" datePattern="dd/MM/yyyy"/>            
+        </s:decorate>
+
+        <s:decorate id="fechaHasta" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Hasta</ui:define>
+            
+			<rich:calendar id="calFechaHasta" value="#{solicitudVacacionHome.instance.fechaHasta}" datePattern="dd/MM/yyyy"/>            
+        </s:decorate>
+
+        <div style="clear:both"/>
+        
+        <rich:separator rendered="#{not empty solicitudVacacionHome.listaPermisoAutoriza}"/>	
+            
+            <br></br>  
+            
+             <rich:dataTable id="listaAutorizacion" var="_auto" value="#{solicitudVacacionHome.listaPermisoAutoriza}" 
+   					rendered="#{not empty solicitudVacacionHome.listaPermisoAutoriza}" rowKeyVar="fila" >
+   					
+   				<f:facet name="header">
+                	<h:outputText value="Autorizaciones"/>
+            	</f:facet>
+            	
+   				<rich:column>
+					<div align="center">
+						<f:facet name="header">
+							<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+								<ui:param name="propertyLabel" value="Empleado" />							
+							</ui:include>
+						</f:facet>	
+						
+						<h:outputText value="#{_auto.empleado.apellido} - #{_auto.empleado.nombre}" />
+					</div>
+				</rich:column>	
+   					
+				<rich:column>
+					<div align="center">
+						<f:facet name="header">
+							<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+								<ui:param name="propertyLabel" value="Nivel" />							
+							</ui:include>
+						</f:facet>	
+						
+						<h:outputText value="#{_auto.nivel}" />
+					</div>
+				</rich:column>	
+				
+				<rich:column>
+					<div align="center">
+						<f:facet name="header">
+							<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+								<ui:param name="propertyLabel" value="Departamento" />							
+							</ui:include>
+						</f:facet>	
+						
+						<h:outputText value="#{_auto.empleado.departamento.descripcion}" />
+					</div>
+				</rich:column>	
+				
+			</rich:dataTable>		          
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/SolicitudVacacionEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button id="imprimir" value="Imprimir" action="#{reportesFulltime.reporteSolicitudVacacionIndividual}"/>             		
+            <rich:spacer width="5"/>
+
+        <s:button view="/fulltime/#{empty solicitudVacacionFrom ? 'SolicitudVacacionList' : solicitudVacacionFrom}.xhtml"
+                    id="done"
+                 value="Aceptar" action="#{solicitudVacacionNiveles.ConsultarSolicitudVacacion()}"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

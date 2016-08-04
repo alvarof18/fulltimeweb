@@ -1,0 +1,31 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.Arrays;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.DetalleHorarioHoraExtra;
+
+@Name("detalleHorarioHoraExtraList")
+public class DetalleHorarioHoraExtraList extends EntityQuery<DetalleHorarioHoraExtra> {
+
+	private static final long serialVersionUID = 7284104049247392673L;
+
+	private static final String EJBQL = "select detalleHorarioHoraExtra from DetalleHorarioHoraExtra detalleHorarioHoraExtra";
+
+	private static final String[] RESTRICTIONS = {};
+
+	private DetalleHorarioHoraExtra detalleHorarioHoraExtra = new DetalleHorarioHoraExtra();
+
+	public DetalleHorarioHoraExtraList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+	}
+
+	public DetalleHorarioHoraExtra getDetalleHorarioHoraExtra() {
+		return detalleHorarioHoraExtra;
+	}
+}

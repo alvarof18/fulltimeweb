@@ -1,0 +1,186 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="#{requestScope.contextPath}/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="detalleGrupoContratadoSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Detalle Grupo Contratados - Criterios de B&#250;squeda"
+				switchType="ajax">
+
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Descripci&#243;n</ui:define>
+					<h:inputText id="descripcion"
+						value="#{detalleGrupoContratadoList.detalleGrupoContratado.descripcion}" />
+				</s:decorate>
+
+
+			</rich:simpleTogglePanel>
+
+			<table width="100%">
+				<tr>
+					<td width="70%"><s:div styleClass="actionButtons"
+						rendered="#{empty from}">
+						<s:button view="/fulltime/DetalleGrupoContratadoEdit.xhtml"
+							id="create" propagation="none" value="Crear"
+							rendered="#{contexts.applicationContext.get('permisoCrear')}">
+							<f:param name="detalleGrupoContratadoDgcoId" />
+						</s:button>
+						<h:commandButton id="search" value="Buscar"
+							action="/fulltime/DetalleGrupoContratadoList.xhtml" />
+						<s:button id="reset" value="Cancelar" includePageParams="false" />
+					</s:div></td>
+
+					<td align="right"><h:selectOneRadio
+						value="#{detalleGrupoContratadoList.extensionArchivo}">
+						<s:selectItems label="#{tipoArchivo}"
+							value="#{enumeraciones.tipoArchivo}" var="tipoArchivo">
+						</s:selectItems>
+					</h:selectOneRadio></td>
+					<td align="right"><h:commandLink id="imprimir"
+						value="Imprimir" action="#{reportesFulltime.listadoDetalleGrupoContratados}" /></td>
+				</tr>
+			</table>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">Resultados B&#250;squeda</f:facet>
+			<div class="results" id="detalleGrupoContratadoList"><h:outputText
+				value="No existe resultados"
+				rendered="#{empty detalleGrupoContratadoList.resultList}" /> <rich:dataTable
+				id="detalleGrupoContratadoList" var="_detalleGrupoContratado"
+				value="#{detalleGrupoContratadoList.resultList}"
+				rendered="#{not empty detalleGrupoContratadoList.resultList}">
+				
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{detalleGrupoContratadoList}" />
+							<ui:param name="propertyLabel" value="Grupo Contratado" />
+							<ui:param name="propertyPath"
+								value="detalleGrupoContratado.grupoContratado.descripcion" />
+						</ui:include>
+					</f:facet>
+					<h:outputText
+						value="#{_detalleGrupoContratado.grupoContratado.descripcion}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{detalleGrupoContratadoList}" />
+							<ui:param name="propertyLabel" value="Descripci&#243;n" />
+							<ui:param name="propertyPath"
+								value="detalleGrupoContratado.descripcion" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_detalleGrupoContratado.descripcion}" />
+				</h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleGrupoContratadoList}"/>
+                    <ui:param name="propertyLabel" value="D&#237;as Vacacion"/>
+                    <ui:param name="propertyPath" value="detalleGrupoContratado.horasVacacion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleGrupoContratado.horasVacacion}"/>
+        </h:column>
+				
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleGrupoContratadoList}"/>
+                    <ui:param name="propertyLabel" value="D&#237;as Incremento"/>
+                    <ui:param name="propertyPath" value="detalleGrupoContratado.diasIncremento"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleGrupoContratado.diasIncremento}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleGrupoContratadoList}"/>
+                    <ui:param name="propertyLabel" value="A&#241;os Laborables"/>
+                    <ui:param name="propertyPath" value="detalleGrupoContratado.anios"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleGrupoContratado.anios}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleGrupoContratadoList}"/>
+                    <ui:param name="propertyLabel" value="M&#225;ximo D&#237;as"/>
+                    <ui:param name="propertyPath" value="detalleGrupoContratado.maximoHoras"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleGrupoContratado.maximoHoras}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleGrupoContratadoList}"/>
+                    <ui:param name="propertyLabel" value="Meses Periodo"/>
+                    <ui:param name="propertyPath" value="detalleGrupoContratado.mesesPeriodo"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleGrupoContratado.mesesPeriodo}"/>
+        </h:column>
+				
+				<rich:column styleClass="action">
+					<f:facet name="header">Acci&#243;n</f:facet>
+					<s:link
+						view="/fulltime/#{empty from ? 'DetalleGrupoContratado' : from}.xhtml"
+						value="#{empty from ? 'Ver' : 'Seleccionar'}"
+						propagation="#{empty from ? 'none' : 'default'}"
+						id="detalleGrupoContratado"
+						rendered="#{contexts.applicationContext.get('permisoVer')}">
+						<f:param name="detalleGrupoContratadoDgcoId"
+							value="#{_detalleGrupoContratado.dgcoId}" />
+					</s:link>
+            #{' '}
+            <s:link view="/fulltime/DetalleGrupoContratadoEdit.xhtml"
+						value="Editar" propagation="none" id="detalleGrupoContratadoEdit"
+						rendered="#{empty from}">
+						<f:param name="detalleGrupoContratadoDgcoId"
+							value="#{_detalleGrupoContratado.dgcoId}" />
+					</s:link>
+				</rich:column>
+			</rich:dataTable></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link
+			view="/fulltime/DetalleGrupoContratadoList.xhtml"
+			rendered="#{detalleGrupoContratadoList.previousExists}"
+			value="#{messages.left}#{messages.left} Primera P&#225;gina" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/fulltime/DetalleGrupoContratadoList.xhtml"
+			rendered="#{detalleGrupoContratadoList.previousExists}"
+			value="#{messages.left} P&#225;gina Anterior" id="previousPage">
+			<f:param name="firstResult"
+				value="#{detalleGrupoContratadoList.previousFirstResult}" />
+		</s:link> <s:link view="/fulltime/DetalleGrupoContratadoList.xhtml"
+			rendered="#{detalleGrupoContratadoList.nextExists}"
+			value="P&#225;gina Siguiente #{messages.right}" id="nextPage">
+			<f:param name="firstResult"
+				value="#{detalleGrupoContratadoList.nextFirstResult}" />
+		</s:link> <s:link view="/fulltime/DetalleGrupoContratadoList.xhtml"
+			rendered="#{detalleGrupoContratadoList.nextExists}"
+			value="Ultima P&#225;gina #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult"
+				value="#{detalleGrupoContratadoList.lastFirstResult}" />
+		</s:link></div>
+
+	</ui:define>
+
+</ui:composition>

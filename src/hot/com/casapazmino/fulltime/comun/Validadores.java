@@ -1,0 +1,45 @@
+package com.casapazmino.fulltime.comun;
+
+import java.util.Date;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.Validator;
+import javax.faces.validator.ValidatorException;
+
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
+
+@Name("validadorFecha")
+@BypassInterceptors
+@Scope(ScopeType.CONVERSATION)
+@org.jboss.seam.annotations.faces.Validator
+public class Validadores implements Validator{
+
+	//@In private FacesMessages facesMessages;
+	
+	@Override
+	public void validate(FacesContext context, UIComponent component, Object objeto)
+			throws ValidatorException {
+		
+		try {
+			Date fecha = (Date) objeto;
+			
+			if (fecha.before(Fechas.fechaActual())) {
+				
+				FacesMessage mensaje = new FacesMessage("Error Fecha mayor a la actual");
+				//mensaje.setDetail("Error Detail");
+				//mensaje.setSummary("error sumary");
+				//mensaje.setSeverity(FacesMessage.SEVERITY_ERROR);				
+				throw new ValidatorException(mensaje);
+				
+			}
+		
+		} catch (Exception e) {
+		}
+	}
+}

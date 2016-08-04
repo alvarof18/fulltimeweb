@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteHorasExtrasDepartamento" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["C:\\PROYECTO\\fulltime\\view\\Reportes\\estiloFulltimeNormal.jrtx"]]></template>
+	<parameter name="departamentos" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="empresa" class="java.lang.String"/>
+	<parameter name="jefeId" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="ciudades" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     EMPLEADO.EMPL_ID AS EMPLEADO_EMPL_ID,
+     EMPLEADO.CEDULA AS EMPLEADO_CEDULA,
+     EMPLEADO.APELLIDO AS EMPLEADO_APELLIDO,
+     EMPLEADO.NOMBRE AS EMPLEADO_NOMBRE,
+     EMPLEADO.CODIGO_EMPLEADO AS EMPLEADO_CODIGO_EMPLEADO,
+     CIUDAD.CIUD_ID AS CIUDAD_CIUD_ID,
+     CIUDAD.DESCRIPCION AS CIUDAD_DESCRIPCION,
+     TIPO_CARGO.TICA_ID AS TIPO_CARGO_TICA_ID,
+     TIPO_CARGO.DESCRIPCION AS TIPO_CARGO_DESCRIPCION,
+     CARGO.CARG_ID AS CARGO_ID,
+     CARGO.DESCRIPCION AS CARGO_DESCRIPCION,
+     DEPARTAMENTO.DEPA_ID AS DEPARTAMENTO_ID,
+     DEPARTAMENTO.DESCRIPCION AS DEPARTAMENTO_DESCRIPCION,
+     DETALLE_GRUPO_CONTRATADO.DGCO_ID AS DETALLE_GRUPO_CONTRATADO_DGCO,
+     DETALLE_GRUPO_CONTRATADO.DESCRIPCION AS DETALLE_GRUPO_CONTRATADO_DESCR,
+     ASIS_ENTRA.FECHA_HORA_HORARIO AS ASIS_ENTRA_FECHA_HORA_HORARIO,
+     ASIS_ENTRA.FECHA_HORA_TIMBRE AS ASIS_ENTRA_FECHA_HORA_TIMBRE,
+     ASIS_ENTRA.FECHA_HORARIO AS ASIS_ENTRA_FECHA_HORARIO,
+     ASIS_ENTRA.HORA_HORARIO AS ASIS_ENTRA_HORA_HORARIO,
+     ASIS_ENTRA.FECHA_TIMBRE AS ASIS_ENTRA_FECHA_TIMBRE,
+     ASIS_ENTRA.HORA_TIMBRE AS ASIS_ENTRA_HORA_TIMBRE,
+     ASIS_ENTRA.ENTRADA_SALIDA AS ASIS_ENTRA_ENTRADA_SALIDA,
+     ASIS_SALE.FECHA_HORA_HORARIO AS ASIS_SALE_FECHA_HORA_HORARIO,
+     ASIS_SALE.FECHA_HORA_TIMBRE AS ASIS_SALE_FECHA_HORA_TIMBRE,
+     ASIS_SALE.FECHA_HORARIO AS ASIS_SALE_FECHA_HORARIO,
+     ASIS_SALE.HORA_HORARIO AS ASIS_SALE_HORA_HORARIO,
+     ASIS_SALE.FECHA_TIMBRE AS ASIS_SALE_FECHA_TIMBRE,
+     ASIS_SALE.HORA_TIMBRE AS ASIS_SALE_HORA_TIMBRE,
+     ASIS_SALE.ENTRADA_SALIDA AS ASIS_SALE_ENTRADA_SALIDA,
+     HORA_EXTRA.DESDE AS HORA_EXTRA_DESDE,
+     HORA_EXTRA.HASTA AS HORA_EXTRA_HASTA,
+     HORA_EXTRA.DESDE1 AS HORA_EXTRA_DESDE1,
+     HORA_EXTRA.HASTA1 AS HORA_EXTRA_HASTA1,
+     HORA_EXTRA.DESDE2 AS HORA_EXTRA_DESDE2,
+     HORA_EXTRA.HASTA2 AS HORA_EXTRA_HASTA2,
+     HORA_EXTRA.DESDE3 AS HORA_EXTRA_DESDE3,
+     HORA_EXTRA.HASTA3 AS HORA_EXTRA_HASTA3,
+     HORA_EXTRA.DESDE4 AS HORA_EXTRA_DESDE4,
+     HORA_EXTRA.HASTA4 AS HORA_EXTRA_HASTA4,
+     TIMBRE_SALE_ALMU.FECHA_HORA_TIMBRE AS SALE_ALMU,
+     TIMBRE_ENTRA_ALMU.FECHA_HORA_TIMBRE AS ENTRA_ALMU,
+     PERMISO.NUMERO_HORAS AS PERMISO_NUMERO_HORAS,
+     TIPO_PERMISO.DESCRIPCION AS TIPO_PERMISO_DESCRIPCION
+FROM
+     (SELECT * FROM ASISTENCIA WHERE ENTRADA_SALIDA = 'E') ASIS_ENTRA
+     INNER JOIN (SELECT * FROM ASISTENCIA WHERE ENTRADA_SALIDA = 'S') ASIS_SALE ON ASIS_ENTRA.EMPL_ID = ASIS_SALE.EMPL_ID AND ASIS_ENTRA.FECHA_HORARIO = ASIS_SALE.FECHA_HORARIO
+     LEFT JOIN (SELECT * FROM TIMBRE WHERE ACCION = '3') TIMBRE_SALE_ALMU ON ASIS_ENTRA.CODIGO_EMPLEADO = TIMBRE_SALE_ALMU.CODIGO_EMPLEADO AND ASIS_ENTRA.FECHA_HORARIO = DATE(TIMBRE_SALE_ALMU.FECHA_HORA_TIMBRE)
+     LEFT JOIN (SELECT * FROM TIMBRE WHERE ACCION = '2') TIMBRE_ENTRA_ALMU ON ASIS_ENTRA.CODIGO_EMPLEADO = TIMBRE_ENTRA_ALMU.CODIGO_EMPLEADO AND ASIS_ENTRA.FECHA_HORARIO = DATE(TIMBRE_ENTRA_ALMU.FECHA_HORA_TIMBRE)
+     LEFT JOIN PERMISO ON PERMISO.EMPL_ID = ASIS_ENTRA.EMPL_ID AND DATE(PERMISO.FECHA_DESDE) =  DATE(ASIS_ENTRA.FECHA_HORA_HORARIO)
+     LEFT JOIN TIPO_PERMISO ON PERMISO.TIPE_ID = TIPO_PERMISO.TIPE_ID
+     INNER JOIN EMPLEADO on EMPLEADO.EMPL_ID = ASIS_SALE.EMPL_ID
+     INNER JOIN CARGO CARGO ON EMPLEADO.CARG_ID = CARGO.CARG_ID
+     INNER JOIN DEPARTAMENTO DEPARTAMENTO ON EMPLEADO.DEPA_ID = DEPARTAMENTO.DEPA_ID
+     INNER JOIN CIUDAD CIUDAD ON EMPLEADO.CIUD_ID = CIUDAD.CIUD_ID
+     INNER JOIN DETALLE_GRUPO_CONTRATADO DETALLE_GRUPO_CONTRATADO ON EMPLEADO.DGCO_ID = DETALLE_GRUPO_CONTRATADO.DGCO_ID
+     INNER JOIN TIPO_CARGO TIPO_CARGO ON CARGO.TICA_ID = TIPO_CARGO.TICA_ID,
+     DETALLE_HORARIO_HORA_EXTRA  inner join HORA_EXTRA on DETALLE_HORARIO_HORA_EXTRA.HORA_EXTRA_ID = HORA_EXTRA.HORA_EXTRA_ID
+WHERE DETALLE_HORARIO_HORA_EXTRA.DEHO_ID = ASIS_SALE.DEHO_ID and DETALLE_HORARIO_HORA_EXTRA.DGCO_ID = EMPLEADO.DGCO_ID and
+     HORA_EXTRA.CODIGO_DIA = WEEKDAY(ASIS_ENTRA.FECHA_HORA_HORARIO)
+AND
+     DATE(ASIS_ENTRA.FECHA_HORA_TIMBRE) BETWEEN $P{fechaInicial} AND $P{fechaFinal}
+ AND empleado.DEPA_ID IN ($P!{departamentos})
+ AND empleado.CIUD_ID IN ($P!{ciudades})
+ AND (empleado.EMP_EMPL_ID like $P{jefeId} OR empleado.EMPL_ID like $P{jefeId})
+     ORDER BY
+        EMPLEADO.CODIGO_EMPLEADO, ASIS_ENTRA.FECHA_HORA_HORARIO]]>
+	</queryString>
+	<field name="EMPLEADO_EMPL_ID" class="java.math.BigDecimal"/>
+	<field name="EMPLEADO_CEDULA" class="java.lang.String"/>
+	<field name="EMPLEADO_APELLIDO" class="java.lang.String"/>
+	<field name="EMPLEADO_NOMBRE" class="java.lang.String"/>
+	<field name="EMPLEADO_CODIGO_EMPLEADO" class="java.lang.String"/>
+	<field name="CIUDAD_CIUD_ID" class="java.math.BigDecimal"/>
+	<field name="CIUDAD_DESCRIPCION" class="java.lang.String"/>
+	<field name="TIPO_CARGO_TICA_ID" class="java.math.BigDecimal"/>
+	<field name="TIPO_CARGO_DESCRIPCION" class="java.lang.String"/>
+	<field name="CARGO_ID" class="java.math.BigDecimal"/>
+	<field name="CARGO_DESCRIPCION" class="java.lang.String"/>
+	<field name="DETALLE_GRUPO_CONTRATADO_DGCO" class="java.math.BigDecimal"/>
+	<field name="DETALLE_GRUPO_CONTRATADO_DESCR" class="java.lang.String"/>
+	<field name="ASIS_ENTRA_FECHA_HORA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="ASIS_ENTRA_FECHA_HORA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="ASIS_ENTRA_FECHA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="ASIS_ENTRA_HORA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="ASIS_ENTRA_FECHA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="ASIS_ENTRA_HORA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="ASIS_ENTRA_ENTRADA_SALIDA" class="java.lang.String"/>
+	<field name="ASIS_SALE_FECHA_HORA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="ASIS_SALE_FECHA_HORA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="ASIS_SALE_FECHA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="ASIS_SALE_HORA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="ASIS_SALE_FECHA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="ASIS_SALE_HORA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="ASIS_SALE_ENTRADA_SALIDA" class="java.lang.String"/>
+	<field name="HORA_EXTRA_DESDE" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_HASTA" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_DESDE1" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_HASTA1" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_DESDE2" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_HASTA2" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_DESDE3" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_HASTA3" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_DESDE4" class="java.sql.Timestamp"/>
+	<field name="HORA_EXTRA_HASTA4" class="java.sql.Timestamp"/>
+	<field name="SALE_ALMU" class="java.sql.Timestamp"/>
+	<field name="ENTRA_ALMU" class="java.sql.Timestamp"/>
+	<field name="PERMISO_NUMERO_HORAS" class="java.lang.Float"/>
+	<field name="TIPO_PERMISO_DESCRIPCION" class="java.lang.String"/>
+	<field name="DEPARTAMENTO_ID" class="java.lang.Long"/>
+	<field name="DEPARTAMENTO_DESCRIPCION" class="java.lang.String"/>
+	<variable name="desde" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_DESDE}.getHours() * 60)  + $F{HORA_EXTRA_DESDE}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="hasta" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_HASTA}.getHours() * 60)  + $F{HORA_EXTRA_HASTA}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="desde1" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_DESDE1}.getHours() * 60)  + $F{HORA_EXTRA_DESDE1}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="hasta1" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_HASTA1}.getHours() * 60)  + $F{HORA_EXTRA_HASTA1}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="desde2" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_DESDE2}.getHours() * 60)  + $F{HORA_EXTRA_DESDE2}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="hasta2" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_HASTA2}.getHours() * 60)  + $F{HORA_EXTRA_HASTA2}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="desde3" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_DESDE3}.getHours() * 60)  + $F{HORA_EXTRA_DESDE3}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="hasta3" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_HASTA3}.getHours() * 60)  + $F{HORA_EXTRA_HASTA3}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="desde4" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_DESDE4}.getHours() * 60)  + $F{HORA_EXTRA_DESDE4}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="hasta4" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{HORA_EXTRA_HASTA4}.getHours() * 60)  + $F{HORA_EXTRA_HASTA4}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="minutosEntradaHorario" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{ASIS_ENTRA_FECHA_HORA_HORARIO}.getHours() * 60) + $F{ASIS_ENTRA_FECHA_HORA_HORARIO}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="minutosSalidaHorario" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{ASIS_SALE_FECHA_HORA_HORARIO}.getHours() * 60) + $F{ASIS_SALE_FECHA_HORA_HORARIO}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="minutosEntradaTimbre" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{ASIS_ENTRA_FECHA_HORA_TIMBRE}.getHours() * 60) + $F{ASIS_ENTRA_FECHA_HORA_TIMBRE}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="minutosSalidaTimbre" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{ASIS_SALE_FECHA_HORA_TIMBRE}.getHours() * 60) + $F{ASIS_SALE_FECHA_HORA_TIMBRE}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="minutosEntradaAux" class="java.lang.Integer">
+		<variableExpression><![CDATA[(
+    $V{minutosEntradaHorario} < $V{minutosEntradaTimbre} ?
+    $V{minutosEntradaTimbre} :
+    $V{minutosEntradaHorario}
+)]]></variableExpression>
+	</variable>
+	<variable name="minutosSalidaAlmuerzo" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{SALE_ALMU}.equals(null) || $F{ENTRA_ALMU}.equals(null)? 0 :
+    ($F{SALE_ALMU}.getHours() * 60) + $F{SALE_ALMU}.getMinutes()
+)]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="minutosEntradaAlmuerzo" class="java.lang.Integer">
+		<variableExpression><![CDATA[($F{SALE_ALMU}.equals(null) || $F{ENTRA_ALMU}.equals(null)? 0 :
+($F{ENTRA_ALMU}.getHours() * 60) + $F{ENTRA_ALMU}.getMinutes()
+)]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="diaEntradaTimbre" class="java.lang.Integer">
+		<variableExpression><![CDATA[$F{ASIS_ENTRA_FECHA_HORA_TIMBRE}.getDay()]]></variableExpression>
+	</variable>
+	<variable name="diaSalidaTimbre" class="java.lang.Integer">
+		<variableExpression><![CDATA[$F{ASIS_SALE_FECHA_HORA_TIMBRE}.getDay()]]></variableExpression>
+	</variable>
+	<variable name="totalAlmuerzo" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{minutosEntradaAlmuerzo} - $V{minutosSalidaAlmuerzo}]]></variableExpression>
+	</variable>
+	<variable name="totalEmplDesde" class="java.lang.Integer" resetType="Group" resetGroup="EMPLEADO" calculation="Sum">
+		<variableExpression><![CDATA[(
+($V{minutosSalidaTimbre} > ($V{desde} + 29) && $V{minutosSalidaTimbre} < $V{hasta} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+    $V{minutosSalidaTimbre} - $V{desde}:
+        $V{minutosSalidaTimbre} > $V{desde1} && $V{minutosSalidaTimbre} < $V{hasta1} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+        $V{hasta} - $V{desde} : 0
+) > 240 ? 240 :
+($V{minutosSalidaTimbre} > ($V{desde} + 29) && $V{minutosSalidaTimbre} < $V{hasta} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+    $V{minutosSalidaTimbre} - $V{desde}:
+        $V{minutosSalidaTimbre} > $V{desde1} && $V{minutosSalidaTimbre} < $V{hasta1} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+        $V{hasta} - $V{desde} : 0
+)
+)]]></variableExpression>
+	</variable>
+	<variable name="totalEmplDesde1" class="java.lang.Integer" resetType="Group" resetGroup="EMPLEADO" calculation="Sum">
+		<variableExpression><![CDATA[($V{minutosSalidaTimbre} > $V{desde1} && $V{minutosSalidaTimbre} < $V{hasta1} && $V{diaSalidaTimbre} >= 1 && $V{diaSalidaTimbre} <= 5 ?
+     $V{minutosSalidaTimbre} : 0
+)]]></variableExpression>
+	</variable>
+	<variable name="totalDiaR" class="java.lang.Integer">
+		<variableExpression><![CDATA[(
+    ($V{minutosSalidaTimbre} > ($V{desde} + 29) && $V{minutosSalidaTimbre} < $V{hasta} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+    $V{minutosSalidaTimbre} - $V{desde}:
+        $V{minutosSalidaTimbre} > $V{desde1} && $V{minutosSalidaTimbre} < $V{hasta1} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+        $V{hasta} - $V{desde} : 0
+    ) > 240 ? 240 :
+    ($V{minutosSalidaTimbre} > ($V{desde} + 29) && $V{minutosSalidaTimbre} < $V{hasta} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+    $V{minutosSalidaTimbre} - $V{desde}:
+        $V{minutosSalidaTimbre} > $V{desde1} && $V{minutosSalidaTimbre} < $V{hasta1} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+        $V{hasta} - $V{desde} : 0
+    )
+)]]></variableExpression>
+	</variable>
+	<variable name="totalDiaR1" class="java.lang.Integer">
+		<variableExpression><![CDATA[($V{minutosSalidaTimbre} > $V{desde1} && $V{minutosSalidaTimbre} < $V{hasta1} && $V{diaSalidaTimbre} >= 1 && $V{diaSalidaTimbre} <= 5 ?
+     $V{minutosSalidaTimbre} : 0
+)]]></variableExpression>
+	</variable>
+	<variable name="totalDiaR2aux" class="java.lang.Integer">
+		<variableExpression><![CDATA[(
+ $V{minutosSalidaTimbre} > $V{desde2} &&
+ $V{minutosSalidaTimbre} < $V{hasta2} &&
+ $V{diaEntradaTimbre} == 5 &&
+ $V{diaSalidaTimbre} == 6
+ ?
+    $V{minutosSalidaTimbre}
+ :
+    $V{minutosSalidaTimbre} > $V{desde2} &&
+    $V{minutosSalidaTimbre} < $V{hasta2} &&
+    $V{diaEntradaTimbre} == 6 &&
+    $V{diaSalidaTimbre} == 6
+ ?
+    $V{minutosSalidaTimbre} - $V{minutosEntradaHorario} - $V{totalAlmuerzo}
+ :
+    $V{minutosSalidaTimbre} > $V{desde2} &&
+    $V{minutosSalidaTimbre} < $V{hasta2} &&
+    $V{diaEntradaTimbre} == 6 &&
+    $V{diaSalidaTimbre} == 0
+ ?
+    $V{minutosSalidaTimbre} - $V{minutosEntradaHorario} - $V{totalAlmuerzo}
+ :
+    $V{minutosSalidaTimbre} > $V{desde2} &&
+    $V{minutosSalidaTimbre} < $V{hasta2} &&
+    $V{diaEntradaTimbre} == 0 &&
+    $V{diaSalidaTimbre} == 0
+ ?
+    $V{minutosSalidaTimbre} - $V{minutosEntradaHorario} - $V{totalAlmuerzo}
+ :
+    $V{minutosSalidaTimbre} > $V{desde2} &&
+    $V{minutosSalidaTimbre} < $V{hasta2} &&
+    $V{diaEntradaTimbre} == 0 &&
+    $V{diaSalidaTimbre} == 1
+ ?
+    $V{hasta2} - $V{minutosEntradaTimbre} : 0
+)]]></variableExpression>
+	</variable>
+	<variable name="siguienteDia" class="java.lang.Integer">
+		<variableExpression><![CDATA[($V{totalDiaR2aux} < 0 ? 1440 : 0)]]></variableExpression>
+	</variable>
+	<variable name="totalDiaR2" class="java.lang.Integer">
+		<variableExpression><![CDATA[(
+ $V{minutosSalidaTimbre} > $V{desde2} &&
+ $V{minutosSalidaTimbre} < $V{hasta2} &&
+ $V{diaEntradaTimbre} == 5 &&
+ $V{diaSalidaTimbre} == 6
+ ?
+    $V{minutosSalidaTimbre}
+ :
+    $V{minutosSalidaTimbre} > $V{desde2} &&
+    $V{minutosSalidaTimbre} < $V{hasta2} &&
+    $V{diaEntradaTimbre} == 6 &&
+    $V{diaSalidaTimbre} == 6
+ ?
+    $V{minutosSalidaTimbre} - $V{minutosEntradaAux} - $V{totalAlmuerzo} + $V{siguienteDia}
+ :
+    $V{minutosSalidaTimbre} > $V{desde2} &&
+    $V{minutosSalidaTimbre} < $V{hasta2} &&
+    $V{diaEntradaTimbre} == 6 &&
+    $V{diaSalidaTimbre} == 0
+ ?
+    $V{minutosSalidaTimbre} - $V{minutosEntradaAux} - $V{totalAlmuerzo} + $V{siguienteDia}
+ :
+    $V{minutosSalidaTimbre} > $V{desde2} &&
+    $V{minutosSalidaTimbre} < $V{hasta2} &&
+    $V{diaEntradaTimbre} == 0 &&
+    $V{diaSalidaTimbre} == 0
+ ?
+    $V{minutosSalidaTimbre} - $V{minutosEntradaAux} - $V{totalAlmuerzo} + $V{siguienteDia}
+ :
+    $V{minutosSalidaTimbre} > $V{desde2} &&
+    $V{minutosSalidaTimbre} < $V{hasta2} &&
+    $V{diaEntradaTimbre} == 0 &&
+    $V{diaSalidaTimbre} == 1
+ ?
+    $V{hasta2} - $V{minutosEntradaTimbre} : 0
+)]]></variableExpression>
+	</variable>
+	<variable name="totalEmplDesde2" class="java.lang.Integer" resetType="Group" resetGroup="EMPLEADO" calculation="Sum">
+		<variableExpression><![CDATA[($V{minutosSalidaTimbre} > $V{desde2} && $V{minutosSalidaTimbre} < $V{hasta2} && $V{diaEntradaTimbre} == 5 && $V{diaSalidaTimbre} == 6 ?
+    $V{minutosSalidaTimbre} : $V{minutosSalidaTimbre} > $V{desde2} && $V{minutosSalidaTimbre} < $V{hasta2} && $V{diaEntradaTimbre} == 6 && $V{diaSalidaTimbre} == 6 ?
+        $V{minutosSalidaTimbre} - $V{minutosEntradaAux} - $V{totalAlmuerzo} + $V{siguienteDia} : $V{minutosSalidaTimbre} > $V{desde2} && $V{minutosSalidaTimbre} < $V{hasta2} && $V{diaEntradaTimbre} == 6 && $V{diaSalidaTimbre} == 0 ?
+            $V{minutosSalidaTimbre} - $V{minutosEntradaAux} - $V{totalAlmuerzo} + $V{siguienteDia} : $V{minutosSalidaTimbre} > $V{desde2} && $V{minutosSalidaTimbre} < $V{hasta2} && $V{diaEntradaTimbre} == 0 && $V{diaSalidaTimbre} == 0 ?
+                $V{minutosSalidaTimbre} - $V{minutosEntradaAux} - $V{totalAlmuerzo} + $V{siguienteDia} : $V{minutosSalidaTimbre} > $V{desde2} && $V{minutosSalidaTimbre} < $V{hasta2} && $V{diaEntradaTimbre} == 0 && $V{diaSalidaTimbre} == 1 ?
+                    $V{hasta2} - $V{minutosEntradaTimbre} : 0
+)]]></variableExpression>
+	</variable>
+	<variable name="totalDiaRaux" class="java.lang.Integer">
+		<variableExpression><![CDATA[($V{minutosSalidaTimbre} > ($V{desde} + 29) && $V{minutosSalidaTimbre} < $V{hasta} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+    $V{minutosSalidaTimbre} - $V{desde}:
+        $V{minutosSalidaTimbre} > $V{desde1} && $V{minutosSalidaTimbre} < $V{hasta1} && $V{diaEntradaTimbre} >=1 && $V{diaEntradaTimbre} <= 5 ?
+        $V{hasta} - $V{desde} : 0
+)]]></variableExpression>
+	</variable>
+	<group name="CIUDAD">
+		<groupExpression><![CDATA[$F{CIUDAD_CIUD_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement style="gh2Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[CIUDAD]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="103" y="0" width="368" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{CIUDAD_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="DEPARTAMENTO">
+		<groupExpression><![CDATA[$F{DEPARTAMENTO_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[DEPARTAMENTO]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="103" y="0" width="371" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{DEPARTAMENTO_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="EMPLEADO" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{EMPLEADO_EMPL_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement x="103" y="0" width="457" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{EMPLEADO_APELLIDO} + " " + $F{EMPLEADO_NOMBRE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gh2Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[EMPLEADO]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="599" y="0" width="81" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{EMPLEADO_CEDULA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="729" y="0" width="75" height="20"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{EMPLEADO_CODIGO_EMPLEADO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gh2Etiqueta" mode="Transparent" x="560" y="0" width="39" height="20"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[C.C:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="gh2Etiqueta" mode="Transparent" x="680" y="0" width="49" height="20"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CODIGO:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="38">
+				<textField>
+					<reportElement x="417" y="0" width="55" height="20"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(
+    ($V{totalEmplDesde} /60).intValue() <= 9 ?
+        "0"+ ($V{totalEmplDesde} /60).intValue() :
+            ($V{totalEmplDesde} /60).intValue()
+)+":"+
+(
+    Math.round( (($V{totalEmplDesde}/60 - ($V{totalEmplDesde}/60).intValue()) * 60)) <= 9 ?
+        "0"+ Math.round( (($V{totalEmplDesde}/60 - ($V{totalEmplDesde}/60).intValue()) * 60)) :
+            Math.round( (($V{totalEmplDesde}/60 - ($V{totalEmplDesde}/60).intValue()) * 60))
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="495" y="0" width="55" height="20"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(
+    ($V{totalEmplDesde1} /60).intValue() <= 9 ?
+        "0"+ ($V{totalEmplDesde1} /60).intValue() :
+            ($V{totalEmplDesde1} /60).intValue()
+)+":"+
+(    Math.round( (($V{totalEmplDesde1}/60 - ($V{totalEmplDesde1}/60).intValue()) * 60)) <= 9 ?
+        "0"+ Math.round( (($V{totalEmplDesde1}/60 - ($V{totalEmplDesde1}/60).intValue()) * 60)) :
+            Math.round( (($V{totalEmplDesde1}/60 - ($V{totalEmplDesde1}/60).intValue()) * 60))
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="577" y="0" width="55" height="20"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(
+    ($V{totalEmplDesde2} /60).intValue() <= 9 ?
+        "0"+ ($V{totalEmplDesde2} /60).intValue() :
+            ($V{totalEmplDesde2} /60).intValue()
+)+":"+
+(
+    Math.round( (($V{totalEmplDesde2}/60 - ($V{totalEmplDesde2}/60).intValue()) * 60)) <= 9 ?
+        "0"+ Math.round( (($V{totalEmplDesde2}/60 - ($V{totalEmplDesde2}/60).intValue()) * 60)) :
+            Math.round( (($V{totalEmplDesde2}/60 - ($V{totalEmplDesde2}/60).intValue()) * 60))
+)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gh2Etiqueta" mode="Transparent" x="114" y="0" width="92" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTALES:]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="417" y="18" width="55" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{totalEmplDesde} / 60]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="495" y="18" width="55" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{totalEmplDesde1} / 60]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="577" y="18" width="55" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{totalEmplDesde2} / 60]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<staticText>
+				<reportElement style="tNombreReporte" x="70" y="35" width="732" height="35"/>
+				<textElement/>
+				<text><![CDATA[Reporte - Horas Extras]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="70" height="70"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement style="tNombreEmpresa" x="70" y="0" width="732" height="35"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{empresa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="480" y="70" width="69" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{fechaFinal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="372" y="70" width="69" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{fechaInicial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="261" y="70" width="92" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periodo del:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="441" y="70" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[al]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="43" splitType="Stretch">
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="495" y="22" width="55" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXTR. L-V]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="419" y="5" width="55" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="0" y="22" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENTRADA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="103" y="22" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="419" y="22" width="55" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUPLEME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="577" y="22" width="55" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXTR. S-D]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="577" y="5" width="55" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="206" y="22" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENTRADA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="309" y="22" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="gh2Etiqueta" mode="Transparent" x="495" y="5" width="55" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORAS]]></text>
+			</staticText>
+			<line>
+				<reportElement style="linea" x="2" y="3" width="800" height="1"/>
+			</line>
+			<line>
+				<reportElement style="linea" x="2" y="41" width="800" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="656" y="21" width="46" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[HORAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="702" y="21" width="100" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="656" y="3" width="146" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[PERMISO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField pattern="EEE dd/MM/yyyy HH:mm">
+				<reportElement x="0" y="0" width="103" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ASIS_ENTRA_FECHA_HORA_TIMBRE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="417" y="0" width="55" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[(
+    ($V{totalDiaR} /60).intValue() <= 9 ?
+        "0"+ ($V{totalDiaR} /60).intValue() :
+            ($V{totalDiaR} /60).intValue()
+)+":"+
+(
+    Math.round( (($V{totalDiaR}/60 - ($V{totalDiaR}/60).intValue()) * 60)) <= 9 ?
+        "0"+ Math.round( (($V{totalDiaR}/60 - ($V{totalDiaR}/60).intValue()) * 60)) :
+            Math.round( (($V{totalDiaR}/60 - ($V{totalDiaR}/60).intValue()) * 60))
+)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="495" y="0" width="55" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[(
+    ($V{totalDiaR1} /60).intValue() <= 9 ?
+        "0"+ ($V{totalDiaR1} /60).intValue() :
+            ($V{totalDiaR1} /60).intValue()
+)+":"+
+(
+    Math.round( (($V{totalDiaR1}/60 - ($V{totalDiaR1}/60).intValue()) * 60)) <= 9 ?
+        "0"+ Math.round( (($V{totalDiaR1}/60 - ($V{totalDiaR1}/60).intValue()) * 60)) :
+            Math.round( (($V{totalDiaR1}/60 - ($V{totalDiaR1}/60).intValue()) * 60))
+)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="577" y="0" width="55" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[(
+    ($V{totalDiaR2} /60).intValue() <= 9 ?
+        "0"+ ($V{totalDiaR2} /60).intValue() :
+            ($V{totalDiaR2} /60).intValue()
+)+":"+
+(
+    Math.round( (($V{totalDiaR2}/60 - ($V{totalDiaR2}/60).intValue()) * 60)) <= 9 ?
+        "0"+ Math.round( (($V{totalDiaR2}/60 - ($V{totalDiaR2}/60).intValue()) * 60)) :
+            Math.round( (($V{totalDiaR2}/60 - ($V{totalDiaR2}/60).intValue()) * 60))
+)]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="103" y="0" width="103" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SALE_ALMU}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="206" y="0" width="103" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ENTRA_ALMU}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="309" y="0" width="103" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ASIS_SALE_FECHA_HORA_TIMBRE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="656" y="0" width="46" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[(
+    ($F{PERMISO_NUMERO_HORAS}).intValue() < 9 ?
+        "0"+ ($F{PERMISO_NUMERO_HORAS}).intValue() :
+            ($F{PERMISO_NUMERO_HORAS}).intValue()
+)+":"+
+(
+    ( (($F{PERMISO_NUMERO_HORAS} - $F{PERMISO_NUMERO_HORAS}.intValue()) * 60).intValue() ) < 9 ?
+        "0"+ Math.round(($F{PERMISO_NUMERO_HORAS} - $F{PERMISO_NUMERO_HORAS}.intValue()) * 60 ) :
+             Math.round(($F{PERMISO_NUMERO_HORAS} - $F{PERMISO_NUMERO_HORAS}.intValue()) * 60 )
+)]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="702" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{TIPO_PERMISO_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement style="pfEtiqueta" x="2" y="2" width="78" height="20" forecolor="#000000"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Impreso por:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pfParametro" x="78" y="2" width="168" height="20" forecolor="#000000"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="pfEtiqueta" x="444" y="2" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pfEtiqueta" x="361" y="2" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh.mm">
+				<reportElement style="pfEtiqueta" x="671" y="0" width="131" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement style="linea" x="2" y="2" width="800" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

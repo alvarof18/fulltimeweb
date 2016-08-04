@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <uri name="http://jboss.com/products/seam/async-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/async-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/bpm-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/bpm-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/components-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/components-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/core-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/core-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/drools-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/drools-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/mail-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/mail-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/pages-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/pages-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/persistence-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/persistence-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/security-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/security-2.1.xsd"/>
+  <uri name="http://jboss.com/products/seam/web-2.1.xsd" uri="https://anonsvn.jboss.org/repos/seam/branches/community/Seam_2_1/src/main/org/jboss/seam/web-2.1.xsd"/>
+</catalog>

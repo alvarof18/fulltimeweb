@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      no-conversation-view-id="/fulltime/DetalleHorarioList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{departamentoAutorizacionHome.wire}"/>
+
+   <param name="departamentoAutorizacionFrom"/>
+   <param name="departamentoAutorizacionId" value="#{departamentoAutorizacionHome.departamentoAutorizacionDepAutId}"/>
+   <param name="departamentoFrom"/>
+   <param name="departamentoDepaId" value="#{departamentoHome.departamentoDepaId}"/>
+
+
+
+   <navigation from-action="#{departamentoAutorizacionHome.persist}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/DepartamentoAutorizacion.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{departamentoAutorizacionHome.update}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/DepartamentoAutorizacion.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{departamentoAutorizacionHome.remove}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/Departamento.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

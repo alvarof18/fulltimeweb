@@ -1,0 +1,162 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="cargoSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Funciones - Criterios de B&#250;squeda" switchType="ajax">
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Funci&#243;n</ui:define>
+                <h:inputText id="funca" value="#{funcionesList.funciones.func_resp}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+    <div class="results" id="funcionesList">
+
+    <h:outputText value="No existe resultados"
+               rendered="#{empty funcionesList.resultList}"/>
+
+    <rich:dataTable id="funcioneList"
+                var="_funciones"
+              value="#{funcionesList.resultList}"
+           rendered="#{not empty funcionesList.resultList}">
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{funcionesList}"/>
+                    <ui:param name="propertyLabel" value="Función"/>
+                    <ui:param name="propertyPath" value="funciones.funcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_funciones.func_resp}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{funcionesList}"/>
+                    <ui:param name="propertyLabel" value="Actividad"/>
+                    <ui:param name="propertyPath" value="funciones.actividad"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_funciones.actividad}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{funcionesList}"/>
+                    <ui:param name="propertyLabel" value="Horas Laborales"/>
+                    <ui:param name="propertyPath" value="funciones.laborales"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_funciones.horas_laborales}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{funcionesList}"/>
+                    <ui:param name="propertyLabel" value="Horas Suplementarias"/>
+                    <ui:param name="propertyPath" value="funciones.suplementarias"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_funciones.horas_suplementarias}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{funcionesList}"/>
+                    <ui:param name="propertyLabel" value="Horas Extraordinarias"/>
+                    <ui:param name="propertyPath" value="funciones.extraordinarias"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_funciones.horas_extraordinarias}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{funcionesList}"/>
+                    <ui:param name="propertyLabel" value="Justificación"/>
+                    <ui:param name="propertyPath" value="funciones.justificacion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_funciones.justificacion}"/>
+        </h:column>
+        
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/fulltime/#{empty from ? 'Funciones' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="cargo" rendered="#{contexts.applicationContext.get('permisoVer')}">
+                <f:param name="funcionFuncId"
+                        value="#{_funciones.func_id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/fulltime/FuncionesEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="funcaEdit"
+                rendered="#{empty from}">
+                <f:param name="funcionFuncId"
+                        value="#{_funciones.func_id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/fulltime/FuncionesList.xhtml"
+            rendered="#{funcionesList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/fulltime/FuncionesList.xhtml"
+            rendered="#{funcionesList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{funcionesList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/FuncionesList.xhtml"
+            rendered="#{funcionesList.nextExists}"
+               value="P&#225;gina Siguiente #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{funcionesList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/FuncionesList.xhtml"
+            rendered="#{cargoList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{funcionesList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

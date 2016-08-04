@@ -1,0 +1,110 @@
+package com.casapazmino.fulltime.action;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.*;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+import java.util.Arrays;
+import java.util.List;
+
+@Name("detalleTipoParametroList")
+public class DetalleTipoParametroList extends EntityQuery<DetalleTipoParametro> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String EJBQL = "select detalleTipoParametro from DetalleTipoParametro detalleTipoParametro";
+
+	private static final String[] RESTRICTIONS = {
+		"lower(detalleTipoParametro.dtpaId) like concat(lower(#{detalleTipoParametroList.detalleTipoParametro.dtpaId}),'')",
+		"lower(detalleTipoParametro.descripcion) like concat(lower(#{detalleTipoParametroList.detalleTipoParametro.descripcion}),'%')",
+		"lower(detalleTipoParametro.tipoParametro.tipaId) like concat(lower(#{detalleTipoParametroList.tipaId}),'')",
+		"lower(detalleTipoParametro.tipoParametro.tipaId) like concat(lower(#{tParam}),'')",
+		};
+
+	private Long tipaId;
+	private String extensionArchivo;
+	
+	private DetalleTipoParametro detalleTipoParametro = new DetalleTipoParametro();
+
+	public DetalleTipoParametroList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+		setExtensionArchivo(Constantes.PDF);
+	}
+
+	public DetalleTipoParametro getDetalleTipoParametro() {
+		return detalleTipoParametro;
+	}
+	
+	public List<DetalleTipoParametro> getListaDetalleTipoParametro() {
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+
+	public List<DetalleTipoParametro> getListaEstadoCivil() {
+		setTipaId(Constantes.ESTADO_CIVIL);
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+	
+	public List<DetalleTipoParametro> getListaSexo() {
+		setTipaId(Constantes.SEXO);
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+	
+	public List<DetalleTipoParametro> getListaDecision() {
+		setTipaId(Constantes.DECISION);
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+	
+	public DetalleTipoParametro getListaEmpresa() {
+		setTipaId(Constantes.ID_EMPRESA);
+		this.setMaxResults(null);
+		return this.getSingleResult();
+	}	
+	
+	public List<DetalleTipoParametro> getListaEstado() {
+		setTipaId(Constantes.ESTADO);
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+	
+	public List<DetalleTipoParametro> getListaNivelAcademico() {
+		setTipaId(Constantes.NIVEL_ACADEMICO);
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+	
+	public List<DetalleTipoParametro> getListaTipoContacto() {
+		setTipaId(Constantes.TIPO_CONTACTO);
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+
+	public List<DetalleTipoParametro> getListaPeriodoVacacion() {
+		setTipaId(Constantes.PERIODO_VACACIONES);
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+
+	/////// GET === SET \\\\\\\
+
+	public String getExtensionArchivo() {
+		return extensionArchivo;
+	}
+
+	public void setExtensionArchivo(String extensionArchivo) {
+		this.extensionArchivo = extensionArchivo;
+	}
+
+	public Long getTipaId() {
+		return tipaId;
+	}
+
+	public void setTipaId(Long tipaId) {
+		this.tipaId = tipaId;
+	}	
+}

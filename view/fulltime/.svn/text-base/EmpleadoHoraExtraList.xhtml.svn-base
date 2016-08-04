@@ -1,0 +1,151 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="empleadoHoraExtraSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Par&#225;metros de B&#250;squeda" switchType="ajax">
+
+
+        </rich:simpleTogglePanel>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/fulltime/EmpleadoHoraExtraEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear">
+            <f:param name="empleadoHoraExtraEmplHoraExtrId"/>
+        </s:button>
+        
+        <h:commandButton id="search" value="Buscar" action="/fulltime/EmpleadoHoraExtraList.xhtml"/>
+        <s:button id="reset" value="Cancelar" includePageParams="false"/>
+        
+    </s:div>
+
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+    <div class="results" id="empleadoHoraExtraList">
+
+    <h:outputText value="No existe resultados"
+               rendered="#{empty empleadoHoraExtraList.resultList}"/>
+
+    <rich:dataTable id="empleadoHoraExtraList"
+                var="_empleadoHoraExtra"
+              value="#{empleadoHoraExtraList.resultList}"
+           rendered="#{not empty empleadoHoraExtraList.resultList}">
+<!--
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Empl hora extr id"/>
+                    <ui:param name="propertyPath" value="empleadoHoraExtra.emplHoraExtrId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHoraExtra.emplHoraExtrId}"/>
+        </h:column>
+-->
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Empleado Apellido"/>
+                    <ui:param name="propertyPath" value="empleadoHoraExtra.empleado.apellido"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHoraExtra.empleado.apellido}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Empleado Nombre"/>
+                    <ui:param name="propertyPath" value="empleadoHoraExtra.empleado.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHoraExtra.empleado.nombre}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Hora Extra"/>
+                    <ui:param name="propertyPath" value="empleadoHoraExtra.horaExtra.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHoraExtra.horaExtra.descripcion}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/fulltime/#{empty from ? 'EmpleadoHoraExtra' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="empleadoHoraExtra">
+                <f:param name="empleadoHoraExtraEmplHoraExtrId"
+                        value="#{_empleadoHoraExtra.emplHoraExtrId}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/fulltime/EmpleadoHoraExtraEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="empleadoHoraExtraEdit"
+                rendered="#{empty from}">
+                <f:param name="empleadoHoraExtraEmplHoraExtrId"
+                        value="#{_empleadoHoraExtra.emplHoraExtrId}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/fulltime/EmpleadoHoraExtraList.xhtml"
+            rendered="#{empleadoHoraExtraList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/fulltime/EmpleadoHoraExtraList.xhtml"
+            rendered="#{empleadoHoraExtraList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{empleadoHoraExtraList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/EmpleadoHoraExtraList.xhtml"
+            rendered="#{empleadoHoraExtraList.nextExists}"
+               value="P&#225;gina Siguiente #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{empleadoHoraExtraList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/EmpleadoHoraExtraList.xhtml"
+            rendered="#{empleadoHoraExtraList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{empleadoHoraExtraList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

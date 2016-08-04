@@ -1,0 +1,72 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="auditoriaSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Reporte Auditoria" switchType="ajax">
+		
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Ciudad</ui:define>
+					<h:selectManyListbox id="listaCiudades" value="#{auditoriaList.ciudades}" size="10" required="true">
+						<s:selectItems id="itemsCiudad"  
+							value="#{usuarioCiudadList.listaCiudadesUsuarios}" var="usuarioCiudad"
+							label="#{usuarioCiudad.ciudad.provincia.descripcion} -  #{usuarioCiudad.ciudad.descripcion}"
+							itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+							<f:convertNumber />
+							<a:support id="ciudades" event="onchange"
+							reRender="ciudadField,listaCiudades,itemsCiudad"
+							bypassUpdates="true" ajaxSingle="true" />
+							
+					</h:selectManyListbox>
+					
+			</s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde" value="#{auditoriaList.fechaDesde}" datePattern="dd/MM/yyyy"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Hasta</ui:define>
+                <rich:calendar id="fechaHasta" value="#{auditoriaList.fechaHasta}" datePattern="dd/MM/yyyy"/>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+	<table width="100%">
+		<tr>
+			<td width="70%">
+		        <s:div styleClass="actionButtons" >
+            		<h:commandButton id="descargar" value="Descargar" action="#{reportesSeguridad.reporteAuditorias}"/>
+            		<s:button id="reset" value="Cancelar" includePageParams="false"/>
+            		<rich:spacer width="10"/>
+        		</s:div>
+			</td>
+
+			<td align="right" >
+
+   				<h:selectOneRadio value="#{auditoriaList.extensionArchivo}" >
+					<s:selectItems label="#{tipoArchivo}"
+						value="#{enumeraciones.tipoArchivo}" 
+						var="tipoArchivo">
+					</s:selectItems>
+				</h:selectOneRadio>
+			</td>
+		</tr>
+	</table>
+
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

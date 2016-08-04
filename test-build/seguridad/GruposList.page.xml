@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{gruposList.firstResult}"/>
+   <param name="sort" value="#{gruposList.orderColumn}"/>
+   <param name="dir" value="#{gruposList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="descripcion" value="#{gruposList.grupos.descripcion}"/>
+   <param name="etiqueta" value="#{gruposList.grupos.etiqueta}"/>
+   <param name="nombre" value="#{gruposList.grupos.nombre}"/>
+
+</page>

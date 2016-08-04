@@ -1,0 +1,276 @@
+8
+
+dir
+47
+https://server/svn/fulltime/test-build
+https://server/svn/fulltime
+
+
+
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ed1cc5d6-6e7c-1946-840e-f2e39bd44d97
+
+components.properties
+file
+
+
+
+
+2011-04-11T16:24:09.422329Z
+546224448499d327d27b2deba71ffab0
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+seam-gen.reveng.xml
+file
+
+
+
+
+2011-04-11T16:24:09.422329Z
+269c01fba148f7c0670d4adbccc67a29
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+seam.properties
+file
+
+
+
+
+2011-04-11T16:24:09.406729Z
+d41d8cd98f00b204e9800998ecf8427e
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+fulltime
+dir
+
+login.page.xml
+file
+
+
+
+
+2011-04-11T16:24:09.422329Z
+f3b19aa1832348fdd1ac3b634518056e
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+home.xhtml
+file
+
+
+
+
+2011-04-11T16:24:09.422329Z
+b156701e568d0807ffbdb0bd057860d3
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+messages_en.properties
+file
+
+
+
+
+2011-04-11T16:24:09.437929Z
+e9a0579cd9deaee7528fda2fe4024303
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+error.xhtml
+file
+
+
+
+
+2011-04-11T16:24:09.437929Z
+5b7ec7492bf6083a712245ef1079c9c2
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+WEB-INF
+dir
+
+scripts
+dir
+
+security.drl
+file
+
+
+
+
+2011-04-11T16:24:09.437929Z
+cad175eea94d37e713bef25eb5a137ec
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+stylesheet
+dir
+
+messages_fr.properties
+file
+
+
+
+
+2011-04-11T16:24:09.437929Z
+7b49a3ed0d43f8ad22bd13a5de6f7753
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+messages_it.properties
+file
+
+
+
+
+2011-04-11T16:24:09.453529Z
+9084ad86f63979343136042d7b8fcb39
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+favicon.ico
+file
+
+
+
+
+2011-04-11T16:24:09.453529Z
+eeb6f5023b94701cc565a87225fcb0d0
+2011-02-15T22:56:31.360665Z
+21
+esteban
+has-props
+
+magap.ico
+file
+
+
+
+
+2011-04-11T16:24:09.469129Z
+4c97835595e131ce802682d454171728
+2011-02-15T22:56:31.360665Z
+21
+esteban
+has-props
+
+META-INF
+dir
+
+reportes
+dir
+
+login.xhtml
+file
+
+
+
+
+2011-04-11T16:24:09.469129Z
+de005e7a1d82c6c240684e30bb4a841a
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+seguridad
+dir
+
+messages_tr.properties
+file
+
+
+
+
+2011-04-11T16:24:09.469129Z
+3fb56c4ac3b75e88a28bb49e96b345c1
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+import.sql
+file
+
+
+
+
+2011-04-11T16:24:09.484730Z
+d41d8cd98f00b204e9800998ecf8427e
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+messages_bg.properties
+file
+
+
+
+
+2011-04-11T16:24:09.484730Z
+1d7e10a28c88420cbd1ca6d680c14a4b
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+index.html
+file
+
+
+
+
+2011-04-11T16:24:09.484730Z
+c9b9feb98dcd6e546b17c8712c1e7c16
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+messages_de.properties
+file
+
+
+
+
+2011-04-11T16:24:09.484730Z
+5218d74bc32c737231577b91267ceea2
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+img
+dir
+
+layout
+dir
+
+com
+dir
+

@@ -1,0 +1,64 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Item Men&#250;</f:facet>
+	
+		<s:decorate id="menuField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Men&#250;</ui:define>
+            <h:outputText value="#{itemMenuHome.instance.grupos.nombre}"/>
+        </s:decorate>
+        
+        <s:decorate id="submenuField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Submen&#250;</ui:define>
+            <h:outputText value="#{itemMenuHome.instance.subgrupos.nombre}"/>
+        </s:decorate>
+        
+		<s:decorate id="nombre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo</ui:define>
+            <h:outputText value="#{itemMenuHome.instance.nombre}"/>
+        </s:decorate>
+        
+        <s:decorate id="etiqueta" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Etiqueta</ui:define>
+            <h:outputText value="#{itemMenuHome.instance.etiqueta}"/>
+        </s:decorate>
+        
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{itemMenuHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <s:decorate id="link" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Link</ui:define>
+            <h:outputText value="#{itemMenuHome.instance.link}"/>
+        </s:decorate>
+		
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/seguridad/ItemMenuEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/seguridad/#{empty itemMenuFrom ? 'ItemMenuList' : itemMenuFrom}.xhtml"
+                    id="done"
+                 value="Salir"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

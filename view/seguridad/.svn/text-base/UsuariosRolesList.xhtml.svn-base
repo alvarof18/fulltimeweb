@@ -1,0 +1,138 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="usuariosRolesSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Criterio de B&#250;squeda" switchType="ajax">
+		
+			<s:decorate id="ivUsuRolSearsdtus" template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Usuario</ui:define>
+                <h:inputText id="usuario" value="#{usuariosRolesList.usuariosRoles.usuarios.usuario}"/>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <s:div styleClass="actionButtons" rendered="#{empty from}">
+        	<s:button view="/seguridad/UsuariosRolesEdit.xhtml" id="create" propagation="none" value="Crear"
+        	rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            	<f:param name="usuariosRolesId"/>
+        	</s:button>
+    
+            <h:commandButton id="search" value="Buscar" action="/seguridad/UsuariosRolesList.xhtml"/>
+            <s:button id="reset" value="Cancelar" includePageParams="false"/>
+        </s:div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados</f:facet>
+    <div class="results" id="usuariosRolesList">
+
+    <h:outputText value="No se encontro resultados."
+               rendered="#{empty usuariosRolesList.resultList}"/>
+
+    <rich:dataTable id="usuariosRolesList"
+                var="_usuariosRoles"
+              value="#{usuariosRolesList.resultList}"
+           rendered="#{not empty usuariosRolesList.resultList}">
+        <!-- <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{usuariosRolesList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="usuariosRoles.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_usuariosRoles.id}"/>
+        </h:column> -->
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{usuariosRolesList}"/>
+                    <ui:param name="propertyLabel" value="Roles"/>
+                    <ui:param name="propertyPath" value="usuariosRoles.roles.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_usuariosRoles.roles.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{usuariosRolesList}"/>
+                    <ui:param name="propertyLabel" value="Usuarios"/>
+                    <ui:param name="propertyPath" value="usuariosRoles.usuarios.usuario"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_usuariosRoles.usuarios.usuario}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/seguridad/#{empty from ? 'UsuariosRoles' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="usuariosRoles" rendered="#{contexts.applicationContext.get('permisoVer')}">
+                <f:param name="usuariosRolesId"
+                        value="#{_usuariosRoles.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/seguridad/UsuariosRolesEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="usuariosRolesEdit"
+                rendered="#{empty from}">
+                <f:param name="usuariosRolesId"
+                        value="#{_usuariosRoles.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/seguridad/UsuariosRolesList.xhtml"
+            rendered="#{usuariosRolesList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/seguridad/UsuariosRolesList.xhtml"
+            rendered="#{usuariosRolesList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{usuariosRolesList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/UsuariosRolesList.xhtml"
+            rendered="#{usuariosRolesList.nextExists}"
+               value="Siguiente P&#225;gina #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{usuariosRolesList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/UsuariosRolesList.xhtml"
+            rendered="#{usuariosRolesList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{usuariosRolesList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

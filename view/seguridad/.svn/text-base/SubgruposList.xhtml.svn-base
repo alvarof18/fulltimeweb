@@ -1,0 +1,212 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="subgruposSearch" styleClass="edit">
+
+		<h1 id="segmotmanalce" align="center">Sub Men&#250;</h1>
+       
+        <rich:simpleTogglePanel label="Criterio de B&#250;squeda" switchType="ajax">
+			
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" value="#{subgruposList.subgrupos.descripcion}"/> 
+            </s:decorate>
+			<!--
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{subgruposList.subgrupos.nombre}"/>
+            </s:decorate>
+            
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Etiqueta</ui:define>
+                <h:inputText id="etiqueta" value="#{subgruposList.subgrupos.etiqueta}"/>
+            </s:decorate>
+            -->
+        </rich:simpleTogglePanel>
+
+	<table width="100%">
+		<tr>
+			<td width="70%">
+		        <s:div styleClass="actionButtons" rendered="#{empty from}">
+        			<s:button view="/seguridad/SubgruposEdit.xhtml" id="create" propagation="none" value="Crear"
+        			rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            			<f:param name="subgruposId"/>
+        			</s:button>
+    
+		            <h:commandButton id="search" value="Buscar" action="/seguridad/SubgruposList.xhtml"/>
+            		<s:button id="reset" value="Cancelar" includePageParams="false"/>
+        		</s:div>
+			</td>
+
+			<td align="right" >
+   				<h:selectOneRadio value="#{subgruposList.extensionArchivo}" >
+					<s:selectItems label="#{tipoArchivo}"
+						value="#{enumeraciones.tipoArchivo}" 
+						var="tipoArchivo">
+					</s:selectItems>
+				</h:selectOneRadio>
+			</td>
+			<td align="right">
+				<h:commandLink id="imprimir" value="Imprimir"
+						action="#{reportesSeguridad.listadoSubmenus}"/>
+			</td>
+		</tr>
+	</table>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados de B&#250;squeda</f:facet>
+    <div class="results" id="subgruposList">
+
+    <h:outputText value="No se encontro resultados."
+               rendered="#{empty subgruposList.resultList}"/>
+
+    <rich:dataTable id="subgruposList"
+                var="_subgrupos"
+              value="#{subgruposList.resultList}"
+           rendered="#{not empty subgruposList.resultList}">
+        <!-- <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{subgruposList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="subgrupos.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_subgrupos.id}"/>
+        </h:column> -->
+        
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{subgruposList}"/>
+                    <ui:param name="propertyLabel" value="Grupos"/>
+                    <ui:param name="propertyPath" value="subgrupos.grupos.etiqueta"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_subgrupos.grupos.etiqueta}"/>
+        </h:column>        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{subgruposList}"/>
+                    <ui:param name="propertyLabel" value="C&#243;digo"/>
+                    <ui:param name="propertyPath" value="subgrupos.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_subgrupos.nombre}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{subgruposList}"/>
+                    <ui:param name="propertyLabel" value="Etiqueta"/>
+                    <ui:param name="propertyPath" value="subgrupos.etiqueta"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_subgrupos.etiqueta}"/>
+        </h:column>
+        <!-- <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{subgruposList}"/>
+                    <ui:param name="propertyLabel" value="Descripci&#243;n"/>
+                    <ui:param name="propertyPath" value="subgrupos.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_subgrupos.descripcion}"/>
+        </h:column> -->
+        <!--
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{subgruposList}"/>
+                    <ui:param name="propertyLabel" value="Expandible"/>
+                    <ui:param name="propertyPath" value="subgrupos.expandible"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_subgrupos.expandible}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{subgruposList}"/>
+                    <ui:param name="propertyLabel" value="Orden"/>
+                    <ui:param name="propertyPath" value="subgrupos.orden"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_subgrupos.orden}"/>
+        </h:column>
+        -->
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/seguridad/#{empty from ? 'Subgrupos' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="subgrupos" rendered="#{contexts.applicationContext.get('permisoVer')}">
+                <f:param name="subgruposId"
+                        value="#{_subgrupos.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/seguridad/SubgruposEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="subgruposEdit"
+                rendered="#{empty from}">
+                <f:param name="subgruposId"
+                        value="#{_subgrupos.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/seguridad/SubgruposList.xhtml"
+            rendered="#{subgruposList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/seguridad/SubgruposList.xhtml"
+            rendered="#{subgruposList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{subgruposList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/SubgruposList.xhtml"
+            rendered="#{subgruposList.nextExists}"
+               value="Siguiente P&#225;gina #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{subgruposList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/SubgruposList.xhtml"
+            rendered="#{subgruposList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{subgruposList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

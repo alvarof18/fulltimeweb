@@ -1,0 +1,238 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"    
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+<ui:define name="body">
+
+    <h:form id="planificacionMultiple" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Planificaci&#243;n Multiple" switchType="ajax">
+        		
+		<h:panelGrid columns="1" > 
+		
+			<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Seleccione Par&#225;metros</ui:define>
+					<h:selectOneRadio id="listaParametros" value="#{planificacionMultiple.tipoReporte}" >
+
+						<s:selectItems value="#{enumeraciones.tipoReporte}" var="tipoReporte"
+							label="#{tipoReporte}" />
+						<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,
+															departamentoField,listaDepartamento,itemsDepartamento,
+															detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+															empleadoField,listaEmpleado,itemsEmpleado,ciudadField,listaCiudades"
+						 ajaxSingle="true" />
+					</h:selectOneRadio>
+			</s:decorate>
+ 
+
+			<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+					<h:selectManyListbox id="listaCargo" value="#{planificacionMultiple.cargos}"
+						size="10" rendered="#{planificacionMultiple.tipoReporte != 'Departamento' and planificacionMultiple.tipoReporte != 'Grupo' and planificacionMultiple.tipoReporte != 'Empleado'}" >
+							<s:selectItems id="itemsCargo"  
+								value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+								itemValue="#{cargo.cargId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+					<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{planificacionMultiple.detalleGrupoContratados}"
+						size="10" rendered="#{planificacionMultiple.tipoReporte != 'Cargo' and planificacionMultiple.tipoReporte != 'Departamento' and planificacionMultiple.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDetalleGrupoContratado"  
+								value="#{detalleGrupoContratadoList.resultList}" 
+								var="detalleGrupoContratado" 
+								label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+								itemValue="#{detalleGrupoContratado.dgcoId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/display.xhtml"  >
+					<h:selectManyListbox id="listaDepartamento" value="#{planificacionMultiple.departamentos}"
+						size="10" rendered="#{planificacionMultiple.tipoReporte != 'Cargo' and planificacionMultiple.tipoReporte != 'Grupo' and planificacionMultiple.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDepartamento"  
+								value="#{departamentoList.listaDepartamentos}" 
+								var="departamento" 
+								label="#{departamento.descripcion}"
+								itemValue="#{departamento.depaId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+			
+			<s:decorate id="empleadoField"
+			template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<h:selectManyListbox id="listaEmpleado" required="false" value="#{planificacionMultiple.empleados}"
+					rendered="#{planificacionMultiple.tipoReporte != 'Cargo' and planificacionMultiple.tipoReporte != 'Grupo' and planificacionMultiple.tipoReporte != 'Departamento'}">
+						<s:selectItems id="itemsEmpleado" noSelectionLabel="Seleccione Empleado..." value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}" />
+						<s:convertEntity />
+					</h:selectManyListbox>					
+			</s:decorate>
+
+</h:panelGrid>
+		<h:panelGrid columns="2" styleClass="vertical-align: top"> 
+		<h:panelGrid columns="1" >
+		<!--  
+		<s:decorate 
+			template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Horario</ui:define>					
+					<h:selectOneMenu id="horario" required="false" value="#{planificacionMultiple.horarioseleccionado}">
+						<s:selectItems id="itemsHorario" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" />
+						<s:convertEntity />
+					</h:selectOneMenu>					
+			</s:decorate>
+			-->
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label" rendered="#{planificacionMultiple.tipoReporte != 'Empleado'}">Ciudad</ui:define>
+					<h:selectManyListbox id="listaCiudades" value="#{planificacionMultiple.ciudades}" size="10" > 
+						<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad..." 
+							value="#{usuarioCiudadList.listaCiudadesUsuarios}" var="usuarioCiudad"
+							label="#{usuarioCiudad.ciudad.provincia.descripcion} -  #{usuarioCiudad.ciudad.descripcion}"
+							itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+			
+			
+                
+                 <s:decorate id="year" template="#{requestScope.contextPath}/layout/display.xhtml">
+						<ui:define name="label">A&#241;o</ui:define>
+							<h:selectOneMenu  id="year" value="#{planificacionMultiple.year}" >
+								<f:selectItem itemValue="2013" itemLabel="2013" />
+   								<f:selectItem itemValue="2014" itemLabel="2014" />
+   								<f:selectItem itemValue="2015" itemLabel="2015" />
+   								<f:selectItem itemValue="2016" itemLabel="2016" />
+   								<f:selectItem itemValue="2017" itemLabel="2017" />
+   								<f:selectItem itemValue="2018" itemLabel="2018" />
+   								<f:selectItem itemValue="2019" itemLabel="2019" />
+   								<f:selectItem itemValue="2020" itemLabel="2020" />
+   								<f:selectItem itemValue="2021" itemLabel="2021" />
+   								<f:selectItem itemValue="2022" itemLabel="2022" />
+   								<f:selectItem itemValue="2023" itemLabel="2023" />
+   								<f:selectItem itemValue="2024" itemLabel="2024" />
+							</h:selectOneMenu>
+				</s:decorate>
+                
+                <s:decorate id="mes" template="#{requestScope.contextPath}/layout/display.xhtml">
+						<ui:define name="label">Mes</ui:define>
+							<h:selectOneMenu  id="mes" value="#{planificacionMultiple.mes}" >
+								<f:selectItem itemValue="1" itemLabel="Enero" />
+   								<f:selectItem itemValue="2" itemLabel="Febrero" />
+   								<f:selectItem itemValue="3" itemLabel="Marzo" />
+   								<f:selectItem itemValue="4" itemLabel="Abril" />
+   								<f:selectItem itemValue="5" itemLabel="Mayo" />
+   								<f:selectItem itemValue="6" itemLabel="Junio" />
+   								<f:selectItem itemValue="7" itemLabel="Julio" />
+   								<f:selectItem itemValue="8" itemLabel="Agosto" />
+   								<f:selectItem itemValue="9" itemLabel="Septiembre" />
+   								<f:selectItem itemValue="10" itemLabel="Octubre" />
+   								<f:selectItem itemValue="11" itemLabel="Noviembre" />
+   								<f:selectItem itemValue="12" itemLabel="Diciembre" />
+							</h:selectOneMenu>
+				</s:decorate>
+	</h:panelGrid>
+             		
+		</h:panelGrid>
+		
+		
+</rich:simpleTogglePanel>
+<div>
+				<h:commandButton id="crear" value="crear"
+					action="#{planificacionMultiple.crearPlanificacion()}" rendered="true" >
+				</h:commandButton>
+				
+			<rich:spacer width="7"/>
+			<h:commandButton id="procesar" value="procesar" 
+				action="#{planificacionMultiple.crearAsistenciaMult}"/>
+				<rich:spacer width="7"/>
+			<h:commandButton id="cargar" value="Buscar"
+				action="#{planificacionMultiple.buscarPlanificacion}"/>
+			<rich:spacer width="7"/>
+			
+			<h:commandButton id="guardar" value="guardar"
+					action="#{planificacionMultiple.guardar}"/>
+				<rich:spacer width="30"/>
+				
+			<h:commandButton id="valor" value="valor"
+					action="#{planificacionMultiple.vervalor()}"/>
+				<rich:spacer width="30"/>		
+						
+			<h:commandButton id="recorrer" value="recorrer"
+					action="#{planificacionMultiple.recorrerLista()}"/>
+				<rich:spacer width="30"/>		
+
+						
+				<h:outputText value="Registros Procesados " />
+				<rich:spacer />
+				<h:outputText value="#{asistenciaHome.fechasProcesadas}" />
+				<rich:spacer width="15"/>
+				<h:outputText value="Registros No Procesados " />
+				<rich:spacer />
+				<h:outputText value="#{asistenciaHome.fechasNoProcesadas}" />
+				
+				</div>
+				<div></div>
+ 		 </h:form>
+ 		<rich:panel>
+ 		<f:facet name="header">
+            <h:outputText value="Programaci&#243;n"></h:outputText>
+        </f:facet>
+        <s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Horario</ui:define>					
+					<h:selectOneMenu id="horario" required="false" value="#{planificacionMultiple.horario1}">
+						<s:selectItems id="itemsHorario" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" />
+						<s:convertEntity />
+					</h:selectOneMenu>					
+			</s:decorate>
+            <rich:spacer height="30" />
+            
+        <h:form>
+            <rich:spacer height="30" />
+            <rich:scrollableDataTable frozenColCount="1" height="400px" 
+                width="1000px" id="planificacion" rows="40" value="#{planificacionMultiple.listPlanificacion}" 
+                var="category">
+
+                <rich:column id="Empleado">
+                    <f:facet name="header"><h:outputText styleClass="headerText" value="Empleado" /></f:facet>
+                    <h:outputText value=" #{category.empleadoByEmplId.nombre}  #{category.empleadoByEmplId.apellido}" />
+                </rich:column>
+                <rich:column id="Horario">
+                    <f:facet name="header"><h:outputText styleClass="headerText" value="1"  /></f:facet>
+                     
+                 <h:selectOneMenu id="horario1" required="false" value="#{planificacionMultiple.horario1}">
+						<s:selectItems id="itemsHorario1" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" />
+						<s:convertEntity />
+					</h:selectOneMenu>
+                </rich:column>
+                
+                <rich:column id="Horario2">
+                    <f:facet name="header"><h:outputText styleClass="headerText" value="2" /></f:facet>
+                   <h:selectOneMenu id="horario2" required="false" value="#{planificacionMultiple.horario2}">
+						<s:selectItems id="itemsHorario2" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" />
+						<s:convertEntity />
+					</h:selectOneMenu>
+                </rich:column>
+            </rich:scrollableDataTable>
+            <rich:spacer height="20px"/>
+            
+        </h:form>
+        
+        </rich:panel> 
+ 
+</ui:define>
+
+</ui:composition>

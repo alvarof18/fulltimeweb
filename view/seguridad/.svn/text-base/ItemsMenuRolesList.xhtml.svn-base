@@ -1,0 +1,211 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="itemsMenuRolesSearch" styleClass="edit">
+    
+    	<h1 id="segmotmanalce" align="center">Asignar Item</h1>
+
+        <rich:simpleTogglePanel label="Criterio de B&#250;squeda" switchType="ajax">
+
+			<s:decorate id="menuField" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Men&#250;</ui:define>
+					<h:selectOneMenu id="menu" value="#{itemsMenuRolesList.itemsMenuRoles.grupos}">
+						<s:selectItems id="listaMenus" value="#{gruposList.listaGrupos}" var="grupo" label="#{grupo.nombre}" 
+						 noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+					</h:selectOneMenu>
+			</s:decorate>
+			<s:decorate id="submenuField" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Submen&#250;</ui:define>
+					<h:selectOneMenu id="submenu" value="#{itemsMenuRolesList.itemsMenuRoles.subgrupos}">
+						<s:selectItems id="listaSubMenus" value="#{subgruposList.listaSubgrupo}" var="grupo" label="#{grupo.nombre}" 
+						 noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+					</h:selectOneMenu>
+			</s:decorate>
+			
+			<s:decorate id="rolField" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Rol</ui:define>
+					<h:selectOneMenu id="rol" value="#{itemsMenuRolesList.itemsMenuRoles.roles}">
+						<s:selectItems id="listaRoles" value="#{rolesList.listadoRoles}" var="grupo" label="#{grupo.descripcion}" 
+						 noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+					</h:selectOneMenu>
+			</s:decorate>
+			
+			<s:decorate id="itemMenuField" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Item Men&#250;</ui:define>
+					<h:selectOneMenu id="itemMenu" value="#{itemsMenuRolesList.itemsMenuRoles.itemMenu}">
+						<s:selectItems id="listaItemMenu" value="#{itemMenuList.listaItemMenu}" var="grupo" label="#{grupo.nombre}" 
+						 noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+					</h:selectOneMenu>
+			</s:decorate>
+			
+        </rich:simpleTogglePanel>
+
+	<table width="100%">
+		<tr>
+			<td width="70%">
+		        <s:div styleClass="actionButtons" rendered="#{empty from}">
+        			<s:button view="/seguridad/ItemsMenuRolesEdit.xhtml" id="create" propagation="none" value="Crear"
+        				rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            			<f:param name="itemsMenuRolesId"/>
+        			</s:button>
+    
+		            <h:commandButton id="search" value="Buscar" action="/seguridad/ItemsMenuRolesList.xhtml"/>
+        		    <s:button id="reset" value="Cancelar" includePageParams="false"/>
+        		</s:div>
+			</td>
+
+			<td align="right" >
+   				<h:selectOneRadio value="#{itemsMenuRolesList.extensionArchivo}" >
+					<s:selectItems label="#{tipoArchivo}"
+						value="#{enumeraciones.tipoArchivo}" 
+						var="tipoArchivo">
+					</s:selectItems>
+				</h:selectOneRadio>
+			</td>
+			<td align="right">
+				<h:commandLink id="imprimir" value="Imprimir"
+						action="#{reportesSeguridad.listadoItemsMenuRoles}"/>
+			</td>
+		</tr>
+	</table>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados</f:facet>
+    <div class="results" id="itemsMenuRolesList">
+
+    <h:outputText value="No se encontro resultados."
+               rendered="#{empty itemsMenuRolesList.resultList}"/>
+
+    <rich:dataTable id="itemsMenuRolesList"
+                var="_itemsMenuRoles"
+              value="#{itemsMenuRolesList.resultList}"
+           rendered="#{not empty itemsMenuRolesList.resultList}">
+        <!-- <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemsMenuRolesList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="itemsMenuRoles.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemsMenuRoles.id}"/>
+        </h:column> -->
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemsMenuRolesList}"/>
+                    <ui:param name="propertyLabel" value="Men&#250;"/>
+                    <ui:param name="propertyPath" value="itemsMenuRoles.grupos.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemsMenuRoles.grupos.nombre}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemsMenuRolesList}"/>
+                    <ui:param name="propertyLabel" value="Submen&#250;"/>
+                    <ui:param name="propertyPath" value="itemsMenuRoles.subgrupos.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemsMenuRoles.subgrupos.nombre}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemsMenuRolesList}"/>
+                    <ui:param name="propertyLabel" value="Roles"/>
+                    <ui:param name="propertyPath" value="itemsMenuRoles.roles.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemsMenuRoles.roles.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemsMenuRolesList}"/>
+                    <ui:param name="propertyLabel" value="Item Men&#250;"/>
+                    <ui:param name="propertyPath" value="itemsMenuRoles.itemMenu.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemsMenuRoles.itemMenu.nombre}"/>
+        </h:column>
+        
+        
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/seguridad/#{empty from ? 'ItemsMenuRoles' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="itemsMenuRoles" rendered="#{contexts.applicationContext.get('permisoVer')}">
+                <f:param name="itemsMenuRolesId"
+                        value="#{_itemsMenuRoles.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/seguridad/ItemsMenuRolesEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="itemsMenuRolesEdit"
+                rendered="#{empty from}">
+                <f:param name="itemsMenuRolesId"
+                        value="#{_itemsMenuRoles.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/seguridad/ItemsMenuRolesList.xhtml"
+            rendered="#{itemsMenuRolesList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/seguridad/ItemsMenuRolesList.xhtml"
+            rendered="#{itemsMenuRolesList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{itemsMenuRolesList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/ItemsMenuRolesList.xhtml"
+            rendered="#{itemsMenuRolesList.nextExists}"
+               value="Siguiente P&#225;gina #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{itemsMenuRolesList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/ItemsMenuRolesList.xhtml"
+            rendered="#{itemsMenuRolesList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{itemsMenuRolesList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,59 @@
+package com.casapazmino.fulltime.action;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.*;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+import java.util.Arrays;
+import java.util.List;
+
+@Name("empleadoList")
+public class EmpleadoList extends EntityQuery<Empleado> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String EJBQL = "select empleado from Empleado empleado";
+	private static final String ORDER = "empleado.apellido";
+
+	private static final String[] RESTRICTIONS = {
+			"lower(empleado.cedula) like concat(lower(#{empleadoList.empleado.cedula}),'%')",
+			"lower(empleado.codigoEmpleado) like concat(lower(#{empleadoList.empleado.codigoEmpleado}),'%')",
+			"lower(empleado.apellido) like concat(lower(#{empleadoList.empleado.apellido}),'%')",
+			"lower(empleado.nombre) like concat(lower(#{empleadoList.empleado.nombre}),'%')",
+			"lower(empleado.departamento.descripcion) = lower(#{empleadoList.empleado.departamento.descripcion})",
+			"lower(empleado.cargo.descripcion) = lower(#{empleadoList.empleado.cargo.descripcion})",			
+			"lower(empleado.partida) like concat(lower(#{empleadoList.empleado.partida}),'%')",
+			"lower(empleado.partidaIndividual) like concat(lower(#{empleadoList.empleado.partidaIndividual}),'%')",
+			"lower(empleado.entradaSalida) like concat(lower(#{empleadoList.empleado.entradaSalida}),'%')", 
+	};
+
+	private String extensionArchivo;
+	
+	private Empleado empleado = new Empleado();
+
+	public EmpleadoList() {
+		setEjbql(EJBQL);
+		setOrder(ORDER);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+		setExtensionArchivo(Constantes.PDF);
+	}
+
+	public Empleado getEmpleado() {
+		return empleado;
+	}
+	
+	public List<Empleado> getListaEmpleado() {
+		this.setMaxResults(null);
+		return this.getResultList();
+	}
+
+	public String getExtensionArchivo() {
+		return extensionArchivo;
+	}
+
+	public void setExtensionArchivo(String extensionArchivo) {
+		this.extensionArchivo = extensionArchivo;
+	}	
+}

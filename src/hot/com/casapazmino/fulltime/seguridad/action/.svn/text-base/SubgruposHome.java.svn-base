@@ -1,0 +1,157 @@
+package com.casapazmino.fulltime.seguridad.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.model.SelectItem;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.log.Log;
+
+import com.casapazmino.fulltime.seguridad.model.Grupos;
+import com.casapazmino.fulltime.seguridad.model.ItemMenu;
+import com.casapazmino.fulltime.seguridad.model.ItemsMenuRoles;
+import com.casapazmino.fulltime.seguridad.model.Subgrupos;
+
+@Name("subgruposHome")
+public class SubgruposHome extends EntityHome<Subgrupos> {
+
+	private static final long serialVersionUID = 1L;
+	@Logger
+	private Log log;
+	
+	@In(create = true)
+	GruposHome gruposHome;
+	
+	GruposList grupoList;
+	
+	Grupos grupo;
+	private Long grupos=Long.valueOf(0);
+	private List<SelectItem> gruposLista;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setSubgruposId(Long id) {
+		setId(id);
+	}
+
+	public Long getSubgruposId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Subgrupos createInstance() {
+		return new Subgrupos();
+	}
+
+	public void wire() {
+		getInstance();
+		this.llenarGruposLista();
+		if(isWired())
+		{
+			this.obtenerIdGrupo();
+		}
+		Grupos grupos = gruposHome.getDefinedInstance();
+		if (grupos != null) {
+			getInstance().setGrupos(grupos);
+		}
+	}
+
+	public boolean isWired() {
+		if (getInstance().getGrupos() == null)
+			return false;
+		return true;
+	}
+
+	public Subgrupos getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+	
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}
+
+	public List<ItemMenu> getItemMenus() {
+		return getInstance() == null ? null : new ArrayList<ItemMenu>(
+				getInstance().getItemMenus());
+	}
+	public List<ItemsMenuRoles> getItemsMenuRoleses() {
+		return getInstance() == null ? null : new ArrayList<ItemsMenuRoles>(
+				getInstance().getItemsMenuRoleses());
+	}
+	
+	public String guardar()
+	{
+		this.grupo=new Grupos();
+		try
+		{
+			grupo.setId(this.getGrupos());
+			this.getInstance().setGrupos(grupo);
+			return persist();
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN METODO GUARDAR: ", e);
+		}
+		return null;
+	}
+	
+	public void llenarGruposLista()
+	{
+		log.info("ENTRO EN LLENAR GRUPOS LISTA EN SUBGRUPOS HOME");
+		gruposLista=new ArrayList<SelectItem>();
+		grupoList=new GruposList();
+		try 
+		{
+			if(gruposLista.isEmpty())
+			{
+				for(Grupos grupo:grupoList.getListaGrupos())
+				{
+					gruposLista.add(new SelectItem(grupo.getId(),grupo.getNombre()));
+				}
+			}
+		} 
+		catch (Exception e) 
+		{
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	private void obtenerIdGrupo()
+	{
+		this.setGrupos(this.getInstance().getGrupos().getId());
+	}
+	
+	public Long getGrupos() {
+		return grupos;
+	}
+
+	public void setGrupos(Long grupos) {
+		this.grupos = grupos;
+	}
+	public List<SelectItem> getGruposLista() {
+		return gruposLista;
+	}
+
+	public void setGruposLista(List<SelectItem> gruposLista) {
+		this.gruposLista = gruposLista;
+	}
+}

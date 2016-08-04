@@ -1,0 +1,138 @@
+8
+
+dir
+47
+https://server/svn/fulltime/view
+https://server/svn/fulltime
+
+
+
+2011-04-11T15:39:59.556117Z
+46
+casapazmino
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ed1cc5d6-6e7c-1946-840e-f2e39bd44d97
+
+reporte
+dir
+
+fulltime
+dir
+
+login.page.xml
+file
+
+
+
+
+2011-04-11T16:24:02.605117Z
+f3b19aa1832348fdd1ac3b634518056e
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+home.xhtml
+file
+78
+
+
+
+2011-06-24T15:13:34.647088Z
+ca53ef586f148ba6656fd2605a146ddf
+2011-07-27T18:07:13.582818Z
+78
+sandro
+
+error.xhtml
+file
+
+
+
+
+2011-04-11T16:24:02.620717Z
+5b7ec7492bf6083a712245ef1079c9c2
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+scripts
+dir
+
+stylesheet
+dir
+
+magap.ico
+file
+
+
+
+
+2011-04-11T16:24:02.636317Z
+4c97835595e131ce802682d454171728
+2011-02-15T22:56:31.360665Z
+21
+esteban
+has-props
+
+favicon.ico
+file
+
+
+
+
+2011-04-11T16:24:02.636317Z
+eeb6f5023b94701cc565a87225fcb0d0
+2011-02-15T22:56:31.360665Z
+21
+esteban
+has-props
+
+login.xhtml
+file
+120
+
+
+
+2011-12-02T17:17:53.401750Z
+51abfeeae73766aa1e285cbfeb30c238
+2011-12-05T18:17:08.553901Z
+120
+sandro
+
+reportes
+dir
+
+seguridad
+dir
+
+index.html
+file
+
+
+
+
+2011-04-11T16:24:02.620717Z
+c9b9feb98dcd6e546b17c8712c1e7c16
+2011-02-15T22:56:31.360665Z
+21
+esteban
+
+img
+dir
+
+layout
+dir
+

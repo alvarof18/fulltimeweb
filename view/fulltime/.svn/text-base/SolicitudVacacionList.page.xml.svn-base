@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{solicitudVacacionList.firstResult}"/>
+   <param name="sort" value="#{solicitudVacacionList.orderColumn}"/>
+   <param name="dir" value="#{solicitudVacacionList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="codigoEmpleado" value="#{solicitudVacacionList.solicitudVacacion.empleado.codigoEmpleado}"/>
+   <param name="cedula" value="#{solicitudVacacionList.solicitudVacacion.empleado.cedula}"/>
+   <param name="apellido" value="#{solicitudVacacionList.solicitudVacacion.empleado.apellido}"/>
+   <param name="nombre" value="#{solicitudVacacionList.solicitudVacacion.empleado.nombre}"/>
+   <param name="fechaDesde" value="#{solicitudVacacionList.solicitudVacacion.fechaDesde}" converterId="org.jboss.seam.ui.DateTimeConverter"/>
+
+</page>

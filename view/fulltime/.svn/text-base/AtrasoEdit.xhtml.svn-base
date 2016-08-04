@@ -1,0 +1,109 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="atraso" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{atrasoHome.managed ? 'Editar' : 'A&#241;adir'} Atraso</f:facet>
+
+
+
+            <s:decorate id="numeroDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Numero desde</ui:define>
+                <h:inputText id="numeroDesde"
+                          value="#{atrasoHome.instance.numeroDesde}">
+                    <a:support event="onblur" reRender="numeroDesdeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="numeroHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Numero hasta</ui:define>
+                <h:inputText id="numeroHasta"
+                          value="#{atrasoHome.instance.numeroHasta}">
+                    <a:support event="onblur" reRender="numeroHastaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+			<s:decorate id="tipoAtrasoField"
+				template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Tipo Atraso</ui:define>
+				<h:selectOneMenu value="#{atrasoHome.instance.tipoAtraso}">
+					<s:selectItems value="#{enumeraciones.tipoAtraso}" var="tipoAtraso"
+						label="#{tipoAtraso}" />
+					<s:convertEnum />
+				</h:selectOneMenu>
+			</s:decorate>
+
+			<s:decorate id="tipoDescuentoField"
+				template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Tipo Descuento</ui:define>
+				<h:selectOneMenu value="#{atrasoHome.instance.tipoDescuento}">
+					<s:selectItems value="#{enumeraciones.tipoDescuento}" var="tipoDescuento"
+						label="#{tipoDescuento}" />
+					<s:convertEnum />
+				</h:selectOneMenu>
+			</s:decorate>
+
+            <s:decorate id="porcentajeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Valor</ui:define>
+                <h:inputText id="porcentaje"
+                          value="#{atrasoHome.instance.porcentaje}">
+                    <a:support event="onblur" reRender="porcentajeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{atrasoHome.persist}"
+                       disabled="#{!atrasoHome.wired}"
+                       rendered="#{!atrasoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{atrasoHome.update}"
+                       rendered="#{atrasoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{atrasoHome.remove}"
+                      immediate="true"
+                       rendered="#{atrasoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Atraso.xhtml"
+                rendered="#{atrasoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty atrasoFrom ? 'AtrasoList' : atrasoFrom}.xhtml"
+                rendered="#{!atrasoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

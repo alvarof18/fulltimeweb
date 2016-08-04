@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page login-required="true"
+ no-conversation-view-id="/TipoPermisoList.xhtml"
+ xmlns="http://jboss.com/products/seam/pages"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd">
+ <begin-conversation flush-mode="MANUAL" join="true"/>
+ <action execute="#{tipoPermisoHome.wire}"/>
+ <param name="tipoPermisoFrom"/>
+ <param name="tipoPermisoTipeId" value="#{tipoPermisoHome.tipoPermisoTipeId}"/>
+ <navigation from-action="#{tipoPermisoHome.persist}">
+  <rule>
+   <end-conversation/>
+   <redirect view-id="/fulltime/TipoPermiso.xhtml"/>
+  </rule>
+ </navigation>
+ <navigation from-action="#{tipoPermisoHome.update}">
+  <rule>
+   <end-conversation/>
+   <redirect view-id="/fulltime/TipoPermiso.xhtml"/>
+  </rule>
+ </navigation>
+ <navigation from-action="#{tipoPermisoHome.remove}">
+  <rule>
+   <end-conversation/>
+   <redirect view-id="/fulltime/TipoPermisoList.xhtml"/>
+  </rule>
+ </navigation>
+</page>

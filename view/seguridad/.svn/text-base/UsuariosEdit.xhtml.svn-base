@@ -1,0 +1,149 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="usuarios" styleClass="edit">
+    
+    	<h1  id="titleSeg" align="center">#{usuariosHome.managed ? 'Editar' : 'A&#241;adir'} Usuarios</h1>
+        <rich:panel>
+            <f:facet name="header">#{usuariosHome.managed ? 'Editar' : 'A&#241;adir'} Usuarios</f:facet>
+
+			<s:decorate id="rolesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Roles</ui:define>
+					
+				<h:selectOneMenu id="slRoles" required="true" value="#{usuariosHome.idRol}"> 
+					<f:selectItem itemLabel="Seleccionar"/>
+					<f:selectItems value="#{usuariosHome.listRol}"/>
+				</h:selectOneMenu>
+					
+			</s:decorate>
+			
+			<s:decorate id="usuarioField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Usuario</ui:define>
+                <h:inputText id="usuario"
+                           size="30"
+                      maxlength="30"
+                          value="#{usuariosHome.instance.usuario}" required="true">
+                    <a:support event="onblur" reRender="usuarioField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+			
+            <s:decorate id="fechaCreacionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Creaci&#243;n</ui:define>
+                <rich:calendar id="fechaCreacion" required="true"
+                          value="#{usuariosHome.instance.fechaCreacion}" datePattern="MM/dd/yyyy" />
+            </s:decorate>
+
+            <s:decorate id="fechaVencimientoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Vencimiento</ui:define>
+                <rich:calendar id="fechaVencimiento"
+                          value="#{usuariosHome.instance.fechaVencimiento}" datePattern="MM/dd/yyyy">
+				<a:support event="onchanged"  reRender="fechaVencimientoField" bypassUpdates="true" ajaxSingle="true"/>                          
+                </rich:calendar>
+                                
+            </s:decorate>
+
+            <s:decorate id="contrasenaFieldId" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Clave</ui:define>
+                <h:inputSecret id="contrasena" value="#{usuariosHome.instance.contrasena}" size="20" maxlength="20" required="true"/>
+            </s:decorate>
+
+            <s:decorate id="estadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Estado</ui:define>
+                <h:selectBooleanCheckbox id="idEstadoActivo" value="#{usuariosHome.checkEstado}" />
+                <!-- <h:inputText id="estado"
+                           size="20"
+                      maxlength="20"
+                          value="#{usuariosHome.instance.estado.descripcion}">
+                    <a:support event="onblur" reRender="estadoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText> -->
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Guardar"
+                         action="#{usuariosHome.guardar}"
+                       disabled="#{!usuariosHome.wired}"
+                       rendered="#{!usuariosHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{usuariosHome.actualizar}"
+                       rendered="#{usuariosHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{usuariosHome.remove}"
+                      immediate="true"
+                       rendered="#{usuariosHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/Usuarios.xhtml"
+                rendered="#{usuariosHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/#{empty usuariosFrom ? 'UsuariosList' : usuariosFrom}.xhtml"
+                rendered="#{!usuariosHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!-- <rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Usuarios roleses">
+        <h:form styleClass="association" id="usuariosRolesesChildren">
+
+            <h:outputText value="There are no usuariosRoleses associated with this usuarios."
+                       rendered="#{empty usuariosHome.usuariosRoleses}"/>
+
+            <rich:dataTable value="#{usuariosHome.usuariosRoleses}"
+                           var="_usuariosRoles"
+                      rendered="#{not empty usuariosHome.usuariosRoleses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="usuariosRolesesTable">
+                <rich:column sortBy="#{_usuariosRoles.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_usuariosRoles.id}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{usuariosHome.managed}" id="usuariosRoleses">
+        <div class="actionButtons">
+            <s:button id="addusuariosRoles"
+                   value="Add usuariosRoles"
+                    view="/seguridad/UsuariosRolesEdit.xhtml"
+             propagation="none">
+                 <f:param name="usuariosId"
+                         value="#{usuariosHome.instance.id}"/>
+                 <f:param name="usuariosRolesFrom" value="Usuarios"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel> -->
+</ui:define>
+
+</ui:composition>

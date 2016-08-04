@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+
+   <param name="empleadoHorarioFrom"/>
+   <param name="empleadoHorarioEmhoId" value="#{empleadoHorarioHome.empleadoHorarioEmhoId}"/>
+   <param name="empleadoFrom"/>
+   <param name="empleadoEmplId" value="#{empleadoHome.empleadoEmplId}"/>
+   <param name="cargoFrom"/>
+   <param name="cargoCargId" value="#{cargoHome.cargoCargId}"/>
+   <param name="detalleTipoParametroFrom"/>
+   <param name="detalleTipoParametroDtpaId" value="#{detalleTipoParametroHome.detalleTipoParametroDtpaId}"/>
+   <param name="tipoParametroFrom"/>
+   <param name="tipoParametroTipaId" value="#{tipoParametroHome.tipoParametroTipaId}"/>
+
+
+   <param name="tipoCargoFrom"/>
+   <param name="tipoCargoTicaId" value="#{tipoCargoHome.tipoCargoTicaId}"/>
+
+
+   <param name="ciudadFrom"/>
+   <param name="ciudadCiudId" value="#{ciudadHome.ciudadCiudId}"/>
+   <param name="provinciaFrom"/>
+   <param name="provinciaProvId" value="#{provinciaHome.provinciaProvId}"/>
+   <param name="regionFrom"/>
+   <param name="regionRegiId" value="#{regionHome.regionRegiId}"/>
+
+
+
+   <param name="departamentoFrom"/>
+   <param name="departamentoDepaId" value="#{departamentoHome.departamentoDepaId}"/>
+
+   <param name="detalleGrupoContratadoFrom"/>
+   <param name="detalleGrupoContratadoDgcoId" value="#{detalleGrupoContratadoHome.detalleGrupoContratadoDgcoId}"/>
+   <param name="grupoContratadoFrom"/>
+   <param name="grupoContratadoGrcoId" value="#{grupoContratadoHome.grupoContratadoGrcoId}"/>
+
+
+   <param name="relojFrom"/>
+   <param name="relojReloId" value="#{relojHome.relojReloId}"/>
+
+   <param name="usuariosFrom"/>
+   <param name="usuariosId" value="#{usuariosHome.usuariosId}"/>
+
+
+   <param name="horarioFrom"/>
+   <param name="horarioHoraId" value="#{horarioHome.horarioHoraId}"/>
+
+
+
+</page>

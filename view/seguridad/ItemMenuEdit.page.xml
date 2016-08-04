@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      no-conversation-view-id="/ItemMenuList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{itemMenuHome.wire}"/>
+
+   <param name="itemMenuFrom"/>
+   <param name="itemMenuId" value="#{itemMenuHome.itemMenuId}"/>
+   <param name="gruposFrom"/>
+   <param name="gruposId" value="#{gruposHome.gruposId}"/>
+
+   <param name="subgruposFrom"/>
+   <param name="subgruposId" value="#{subgruposHome.subgruposId}"/>
+
+
+
+   <navigation from-action="#{itemMenuHome.guardar}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/seguridad/ItemMenu.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{itemMenuHome.update}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/seguridad/ItemMenu.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{itemMenuHome.remove}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/seguridad/ItemMenuList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

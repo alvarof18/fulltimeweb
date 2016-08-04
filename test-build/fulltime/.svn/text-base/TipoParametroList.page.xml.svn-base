@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{tipoParametroList.firstResult}"/>
+   <param name="sort" value="#{tipoParametroList.orderColumn}"/>
+   <param name="dir" value="#{tipoParametroList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="descripcion" value="#{tipoParametroList.tipoParametro.descripcion}"/>
+
+</page>

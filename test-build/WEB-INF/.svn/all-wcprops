@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/fulltime/!svn/ver/21/test-build/WEB-INF
+END
+faces-config.xml
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fulltime/!svn/ver/21/test-build/WEB-INF/faces-config.xml
+END
+components.xml
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fulltime/!svn/ver/21/test-build/WEB-INF/components.xml
+END
+web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fulltime/!svn/ver/21/test-build/WEB-INF/web.xml
+END
+pages.xml
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/fulltime/!svn/ver/21/test-build/WEB-INF/pages.xml
+END

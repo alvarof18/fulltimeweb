@@ -1,0 +1,87 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Titulo</f:facet>
+
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{tituloHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/TituloEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty tituloFrom ? 'TituloList' : tituloFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+<!--
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Empleado titulos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoTitulosChildren">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{empty tituloHome.empleadoTitulos}"/>
+
+        <rich:dataTable value="#{tituloHome.empleadoTitulos}"
+                       var="_empleadoTitulo"
+                  rendered="#{not empty tituloHome.empleadoTitulos}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadoTitulosTable">
+            <rich:column sortBy="#{_empleadoTitulo.emtiId}">
+                <f:facet name="header">Emti id</f:facet>
+                <h:outputText value="#{_empleadoTitulo.emtiId}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectempleadoTitulo"
+                     value="Select"
+                      view="/fulltime/EmpleadoTitulo.xhtml">
+                    <f:param name="empleadoTituloEmtiId"
+                            value="#{_empleadoTitulo.emtiId}"/>
+                    <f:param name="empleadoTituloFrom" value="Titulo"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/EmpleadoTituloEdit.xhtml">
+            <f:param name="tituloTituId"
+                    value="#{tituloHome.instance.tituId}"/>
+            <f:param name="empleadoTituloFrom" value="Titulo"/>
+        </s:button>
+    </div>
+    </rich:tab>
+-->    
+    
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

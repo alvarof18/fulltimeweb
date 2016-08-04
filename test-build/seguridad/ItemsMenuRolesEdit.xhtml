@@ -1,0 +1,106 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="itemsMenuRoles" styleClass="edit">
+	
+        <rich:panel>
+           <f:facet name="header">#{itemsMenuRolesHome.managed ? 'Editar' : 'A&#241;adir'} Men&#250; - Rol</f:facet>
+
+				<s:decorate id="rolesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Roles</ui:define>
+					<h:selectOneMenu id="listaRoles" required="false"
+							  value="#{itemsMenuRolesHome.instance.roles}">
+						<s:selectItems id="usuariosRolessCombo" value="#{rolesList.listadoRoles}" var="rol" 
+						label="#{rol.descripcion}" noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+						<a:support id="usuariosRolesRol" event="onblur" reRender="rolesField" bypassUpdates="true" ajaxSingle="true"/>
+					</h:selectOneMenu>
+				</s:decorate>
+				
+				<s:decorate id="menuField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Men&#250;</ui:define>
+					<h:selectOneMenu id="listaRoles" required="false"
+							  value="#{itemsMenuRolesHome.instance.grupos}" valueChangeListener="#{itemsMenuRolesHome.VisualizarMenu}">
+						<s:selectItems id="usuariosRolessCombo" value="#{gruposList.listaGrupos}" var="menu" 
+						label="#{menu.nombre}" noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+						<a:support id="tipoPermiso" event="onchange" reRender="listaRolesSubmenu,listaRolesItem" bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+				
+				<s:decorate id="submenuField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Submen&#250;</ui:define>
+					<h:selectOneMenu id="listaRolesSubmenu" required="false"
+							  value="#{itemsMenuRolesHome.instance.subgrupos}" valueChangeListener="#{itemsMenuRolesHome.VisualizarSubMenu}">
+						<s:selectItems id="usuariosRolessCombo" value="#{itemsMenuRolesHome.listaSubgrupoSelect}" var="rol" 
+						label="#{rol.nombre}" noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+						<a:support id="tipoPermiso" event="onchange" reRender="listaRolesItem"  bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+				
+				<s:decorate id="itemMenuField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Item Men&#250;</ui:define>
+					<h:selectOneMenu id="listaRolesItem" required="false"
+							  value="#{itemsMenuRolesHome.instance.itemMenu}">
+						<s:selectItems id="usuariosRolessCombo" value="#{itemsMenuRolesHome.listaItemMenuSelect}" var="rol" 
+						label="#{rol.nombre}" noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+						<a:support id="usuariosRolesRol" event="onblur" reRender="itemMenuField" bypassUpdates="true" ajaxSingle="true"/>
+					</h:selectOneMenu>
+				</s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Guardar"
+                         action="#{itemsMenuRolesHome.persist}"
+                       disabled="#{!itemsMenuRolesHome.wired}"
+                       rendered="#{!itemsMenuRolesHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{itemsMenuRolesHome.update}"
+                       rendered="#{itemsMenuRolesHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{itemsMenuRolesHome.remove}"
+                      immediate="true"
+                       rendered="#{itemsMenuRolesHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/ItemsMenuRoles.xhtml"
+                rendered="#{itemsMenuRolesHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/#{empty itemsMenuRolesFrom ? 'ItemsMenuRolesList' : itemsMenuRolesFrom}.xhtml"
+                rendered="#{!itemsMenuRolesHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

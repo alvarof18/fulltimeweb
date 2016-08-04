@@ -1,0 +1,52 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.Arrays;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.Permiso;
+
+@Name("permisoList")
+public class PermisoList extends EntityQuery<Permiso> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String EJBQL = "select permiso from Permiso permiso";
+
+	private static final String[] RESTRICTIONS = {
+		"lower(permiso.empleadoByEmplId.codigoEmpleado) like concat(lower(#{permisoList.permiso.empleadoByEmplId.codigoEmpleado}),'%')",
+		"lower(permiso.empleadoByEmplId.apellido) like concat(lower(#{permisoList.permiso.empleadoByEmplId.apellido}),'%')",
+		"lower(permiso.empleadoByEmplId.nombre) like concat(lower(#{permisoList.permiso.empleadoByEmplId.nombre}),'%')",
+		"date(permiso.fechaDesde) >= #{permisoList.permiso.fechaDesde}",
+		"lower(permiso.lugar) like concat(lower(#{permisoList.permiso.lugar}),'%')",
+	};
+
+	private String extensionArchivo;
+	
+	private Permiso permiso = new Permiso();
+
+	public PermisoList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+		setExtensionArchivo(Constantes.PDF);
+	}
+
+	public Permiso getPermiso() {
+		return permiso;
+	}
+
+	public void setPermiso(Permiso permiso) {
+		this.permiso = permiso;
+	}
+
+	public String getExtensionArchivo() {
+		return extensionArchivo;
+	}
+
+	public void setExtensionArchivo(String extensionArchivo) {
+		this.extensionArchivo = extensionArchivo;
+	}
+}

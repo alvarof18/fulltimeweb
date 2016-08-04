@@ -1,0 +1,113 @@
+package com.casapazmino.fulltime.menu.action;
+
+import java.util.List;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.security.Credentials;
+
+import com.casapazmino.fulltime.seguridad.action.GruposList;
+import com.casapazmino.fulltime.seguridad.action.ItemMenuList;
+import com.casapazmino.fulltime.seguridad.action.ItemsMenuRolesList;
+import com.casapazmino.fulltime.seguridad.action.PermisosMenuList;
+import com.casapazmino.fulltime.seguridad.action.SubgruposList;
+import com.casapazmino.fulltime.seguridad.action.UsuariosRolesList;
+import com.casapazmino.fulltime.seguridad.model.Grupos;
+import com.casapazmino.fulltime.seguridad.model.ItemMenu;
+import com.casapazmino.fulltime.seguridad.model.ItemsMenuRoles;
+import com.casapazmino.fulltime.seguridad.model.PermisosMenu;
+import com.casapazmino.fulltime.seguridad.model.Roles;
+import com.casapazmino.fulltime.seguridad.model.Subgrupos;
+import com.casapazmino.fulltime.seguridad.model.UsuariosRoles;
+
+@Name("consultarMenus")
+public class ConsultarMenu {
+
+	@In(create=true)
+	Credentials credensial;
+	
+	/**
+	 * Metodo PAra obtener una lista de ITEMS MENU ROLES
+	 * @param idRol
+	 * @return
+	 */
+
+	public List<ItemsMenuRoles> getItemMenuRoles(Long idRol)
+	{
+		Contexts.getApplicationContext().set("idRol", idRol);
+		ItemsMenuRolesList itemsMenuLista=new ItemsMenuRolesList(300);
+		return itemsMenuLista.getResultList();
+	}
+	
+	/**
+	 * Metodo Para obtener un dato de Items Menu
+	 * @param idItemMenu
+	 * @return 
+	 */
+	
+	public ItemMenu getItemMenu(Long idItemMenu)
+	{
+		Contexts.getApplicationContext().set("idItemMenu", idItemMenu);
+		ItemMenuList itemMenuLista=new ItemMenuList(0);
+		return itemMenuLista.getSingleResult();
+	}
+	
+	/**
+	 * Metodo para obtener un dato de Sub Grupos
+	 * @param idSubgrupo
+	 * @return
+	 */
+	public Subgrupos getSubGrupo(Long idSubgrupo)
+	{
+		Contexts.getApplicationContext().set("idSubgrupo",idSubgrupo);
+		SubgruposList subGrupoLista=new SubgruposList();
+		return subGrupoLista.getSingleResult();
+	}
+
+	/**
+	 * Metodo Para obtener un dato de Grupos
+	 * @param idGrupo
+	 * @return
+	 */
+	public Grupos getGrupo(Long idGrupo)
+	{
+		Contexts.getApplicationContext().set("idGrupo",idGrupo);
+		GruposList grupoLista=new GruposList();
+		return grupoLista.getSingleResult();
+	}
+	
+	/**
+	 * Metodo para obtener una lista de datos de usuario
+	 * @param usuario
+	 * @return
+	 */
+	public List<UsuariosRoles> getUsuarioRol(String usuario)
+	{
+		Contexts.getApplicationContext().set("users",usuario);
+		UsuariosRolesList listaUsuarioRol=new UsuariosRolesList();
+		return listaUsuarioRol.getResultList();
+	}
+	
+	/**
+	 * Metodo para obtener una lista de usuarios con respecto al rol
+	 * @return
+	 */
+	public List<UsuariosRoles> getUsuarioRoles()
+	{
+
+		String userName = this.credensial.getUsername();
+		return this.getUsuarioRol((String) Contexts.getApplicationContext().get("authenticator.credentials.username"));
+
+	}
+	
+	/**
+	 * Metodo para obtener los permisos del usuraio por el rol
+	 */
+	public List<PermisosMenu> getPermisosMenu(Roles rol)
+	{
+		Contexts.getApplicationContext().set("permisoRol", rol);
+		PermisosMenuList listaPermisos=new PermisosMenuList();
+		return listaPermisos.getResultList();
+	}
+}

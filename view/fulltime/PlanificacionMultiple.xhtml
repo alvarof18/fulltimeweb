@@ -1,0 +1,1198 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml"
+    xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+    
+	<ui:define name="body">
+	
+		<style type="text/css">
+			.panelListaPlanificacion {   					
+   					overflow: auto;
+  					}
+		
+  			.panelPopUpEdit {
+   					height: 100px;   					
+   					overflow: auto;
+  					}
+  					
+  			.divPopUpRemove {
+   					height: 50px;
+   					width:  300px;
+   					font-family : Arial;
+    				font-size : 130%;
+  					}
+  					
+  			.panelPopUpEditHorario {
+   					height: 120px;   					
+   					overflow: auto;
+  					}
+  					
+  			.rich-filter-input{
+            		width:50px;
+        			}
+        			
+        	.correcto{
+            		color:green;
+        			}
+        			
+        	.error{
+            		color:red;
+        			}
+		</style> 
+		
+    	<h:form id="planificacionSearch" styleClass="edit" bodyClass="panelListaPlanificacion" style="width:1157px;">	    
+        	<rich:simpleTogglePanel label="Planificaci&#243;n M&#250;ltiple" switchType="ajax">        		
+				<h:panelGrid columns="1" > 		
+					<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+						<ui:define name="label">
+							Seleccione Par&#225;metros				
+						</ui:define>
+							<h:selectOneRadio id="listaParametros" value="#{planificacionHospitales.tipoGrupo}">
+								<s:selectItems value="#{enumeraciones.tipoReporte}" var="tipoReporte" label="#{tipoReporte}" />						
+								<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,departamentoField,listaDepartamento,itemsDepartamento,
+															detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+															empleadoField,listaEmpleado,itemsEmpleado,ciudadField,listaCiudades"
+								ajaxSingle="true" />
+							</h:selectOneRadio>
+					</s:decorate>
+
+					<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+						<h:selectManyListbox id="listaCargo" value="#{planificacionHospitales.cargos}"
+							size="10" rendered="#{planificacionHospitales.tipoGrupo != 'Departamento' and planificacionHospitales.tipoGrupo != 'Grupo' and planificacionHospitales.tipoGrupo != 'Empleado'}" >
+							<s:selectItems id="itemsCargo"  
+								value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+								itemValue="#{cargo.cargId}" >
+							</s:selectItems>
+							<f:convertNumber/>
+						</h:selectManyListbox>
+					</s:decorate>
+
+					<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+						<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{planificacionHospitales.detalleGrupoContratados}"
+							size="10" rendered="#{planificacionHospitales.tipoGrupo != 'Cargo' and planificacionHospitales.tipoGrupo != 'Departamento' and planificacionHospitales.tipoGrupo != 'Empleado'}">
+								<s:selectItems id="itemsDetalleGrupoContratado"  
+									value="#{detalleGrupoContratadoList.resultList}" 
+									var="detalleGrupoContratado" 
+									label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+									itemValue="#{detalleGrupoContratado.dgcoId}" >
+								</s:selectItems>
+								<f:convertNumber />
+							</h:selectManyListbox>
+					</s:decorate>
+
+					<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/display.xhtml"  >
+						<h:selectManyListbox id="listaDepartamento" value="#{planificacionHospitales.departamentos}"
+								size="10" rendered="#{planificacionHospitales.tipoGrupo != 'Cargo' and planificacionHospitales.tipoGrupo != 'Grupo' and planificacionHospitales.tipoGrupo != 'Empleado'}">
+								<s:selectItems id="itemsDepartamento" value="#{departamentoList.listaDepartamentos}" var="departamento" label="#{departamento.descripcion}" itemValue="#{departamento.depaId}"/>
+								<f:convertNumber />
+							</h:selectManyListbox>
+					</s:decorate>
+						
+					<s:decorate id="empleadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+						<h:selectManyListbox id="listaEmpleado" required="false" value="#{planificacionHospitales.empleados}"
+							size="10" rendered="#{planificacionHospitales.tipoGrupo != 'Cargo' and planificacionHospitales.tipoGrupo != 'Grupo' and planificacionHospitales.tipoGrupo != 'Departamento'}">
+							<s:selectItems id="itemsEmpleado" value="#{empleadoList.listaEmpleadoMejorado}" var="empleado" label="#{empleado.apellido} #{empleado.nombre}"/>
+							<s:convertEntity />
+						</h:selectManyListbox>					
+					</s:decorate>
+				</h:panelGrid>
+		
+				<h:panelGrid columns="2" styleClass="vertical-align: top">		
+					<h:panelGrid columns="1" >			
+						<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/display.xhtml">
+							<ui:define name="label" rendered="#{planificacionHospitales.tipoGrupo != 'Empleado'}">Ciudad</ui:define>
+								<h:selectManyListbox id="listaCiudades" value="#{planificacionHospitales.ciudades}" size="10" > 
+									<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad" 
+										value="#{usuarioCiudadList.listaCiudadesUsuarios}" 
+										var="usuarioCiudad" 
+										label="#{usuarioCiudad.ciudad.provincia.descripcion} - #{usuarioCiudad.ciudad.descripcion}"
+										itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+									<f:convertNumber />
+							</h:selectManyListbox>
+						</s:decorate>
+			
+						<s:decorate id="fechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                			<ui:define name="label">Fecha Desde</ui:define>
+                			<rich:calendar id="fechaDesde" required="true" showApplyButton="false" value="#{planificacionHospitales.fechaDesde}" datePattern="dd/MM/yyyy"/>
+	            		</s:decorate>		
+            
+            			<s:decorate id="fechaHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                			<ui:define name="label">Fecha Hasta</ui:define>
+                			<rich:calendar id="fechaHasta" required="true" showApplyButton="false" value="#{planificacionHospitales.fechaHasta}" datePattern="dd/MM/yyyy"/>           
+            			</s:decorate>			
+					</h:panelGrid>             		
+				</h:panelGrid>	
+			</rich:simpleTogglePanel>
+		
+			<div>		
+				<table width="100%">				
+					<tr>
+						<td width="70%">
+							
+							<h:commandButton id="verificar" value="Verificar" action="#{planificacionHospitales.VerificarRegistros()}"/>
+				
+							<rich:spacer width="7"/>					
+							
+							<h:commandButton id="procesar" value="Procesar" action="#{planificacionHospitales.ProcesarRegistros()}"/>
+							
+							<rich:spacer width="7"/>
+							
+							<h:commandButton id="duplicar" value="Duplicar Siguiente Mes" action="#" rendered="false"/>
+							
+							<rich:spacer width="7" rendered="false"/>
+							
+							<a:commandButton id="eliminarPlanificacion" value="Eliminar Planificaci&#243;n">
+								<rich:componentControl for="popUpDeletePlanificacion" attachTo="eliminarPlanificacion" operation="show" event="onclick" />
+							</a:commandButton>
+							
+							<rich:spacer width="7"/>
+							
+							<a:commandButton id="eliminarAsistencia" value="Eliminar Asistencia">
+								<rich:componentControl for="popUpDeleteAsistencia" attachTo="eliminarAsistencia" operation="show" event="onclick" />
+							</a:commandButton>
+							
+							<rich:spacer width="7"/>
+							
+							<a:commandButton id="eliminarTodo" value="Eliminar Todo">
+								<rich:componentControl for="popUpDeleteAll" attachTo="eliminarTodo" operation="show" event="onclick" />
+							</a:commandButton>
+							
+							<rich:spacer width="7"/>
+							
+							<h:commandButton id="cargar" value="Cargar Timbres" action="#{planificacionHospitales.CargarTimbres()}"/>	
+								
+							<rich:spacer width="7"/>	
+									
+							<h:commandButton id="cancelar" value="Cancelar"	action="#{planificacionHospitales.Cancelar()}"/>
+							
+							
+						
+						</td>
+						<td align="right">
+							
+							<s:div rendered="#{planificacionHospitales.listaPlanificacion.size()>0}">
+								<h:outputText value="Registros Procesados "/>
+						
+								<rich:spacer/>
+						
+								<h:outputText id="registrosProcesados" value="#{planificacionHospitales.registrosProcesados}" />
+									
+								<rich:spacer width="30"/>
+									
+								<h:outputText value="Registros No Procesados " />
+									
+								<rich:spacer />
+									
+								<h:outputText id="registrosNoProcesados" value="#{planificacionHospitales.registrosNoProcesados}" />
+							</s:div>
+							
+							<h:graphicImage id="fileImg" value="/img/xls.png" alt="Seam logo" height="30" width="30" style="vertical-align: text-top;">
+								<rich:componentControl for="filePopUp" attachTo="fileImg" operation="show" event="onclick" />							
+							</h:graphicImage>
+							
+						</td>
+					</tr>				
+				</table>			
+			</div>				
+		
+			<rich:panel id="panelMatrizPrincipal" bodyClass="panelListaPlanificacion" style="width:1157px;" rendered="#{planificacionHospitales.listaPlanificacion.size()>0}">
+			  
+	       		<f:facet name="header">
+	       			Resultados de B&#250;squeda
+	       		</f:facet>	       		
+	       			       		
+	       		<rich:dataTable id="listaPlanificacion" var="_planificacion" value="#{planificacionHospitales.listaPlanificacion}"
+					rendered="#{planificacionHospitales.listaPlanificacion.size()>0}" rows="#{planificacionHospitales.numeroFilas}" reRender="ds">
+				
+					<f:facet name="header">
+                		<h:outputText value="Planificaci&#243;n M&#250;ltiple"/>
+            		</f:facet>
+            		          		
+            		<rich:column id="ColNum">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="N&#176;"/> 
+			            	</f:facet>
+			            	
+			            	<h:outputText id="idLink" value="#{_planificacion.numero}"/>
+			            	
+				            <br/>		                  	    
+				            
+		            	</div>    
+		   			</rich:column>
+            	
+            		<rich:column id="ColEmpl">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="Empleado"/> 
+			            	</f:facet>		            	
+			            	<h:outputText value="#{_planificacion.empleado.apellido}  #{_planificacion.empleado.nombre}"/>		        
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="ColEdit">
+            			<div align="center">
+            				<f:facet name="header">
+			            		<h:outputText value=""/> 
+			            	</f:facet>
+            			
+            				<h:graphicImage id="idImageEdit" value="/img/edit.jpg" align="center" alt="Seam logo" 
+				           		height="20" width="20" onclick="updateFilaEdit(#{_planificacion.numero})">
+				           		<rich:componentControl for="popUpEdit" attachTo="idImageEdit" operation="show" event="onclick" />
+				           	</h:graphicImage> 
+				           	 
+            			</div>            		
+            		</rich:column>
+            		
+            		<rich:column id="colRemove">
+            			<div align="center">
+            				<f:facet name="header">
+			            		<h:outputText value=""/> 
+			            	</f:facet>
+            			
+            				<h:graphicImage id="idImageRemove" value="/img/elimina.png" align="center" alt="Seam logo" 
+				           		height="20" width="20" onclick="updateFilaRemove(#{_planificacion.numero})">
+				           		<rich:componentControl for="popUpRemove" attachTo="idImageRemove" operation="show" event="onclick" />
+				           	</h:graphicImage> 
+				           	 
+            			</div>            		
+            		</rich:column>
+		   			
+		   			<rich:column id="codHorario1" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(1)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(1)}"/> 
+			            	</f:facet>		   
+							<h:outputText value="#{_planificacion.horario1.label}"/> 		
+    							    					   
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario2" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(2)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(2)}"/> 
+			            	</f:facet>			            								
+							<h:outputText value="#{_planificacion.horario2.label}"/>						
+		            	</div>    
+		   			</rich:column>	   	
+		   			
+		   			<rich:column id="codHorario3" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(3)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(3)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario3.label}"/>     
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario4" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(4)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(4)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario4.label}"/>      
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario5" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(5)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(5)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario5.label}"/>      
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario6" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(6)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(6)}"/>
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario6.label}"/>    
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario7" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(7)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(7)}"/>
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario7.label}"/>  
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario8" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(8)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(8)}"/>
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario8.label}"/>     
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario9" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(9)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(9)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario9.label}"/>   
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario10" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(10)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(10)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario10.label}"/>   
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario11" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(11)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(11)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario11.label}"/>      
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario12" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(12)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(12)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario12.label}"/>      
+		            	</div>    
+		   			</rich:column>	   	
+		   			
+		   			<rich:column id="codHorario13" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(13)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(13)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario13.label}"/>   
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario14" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(14)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(14)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario14.label}"/>      
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario15" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(15)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(15)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario15.label}"/>      
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario16" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(16)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(16)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario16.label}"/>      
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario17" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(17)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(17)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario17.label}"/>      
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario18" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(18)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(18)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario18.label}"/>      
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario19" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(19)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(19)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario19.label}"/>    
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario20" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(20)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(20)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario20.label}"/>    
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario21" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(21)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(21)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario21.label}"/>       
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario22" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(22)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(22)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario22.label}"/>     
+		            	</div>    
+		   			</rich:column>	   	
+		   			
+		   			<rich:column id="codHorario23" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(23)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(23)}"/>
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario23.label}"/>     
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario24" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(24)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(24)}"/>
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario24.label}"/>    
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario25" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(25)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(25)}"/>
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario25.label}"/>    
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario26" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(26)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(26)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario26.label}"/>   
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario27" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(27)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(27)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario27.label}"/>      
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario28" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(28)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(28)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario28.label}"/>       
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codHorario29" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(29)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(29)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario29.label}"/>      
+		            	</div>    
+		   			</rich:column>	
+		   			
+		   			<rich:column id="codHorario30" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(30)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(30)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario30.label}"/>       
+		            	</div>    
+		   			</rich:column>
+		   					   			
+		   			<rich:column id="codHorario31" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(31)}">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(31)}"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.horario31.label}"/>  
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="codTotal">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="Horas"/> 
+			            	</f:facet>		            	
+							<h:outputText value="#{_planificacion.totalHoras}"/>  
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<f:facet name="footer">	
+                		<rich:datascroller id="ds"/> 		
+            		</f:facet>           		
+            		 			    		
+	       		</rich:dataTable>
+	       		
+	       		<rich:dataTable rendered="#{planificacionHospitales.listaPlanificacion.size()>0}">
+	       			<f:facet name="header">	
+	            		<h:selectOneMenu value="#{planificacionHospitales.valueSelected}" valueChangeListener="#{planificacionHospitales.cambiarNumeroFilas}">
+		            		<f:selectItems value="#{planificacionHospitales.listaNumeroFilas}" />
+		            		<a:support event="onchange" reRender="listaPlanificacion" bypassUpdates="true" ajaxSingle="true" />	
+		        		</h:selectOneMenu>
+	        		</f:facet>
+	       		</rich:dataTable>
+	    		    		
+	    	</rich:panel>   	  	    		
+	    	
+		</h:form>
+		
+		<rich:modalPanel id="filePopUp" autosized="true" resizeable="false"> 
+			<h:form>				
+				<table>
+					<tr>
+						<td>
+							<h:outputText value="Subir Archivo"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<rich:fileUpload fileUploadListener="#{planificacionHospitales.subirArchivo}" listHeight="100px"
+			                	maxFilesQuantity="1"
+			                	id="upload"               
+			                	acceptedTypes="xls">
+			               		<a:support event="onuploadcomplete" reRender="msgOK,msgError"/>              
+			            	</rich:fileUpload>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="msgOK" value="#{planificacionHospitales.mensajeCorrecto}" styleClass="correcto"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="msgError" value="#{planificacionHospitales.mensajeError}" styleClass="error"/>
+						</td>
+					</tr>
+					<tr>
+						<td align="center">
+							<a:commandButton value="Cerrar"  action="#{planificacionHospitales.IniciarMensajesCargaArchivo()}"
+			    		onclick="javascript:Richfaces.hideModalPanel('filePopUp');" />		    		
+			    		
+						</td>
+					</tr>
+				</table>			    
+			</h:form>	        
+		</rich:modalPanel> 	  
+		
+		<rich:modalPanel id="popUpEdit" autosized="true" resizeable="false"> 
+			<h:form>				
+				<!--  -->
+				
+				<rich:panel id="planificacionEmpleadoPanel" bodyClass="panelPopUpEdit" style="width:700px;">
+				    <f:facet name="header">
+				    	Planificaci&#243;n por Empleado
+				    </f:facet>
+				    
+				    <rich:dataTable id="listaPlanificacionEmpleado" var="_planificacionEmpleado" value="#{planificacionHospitales.listaPlanificacionEmpleado}">
+				               		           	
+	            		<rich:column id="ColEmplEmpl">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="Empleado"/> 
+				            	</f:facet>          	
+				            	<h:outputText value="#{_planificacionEmpleado.empleado.apellido}  #{_planificacionEmpleado.empleado.nombre}"/>		        
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="ColClear">
+	            			<div align="center">
+	            				<f:facet name="header">
+				            		<h:outputText value=""/> 
+				            	</f:facet>
+	            			
+		            			<h:graphicImage id="idImageClear" value="/img/clear.png" align="center" alt="Seam logo" 
+					           		height="20" width="20" onclick="vaciarFilaEmpleado(1)">
+					           	</h:graphicImage> 
+					           	 
+	            			</div>            		
+            			</rich:column>
+			   			
+			   			<rich:column id="codHorario1Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(1)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(1)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value1}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario2Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(2)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(2)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value2}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario3Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(3)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(3)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value3}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario4Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(4)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(4)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value4}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario5Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(5)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(5)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value5}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario6Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(6)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(6)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value6}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			
+			   			<rich:column id="codHorario7Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(7)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(7)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value7}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			
+			   			<rich:column id="codHorario8Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(8)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(8)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value8}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			
+			   			<rich:column id="codHorario9Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(9)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(9)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value9}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario10Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(10)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(10)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value10}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario11Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(11)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(11)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value11}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario12Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(12)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(12)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value12}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario13Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(13)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(13)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value13}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario14Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(14)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(14)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value14}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario15Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(15)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(15)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value15}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario16Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(16)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(16)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value16}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario17Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(17)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(17)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value17}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario18Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(18)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(18)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value18}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario19Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(19)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(19)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value19}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   					   			
+			   			<rich:column id="codHorario20Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(20)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(20)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value20}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario21Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(21)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(21)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value21}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario22Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(22)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(22)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value22}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario23Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(23)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(23)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value23}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario24Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(24)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(24)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value24}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario25Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(25)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(25)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value25}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario26Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(26)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(26)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value26}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario27Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(27)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(27)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value27}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario28Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(28)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(28)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value28}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>		   			
+			   			
+			   			<rich:column id="codHorario29Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(29)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(29)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value29}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   					   			
+			   			<rich:column id="codHorario30Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(30)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(30)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value30}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="codHorario31Empl" rendered="#{planificacionHospitales.getHabilitarDiaMatriz(31)}">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="#{planificacionHospitales.getDiaMatriz(31)}"/> 
+				            	</f:facet>	
+				            	<h:selectOneMenu value="#{planificacionHospitales.value31}">
+	            					<f:selectItems value="#{planificacionHospitales.listaCodigosHorario}" />
+	        					</h:selectOneMenu>
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="totalHorasEmpl">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="Horas"/> 
+				            	</f:facet>	
+				            	<h:outputText value="#{_planificacionEmpleado.totalHoras}"/>
+			            	</div>    
+			   			</rich:column>
+		   			     			    		
+	       			</rich:dataTable>			   			
+				    
+				</rich:panel>				
+				
+			   	<rich:spacer height="15"/> 			   	
+			   				    
+			    <rich:simpleTogglePanel id="listaDetalleHorarioPanel" bodyClass="panelPopUpEditHorario" style="width:700px;" 
+			    	switchType="ajax" opened="#{planificacionHospitales.visualizaPanelHorarios}">
+			   
+				   	<f:facet name="header">
+					    	
+					    	<h:graphicImage value="/img/search.png" align="center" alt="Seam logo" 
+								height="20" width="20">
+								Horarios
+							</h:graphicImage> 
+							
+					</f:facet>
+				   
+				    <rich:dataTable id="listaDetalleHorario" var="_detalleHorario" value="#{planificacionHospitales.listaDetalleHorario}" 
+				    	rows="20" reRender="foot">
+				    	
+				    	<rich:column id="ColhorarioCodigo" sortBy="#{_detalleHorario.horario.codigo}"
+				    		filterBy="#{_detalleHorario.horario.codigo}" filterEvent="onkeyup">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="C&#243;digo"/> 
+				            	</f:facet>          	
+				            	<h:outputText value="#{_detalleHorario.horario.codigo}"/>		        
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="ColHorarioDescripcion" sortBy="#{_detalleHorario.horario.descripcion}"
+			   				filterBy="#{_detalleHorario.horario.descripcion}" filterEvent="onkeyup">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="Descripci&#243;n"/> 
+				            	</f:facet>          	
+				            	<h:outputText value="#{_detalleHorario.horario.descripcion}"/>		        
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="ColHora" sortBy="#{planificacionHospitales.getTime(_detalleHorario.hora)}"
+			   				filterBy="#{planificacionHospitales.getTime(_detalleHorario.hora)}" filterEvent="onkeyup">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="Hora"/> 
+				            	</f:facet>
+				            	<h:outputText value="#{planificacionHospitales.getTime(_detalleHorario.hora)}"/>   		        
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="ColEntradaSalida" sortBy="#{_detalleHorario.entradaSalida}"
+			   				filterBy="#{_detalleHorario.entradaSalida}" filterEvent="onkeyup">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="Marcaci&#243;n"/> 
+				            	</f:facet>          	
+				            	<h:outputText value="#{_detalleHorario.entradaSalida}"/>		        
+			            	</div>    
+			   			</rich:column>
+			   			
+			   			<rich:column id="ColTipo" sortBy="#{_detalleHorario.horario.estado}"
+			   				filterBy="#{_detalleHorario.horario.estado}" filterEvent="onkeyup">
+	            			<div align="center">
+				           		<f:facet name="header">
+				            		<h:outputText value="Tipo"/> 
+				            	</f:facet>          	
+				            	<h:outputText value="#{_detalleHorario.horario.estado}"/>		        
+			            	</div>    
+		   				</rich:column>   			
+			   			
+			   			<f:facet name="footer">		   					
+	                		<rich:datascroller id="foot"/>        				
+	            		</f:facet>  
+				    
+				    </rich:dataTable>
+			   
+			   	</rich:simpleTogglePanel>
+	       		
+				<!--  -->
+				
+				<br/>
+				    	             
+		    	<div class="actionButtons" align="center">
+			    	<a:commandButton value="Guardar" action="#{planificacionHospitales.RegistrarEmpleado()}" 
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpEdit');" reRender="listaPlanificacion"/>
+			    	
+			    	<rich:spacer width="15"/>
+			    	
+			    	<a:commandButton value="Procesar" action="#{planificacionHospitales.ProcesarEmpleado()}" 
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpEdit');" reRender="listaPlanificacion,registrosProcesados,registrosNoProcesados"/>
+			    	
+			    	<rich:spacer width="15"/>
+			    				    	
+			    	<a:commandButton value="Cancelar"  
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpEdit');" reRender="listaPlanificacion"/>     
+			    </div>
+			</h:form>	        
+	   	</rich:modalPanel> 
+	   	
+	   	<rich:modalPanel id="popUpRemove" autosized="true" resizeable="false"> 
+			<h:form>	
+				<div class="divPopUpRemove">
+					<p>
+						<h:outputText id="empleadoRemoveText" value="#{planificacionHospitales.empleadoRemove}"/>
+					</p>
+				</div>			
+				
+				<div class="actionButtons" align="center">
+			    	<a:commandButton value="Confirmar" action="#{planificacionHospitales.DescartarEmpleado()}" 
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpRemove');" reRender="listaPlanificacion"/>	
+			    	
+			    	<rich:spacer width="30"/>	
+			    			    	
+			    	<a:commandButton value="Cancelar" onclick="javascript:Richfaces.hideModalPanel('popUpRemove');"/>     
+			    </div>
+			</h:form>	        
+	   	</rich:modalPanel> 		
+	   	
+	   	<rich:modalPanel id="popUpDeletePlanificacion" autosized="true" resizeable="false"> 
+			<h:form>	
+				<div class="divPopUpRemove">
+					<p>
+						<h:outputText value="¿Desea eliminar todos los registros almacenados?"/>
+					</p>
+				</div>			
+				
+				<div class="actionButtons" align="center">
+			    	<a:commandButton value="Confirmar" action="#{planificacionHospitales.EliminarRegistrosAlmacenados()}" 
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpDeletePlanificacion');" reRender="listaPlanificacion,registrosProcesados,registrosNoProcesados"/>	
+			    	
+			    	<rich:spacer width="30"/>	
+			    			    	
+			    	<a:commandButton value="Cancelar" onclick="javascript:Richfaces.hideModalPanel('popUpDeletePlanificacion');"/>     
+			    </div>
+			</h:form>	        
+	   	</rich:modalPanel> 		
+	   	
+	   	<rich:modalPanel id="popUpDeleteAsistencia" autosized="true" resizeable="false"> 
+			<h:form>	
+				<div class="divPopUpRemove">
+					<p>
+						<h:outputText value="¿Desea eliminar todos los registros procesados?"/>
+					</p>
+				</div>			
+				
+				<div class="actionButtons" align="center">
+			    	<a:commandButton value="Confirmar" action="#{planificacionHospitales.EliminarRegistrosProcesados()}" 
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpDeleteAsistencia');" reRender="listaPlanificacion,registrosProcesados,registrosNoProcesados"/>	
+			    	
+			    	<rich:spacer width="30"/>	
+			    			    	
+			    	<a:commandButton value="Cancelar" onclick="javascript:Richfaces.hideModalPanel('popUpDeleteAsistencia');"/>     
+			    </div>
+			</h:form>	        
+	   	</rich:modalPanel> 	
+	   	
+	   <rich:modalPanel id="popUpDeleteAll" autosized="true" resizeable="false"> 
+			<h:form>	
+				<div class="divPopUpRemove">
+					<p>
+						<h:outputText value="¿Desea eliminar todos los registros almacenados y procesados?"/>
+					</p>
+				</div>			
+				
+				<div class="actionButtons" align="center">
+			    	<a:commandButton value="Confirmar" action="#{planificacionHospitales.EliminarRegistrosPlanificacionAsistencia()}" 
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpDeleteAll');" reRender="listaPlanificacion,registrosProcesados,registrosNoProcesados"/>	
+			    	
+			    	<rich:spacer width="30"/>	
+			    			    	
+			    	<a:commandButton value="Cancelar" onclick="javascript:Richfaces.hideModalPanel('popUpDeleteAll');"/>     
+			    </div>
+			</h:form>	        
+	   	</rich:modalPanel> 	
+		
+		<a:form>    	
+        	<a:jsFunction name="updateFilaEdit" reRender="listaPlanificacionEmpleado">
+            	<a:actionparam name="param1" assignTo="#{planificacionHospitales.filaEdit}"  />                  
+        	</a:jsFunction>
+    	</a:form>  
+    	
+    	<a:form>    	
+        	<a:jsFunction name="updateFilaRemove" reRender="empleadoRemoveText">
+            	<a:actionparam name="param1" assignTo="#{planificacionHospitales.filaRemove}"  />                  
+        	</a:jsFunction>
+    	</a:form>  
+    	
+    	<a:form>    	
+        	<a:jsFunction name="vaciarFilaEmpleado" reRender="listaPlanificacion,listaPlanificacionEmpleado">
+            	<a:actionparam name="param1" assignTo="#{planificacionHospitales.vacia}"  />                  
+        	</a:jsFunction>
+    	</a:form>    	
+    	    
+   		
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,371 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+	
+    <h:form id="empleado" styleClass="edit">
+    	
+    	<a:loadScript src="#{requestScope.contextPath}/scripts/funciones.js" />
+<!-- <h1 id="titleInv" align="center">#{empleadoHome.managed ? 'Editar' : 'Crear'} Empleado</h1>  -->
+		
+		<rich:messages globalOnly="true" errorClass="errorClass" id="error">
+			<f:facet name="errorMarker">
+				<h:graphicImage url="/img/error.gif" />
+			</f:facet>
+		</rich:messages>
+		
+        <rich:panel id="info">
+            <f:facet name="header">#{empleadoHome.managed ? 'Editar' : 'A&#241;adir'} Empleado</f:facet>
+			
+			<h:panelGrid columns="2">
+
+					<rich:panel style="width:540px; height:420px">
+						<f:facet name="header">Datos Personales</f:facet>
+
+							<s:decorate id="codigoEmpleadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">C&#243;digo Reloj</ui:define>
+                				<h:inputText id="codigoEmpleado" required="true" size="10" maxlength="10" 
+                												 disabled="#{empleadoHome.activarGeneracionAutomatica()}"	value="#{empleadoHome.instance.codigoEmpleado}">
+                    				<a:support event="onblur" reRender="codigoEmpleadoField" 
+                    				bypassUpdates="true" ajaxSingle="true"/>
+                				</h:inputText>
+            				</s:decorate>
+
+							<s:decorate id="cedulaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">C&#233;dula</ui:define>
+                				<h:inputText id="cedula" required="true" size="10" maxlength="10" value="#{empleadoHome.instance.cedula}">
+                    				<a:support event="onblur" reRender="cedulaField" 
+                    				bypassUpdates="true" ajaxSingle="true"/>
+                				</h:inputText>
+            				</s:decorate>
+							
+							<s:decorate id="nombreField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">Nombre</ui:define>
+                				<h:inputText id="nombre" size="60" required="true" value="#{empleadoHome.instance.nombre}"/>
+            				</s:decorate>
+							
+            				<s:decorate id="apellidoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">Apellido</ui:define>
+                				<h:inputText id="apellido" size="60" required="true" value="#{empleadoHome.instance.apellido}"/>
+            				</s:decorate>
+
+				            <s:decorate id="correoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				                <ui:define name="label">Correo Electr&#243;nico</ui:define>
+				                <h:inputText id="correo" size="60" required="true" value="#{empleadoHome.instance.correo}"/>
+            				</s:decorate>
+            				
+            				<s:decorate id="correoAlternativoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				                <ui:define name="label">Correo Electr&#243;nico Alternativo </ui:define>
+				                <h:inputText id="correoAlternativo" size="50" value="#{empleadoHome.instance.correoAlternativo}"/>
+            				</s:decorate>            				
+            				
+							<s:decorate id="fechaNacimientoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">Fecha Nacimiento</ui:define>
+                					<rich:calendar id="fechaNacimiento" required="true" 
+                						value="#{empleadoHome.instance.fechaNacimiento}" datePattern="dd/MM/yyyy"/>
+            				</s:decorate>
+
+            				<s:decorate id="estadoCivilField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Estado Civil</ui:define>
+									<h:selectOneMenu id="listaEstadoCivil" required="true" value="#{empleadoHome.instance.detalleTipoParametroByEstadoCivil}">
+										<s:selectItems id="itemsEstadoCivil" value="#{detalleTipoParametroList.listaEstadoCivil}" var="detalleTipoParametro"
+											label="#{detalleTipoParametro.descripcion}" noSelectionLabel="Seleccione Estado Civil..." />
+										<s:convertEntity />
+										<a:support id="estadoCivil" event="onchange" reRender="estadoCivilField,listaEstadoCivil"
+											bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>									
+							</s:decorate>
+							
+							<s:decorate id="sexoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Genero</ui:define>
+									<h:selectOneMenu id="listaSexo" required="true" value="#{empleadoHome.instance.detalleTipoParametroBySexo}">
+										<s:selectItems id="itemsSexo" value="#{detalleTipoParametroList.listaSexo}" var="detalleTipoParametro"
+											label="#{detalleTipoParametro.descripcion}" noSelectionLabel="Seleccione Genero..." />
+										<s:convertEntity />
+										<a:support id="sexo" event="onchange" reRender="sexoField,listaSexo" bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Ciudad</ui:define>
+									<h:selectOneMenu id="listaCiudades" required="true" value="#{empleadoHome.instance.ciudad}">
+										<s:selectItems id="itemsCiudad" value="#{ciudadList.listaCiudades}" var="ciudad"
+											label="#{ciudad.descripcion}" noSelectionLabel="Seleccione Ciudad..." />
+										<s:convertEntity />
+										<a:support id="ciudad" event="onchange" reRender="ciudadField,listaCiudades"
+											bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>
+							</s:decorate>
+<!-- 							
+							<s:decorate id="relojField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Reloj</ui:define>
+									<h:outputText value="*" style="color:red;margin-left:5px" />
+									<h:selectOneMenu id="listaRelojes" required="false" value="#{empleadoHome.instance.reloj}">
+										<s:selectItems id="itemsReloj" value="#{relojList.listaReloj}" var="reloj"
+											label="#{reloj.descripcion}" noSelectionLabel="Seleccione Reloj..." />
+										<s:convertEntity />
+										<a:support id="reloj" event="onchange" reRender="relojField,listaRelojes" bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>
+							</s:decorate>
+ -->							
+							<s:decorate id="estadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Estado</ui:define>
+									<h:selectOneMenu id="listaEstado" required="true" value="#{empleadoHome.instance.detalleTipoParametroByEstado}">
+										<s:selectItems id="itemsEstado" value="#{detalleTipoParametroList.listaEstado}" var="detalleTipoParametro"
+											label="#{detalleTipoParametro.descripcion}" />
+										<s:convertEntity />
+										<a:support id="estado" event="onchange" reRender="estadoField,listaEstado"
+											bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>
+							</s:decorate>
+
+					</rich:panel>
+					
+				<rich:panel style="width:540px; height:420px;">
+						<f:facet name="header">Datos Laborales</f:facet>
+						
+							<s:decorate id="empleadoImage" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Foto</ui:define>
+									<h:graphicImage value="/Notificar?url=#{empleadoHome.URLFoto()}" height="120" width="100"/>
+							</s:decorate>
+							
+							<!-- <s:decorate id="empleadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Jefe</ui:define>
+									<h:selectOneMenu id="listaEmpleados" 
+									value="#{empleadoHome.instance.empleado}">
+										<s:selectItems id="itemsEmpleado"
+											value="#{empleadoList.listaEmpleado}" var="empleado"
+											label="#{empleado.apellido} - #{empleado.nombre}"
+											noSelectionLabel="Seleccione Jefe..." />
+										<s:convertEntity />
+										<a:support id="empleados" event="onchange" reRender="empleadoField,listaEmpleado" bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>
+							</s:decorate> -->
+							
+							<s:decorate id="empleadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Jefe / Lider</ui:define>
+									<h:selectOneMenu id="listaEmpleados" 
+									value="#{empleadoHome.instance.empleado}">
+										<s:selectItems id="itemsEmpleado"
+											value="#{empleadoList.listaEmpleado}" var="empleado"
+											label="#{empleado.apellido} - #{empleado.nombre}"
+											noSelectionLabel="Seleccione Jefe..." />
+										<s:convertEntity />
+										<!-- <a:support id="empleados" event="onchange" reRender="empleadoField,listaEmpleado" bypassUpdates="true" ajaxSingle="true" /> -->
+									</h:selectOneMenu>
+							</s:decorate>
+							
+						<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Unidad Administrativa</ui:define>
+								<h:selectOneMenu id="listaDepartamento" required="true" style="width:350px;" 
+									value="#{empleadoHome.instance.departamento}" valueChangeListener="#{empleadoHome.valueChangedEventEmpleado}">
+									<s:selectItems id="itemsDepartamento" value="#{departamentoList.listaDepartamentos}" var="departamento" 
+										label="#{departamento.descripcion}" noSelectionLabel="Seleccione Departamento..." />
+									<s:convertEntity />
+									<a:support event="onchange" reRender="empleadoField" bypassUpdates="true" ajaxSingle="true"/>
+									<a:support id="departamento" event="onchange" reRender="departamentoField,listaDepartamento"
+										bypassUpdates="true" ajaxSingle="true" />	
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Cargo</ui:define>
+									<h:selectOneMenu id="listaCargo" required="true" value="#{empleadoHome.instance.cargo}" style="width:350px;" >
+										<s:selectItems id="itemsCargo" value="#{cargoList.listaCargos}" var="cargo" 
+											label="#{cargo.descripcion}" noSelectionLabel="Seleccione Cargo..." />
+										<s:convertEntity />
+										<a:support id="cargo" event="onchange" reRender="cargoField,listaCargo"
+										 bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="DetalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Regimen Laboral</ui:define>
+									<h:selectOneMenu id="listaDetalleGrupoContratado" required="true" style="width:350px;" 
+										value="#{empleadoHome.instance.detalleGrupoContratado}">
+										<s:selectItems id="itemsDetalleGrupoContratado" value="#{detalleGrupoContratadoList.listaDetalleGrupoContratado}" var="detalleGrupoContratado"
+											label="#{detalleGrupoContratado.descripcion}" noSelectionLabel="Seleccione Grupo Contratado..." />
+										<s:convertEntity />
+										<a:support id="detalleGrupoContratado" event="onchange" reRender="DetalleGrupoContratadoField,listaDetalleGrupoContratado"
+										bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>
+							</s:decorate>
+<!-- 							
+							<s:decorate id="grupoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Grupo</ui:define>
+									<h:selectOneMenu id="listaGrupo" required="true" style="width:350px;" 
+										value="#{empleadoHome.instance.empleadoGrupo}">
+										<s:selectItems id="itemsGrupo" value="#{empleadoGrupoList.listaEmpleadoGrupos}" var="empleadoGrupo"
+											label="#{empleadoGrupo.descripcion}" noSelectionLabel="Seleccione Grupo..." />
+										<s:convertEntity />
+										<a:support id="detalleGrupo" event="onchange" reRender="grupoField,listaGrupo"
+										bypassUpdates="true" ajaxSingle="true" />
+									</h:selectOneMenu>
+							</s:decorate>
+ -->										
+<!-- 
+							<s:decorate id="partidaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">Partida</ui:define>
+                					<h:outputText value=" " style="color:red;pñmargin-left:5px" />
+                					<h:inputText id="partida" value="#{empleadoHome.instance.partida}" >
+                					 	<a:support event="onblur" 
+                						reRender="partidaIndividualField,partidaIndividual" bypassUpdates="true" ajaxSingle="true"/>
+                					</h:inputText>
+            				</s:decorate>
+            				
+            				<s:decorate id="partidaIndividualField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">Partida individual</ui:define>
+                					<h:outputText value=" " style="color:red;margin-left:5px" />
+                					<h:inputText id="partidaIndividual" required="false" size="10"  maxlength="10" 
+                								value="#{empleadoHome.instance.partidaIndividual}">
+                    					<a:support event="onblur" reRender="partidaIndividualField" bypassUpdates="true" ajaxSingle="true"/>
+                					</h:inputText>
+            				</s:decorate>
+
+							<s:decorate id="fechaIngresoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+               					<ui:define name="label">Fecha ingreso</ui:define>
+               						<rich:calendar id="fechaIngreso" required="true" value="#{empleadoHome.instance.fechaIngreso}" datePattern="dd/MM/yyyy"/>
+           					</s:decorate>
+            				
+            				<s:decorate id="fechaSalidaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">Fecha salida</ui:define>
+                					<rich:calendar id="fechaSalida" required="false" value="#{empleadoHome.instance.fechaSalida}" datePattern="dd/MM/yyyy"/>
+            				</s:decorate>
+             				
+            				<s:decorate id="fechaContratoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">Fecha contrato</ui:define>
+                					<h:outputText value=" " style="color:red;margin-left:5px" />
+                					<rich:calendar id="fechaContrato" value="#{empleadoHome.instance.fechaContrato}" datePattern="MM/dd/yyyy"/>
+            				</s:decorate>
+ -->
+              				
+            				<s:decorate id="horasTrabajaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                				<ui:define name="label">Horas trabaja</ui:define>
+                					<h:inputText id="horasTrabaja" required="true" value="#{empleadoHome.instance.horasTrabaja}">
+                    					<a:support event="onblur" reRender="horasTrabajaField" bypassUpdates="true" ajaxSingle="true"/>
+                					</h:inputText>
+            				</s:decorate>
+ 
+            				<s:decorate id="sueldoField" template="#{requestScope.contextPath}/layout/edit.xhtml" rendered="#{empleadoHome.modificaRol}" >
+                				<ui:define name="label">Sueldo</ui:define>
+<!--                  					<h:outputText value="*" style="color:red;margin-left:5px" />   -->
+                					<h:inputText id="sueldo" required="false" value="#{empleadoHome.instance.sueldo}" size="15">
+                    					<a:support event="onblur" reRender="sueldoField" bypassUpdates="true" ajaxSingle="true"/>
+                					</h:inputText>
+            				</s:decorate>
+            				
+							<s:decorate id="controlVacacion" template="#{requestScope.contextPath}/layout/edit.xhtml">
+								<ui:define name="label">Controla Vacaciones</ui:define>
+									<h:selectOneRadio id="listaControl" value="#{empleadoHome.instance.controlaVacacion}" required="true" >
+										<f:selectItem itemValue="1" itemLabel="Si" />
+   										<f:selectItem itemValue="0" itemLabel="No" />
+									</h:selectOneRadio>
+							</s:decorate>
+            				
+            				
+					</rich:panel>
+			</h:panelGrid>
+		<rich:spacer/>
+
+		<rich:panel rendered="#{empleadoHome.modificaRol}" style="width:1092px; height:100px">
+
+            <f:facet name="header">Seguridad</f:facet>
+
+			<h:panelGrid columns="3">
+			
+			<s:decorate id="rolesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Rol</ui:define>
+					
+				<h:selectOneMenu id="slRoles" required="true" value="#{usuariosHome.idRol}"> 
+					<f:selectItem itemLabel="Seleccionar"/>
+					<f:selectItems value="#{usuariosHome.listRol}"/>
+				</h:selectOneMenu>
+					
+			</s:decorate>
+			
+			<s:decorate id="usuarioField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Usuario</ui:define>
+                <h:inputText id="usuario"
+                           size="30"
+                      maxlength="30"
+                          value="#{usuariosHome.instance.usuario}" required="true" onkeypress="if(event.keyCode==32){return false;}">
+                    <a:support event="onblur" reRender="usuarioField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+			
+            <s:decorate id="contrasenaFieldId" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Clave</ui:define>
+                <h:inputText id="contrasena" value="#{usuariosHome.instance.contrasena}" size="20" maxlength="20" required="false" onkeypress="if(event.keyCode==32){return false;}" />
+            </s:decorate>
+
+            <s:decorate id="fechaVencimientoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Vencimiento</ui:define>
+                <rich:calendar id="fechaVencimiento" required="false"
+                          value="#{usuariosHome.instance.fechaVencimiento}" datePattern="dd/MM/yyyy">
+				<a:support event="onchanged"  reRender="fechaVencimientoField" bypassUpdates="true" ajaxSingle="true"/>                          
+                </rich:calendar>
+            </s:decorate>
+
+            <s:decorate id="usuarioEstadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Estado</ui:define>
+                <h:selectBooleanCheckbox id="idEstadoActivo" value="#{usuariosHome.checkEstado}" required="false"/>
+            </s:decorate>
+            
+            </h:panelGrid>
+
+        </rich:panel>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+        
+        
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{empleadoHome.persist}"
+                       disabled="#{!empleadoHome.wired}"
+                       rendered="#{!empleadoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{empleadoHome.update}"
+                       rendered="#{empleadoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{empleadoHome.remove}"
+                      immediate="true"
+                       rendered="#{empleadoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Empleado.xhtml"
+                rendered="#{empleadoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty empleadoFrom ? 'EmpleadoList' : empleadoFrom}.xhtml"
+                rendered="#{!empleadoHome.managed}"/>
+
+        </div>
+                
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

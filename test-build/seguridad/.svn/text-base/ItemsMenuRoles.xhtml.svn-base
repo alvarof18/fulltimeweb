@@ -1,0 +1,269 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+	
+	<h1 id="segmotmanalce" align="center">Asignar Item</h1>
+    <rich:panel>
+        <f:facet name="header">Detalle Items Men&#250; Roles</f:facet>
+
+			<s:decorate id="menuField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            	<ui:define name="label">Men&#250;</ui:define>
+            		<h:outputText value="#{itemsMenuRolesHome.instance.grupos.nombre}"/>
+        	</s:decorate>
+        	
+        	<s:decorate id="submenuField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            	<ui:define name="label">Submen&#250;</ui:define>
+            		<h:outputText value="#{itemsMenuRolesHome.instance.subgrupos.nombre}"/>
+        	</s:decorate>
+        	
+        	<s:decorate id="rolField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            	<ui:define name="label">Rol</ui:define>
+            		<h:outputText value="#{itemsMenuRolesHome.instance.roles.descripcion}"/>
+        	</s:decorate>
+        	
+        	<s:decorate id="itemMenuField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            	<ui:define name="label">Item Men&#250;</ui:define>
+            		<h:outputText value="#{itemsMenuRolesHome.instance.itemMenu.nombre}"/>
+        	</s:decorate>
+			
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/seguridad/ItemsMenuRolesEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/seguridad/#{empty itemsMenuRolesFrom ? 'ItemsMenuRolesList' : itemsMenuRolesFrom}.xhtml"
+                    id="done"
+                 value="Salir"/>
+
+    </div>
+
+   <!-- <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Grupos</h:panelGroup>
+        </f:facet>
+    <div class="association" id="gruposParent">
+
+        <h:outputText value="There is no grupos associated with this itemsMenuRoles."
+                   rendered="#{itemsMenuRolesHome.instance.grupos == null}"/>
+
+        <rich:dataTable var="_grupos"
+                   value="#{itemsMenuRolesHome.instance.grupos}"
+                rendered="#{itemsMenuRolesHome.instance.grupos != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="gruposTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_grupos.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_grupos.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Etiqueta</f:facet>
+                <h:outputText value="#{_grupos.etiqueta}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Expandible</f:facet>
+                <h:outputText value="#{_grupos.expandible}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nombre</f:facet>
+                <h:outputText value="#{_grupos.nombre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Orden</f:facet>
+                <h:outputText value="#{_grupos.orden}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewgrupos"
+                     value="View"
+                      view="/seguridad/Grupos.xhtml">
+                    <f:param name="gruposId"
+                           value="#{_grupos.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Item menu</h:panelGroup>
+        </f:facet>
+    <div class="association" id="itemMenuParent">
+
+        <h:outputText value="There is no itemMenu associated with this itemsMenuRoles."
+                   rendered="#{itemsMenuRolesHome.instance.itemMenu == null}"/>
+
+        <rich:dataTable var="_itemMenu"
+                   value="#{itemsMenuRolesHome.instance.itemMenu}"
+                rendered="#{itemsMenuRolesHome.instance.itemMenu != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="itemMenuTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_itemMenu.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_itemMenu.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Etiqueta</f:facet>
+                <h:outputText value="#{_itemMenu.etiqueta}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Expandible</f:facet>
+                <h:outputText value="#{_itemMenu.expandible}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Grupos id</f:facet>
+                <h:outputText value="#{_itemMenu.grupos.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Link</f:facet>
+                <h:outputText value="#{_itemMenu.link}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nombre</f:facet>
+                <h:outputText value="#{_itemMenu.nombre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Orden</f:facet>
+                <h:outputText value="#{_itemMenu.orden}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Subgrupos id</f:facet>
+                <h:outputText value="#{_itemMenu.subgrupos.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewitemMenu"
+                     value="View"
+                      view="/seguridad/ItemMenu.xhtml">
+                    <f:param name="itemMenuId"
+                           value="#{_itemMenu.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Roles</h:panelGroup>
+        </f:facet>
+    <div class="association" id="rolesParent">
+
+        <h:outputText value="There is no roles associated with this itemsMenuRoles."
+                   rendered="#{itemsMenuRolesHome.instance.roles == null}"/>
+
+        <rich:dataTable var="_roles"
+                   value="#{itemsMenuRolesHome.instance.roles}"
+                rendered="#{itemsMenuRolesHome.instance.roles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_roles.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Usuarios</f:facet>
+                <h:outputText value="#{_roles.usuarios}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewroles"
+                     value="View"
+                      view="/seguridad/Roles.xhtml">
+                    <f:param name="rolesId"
+                           value="#{_roles.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Subgrupos</h:panelGroup>
+        </f:facet>
+    <div class="association" id="subgruposParent">
+
+        <h:outputText value="There is no subgrupos associated with this itemsMenuRoles."
+                   rendered="#{itemsMenuRolesHome.instance.subgrupos == null}"/>
+
+        <rich:dataTable var="_subgrupos"
+                   value="#{itemsMenuRolesHome.instance.subgrupos}"
+                rendered="#{itemsMenuRolesHome.instance.subgrupos != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="subgruposTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_subgrupos.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_subgrupos.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Etiqueta</f:facet>
+                <h:outputText value="#{_subgrupos.etiqueta}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Expandible</f:facet>
+                <h:outputText value="#{_subgrupos.expandible}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Grupos id</f:facet>
+                <h:outputText value="#{_subgrupos.grupos.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nombre</f:facet>
+                <h:outputText value="#{_subgrupos.nombre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Orden</f:facet>
+                <h:outputText value="#{_subgrupos.orden}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewsubgrupos"
+                     value="View"
+                      view="/seguridad/Subgrupos.xhtml">
+                    <f:param name="subgruposId"
+                           value="#{_subgrupos.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel> --> 
+</ui:define>
+
+</ui:composition>

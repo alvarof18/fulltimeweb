@@ -1,0 +1,104 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Departamento</f:facet>
+
+        <s:decorate id="codigo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo</ui:define>
+            <h:outputText value="#{departamentoHome.instance.codigo}"/>
+        </s:decorate>
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{departamentoHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <s:decorate id="departamentoSuperior" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Departamento Superior</ui:define>
+            <h:outputText value="#{departamentoHome.instance.departamento.depaId}"/>
+        </s:decorate>
+        
+        <s:decorate id="jefe" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Jefe</ui:define>
+            <h:outputText value="#{departamentoHome.instance.empleado.apellido} #{departamentoHome.instance.empleado.nombre}"/>
+        </s:decorate>
+        
+        <s:decorate id="nivel" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Nivel</ui:define>
+            <h:outputText value="#{departamentoHome.instance.nivel}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/DepartamentoEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/DepartamentoList.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+    </div>
+    
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Autorización de Solicitudes de Permisos y Vacaciones</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="detalleHorariosChildren">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{empty departamentoHome.departamentoAutorizacion}"/>
+
+        <rich:dataTable value="#{departamentoHome.departamentoAutorizacion}"
+                       var="_det_aut"
+                  rendered="#{not empty departamentoHome.departamentoAutorizacion}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="detalleHorariosTable">
+                        
+            <rich:column sortBy="#{_det_aut.empleado.apellido}">
+                <f:facet name="header">Empleado</f:facet>
+                <h:outputText value="#{_det_aut.empleado.apellido} #{_det_aut.empleado.nombre}"/>
+            </rich:column>
+            
+            <rich:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectEdit"
+                     value="Editar"
+                      view="/fulltime/DepartamentoAutorizacionEdit.xhtml">
+                    <f:param name="departamentoAutorizacionId"
+                            value="#{_det_aut.depaId}"/>
+                    <f:param name="departamentoAutorizacionFrom" value="Departamento"/>
+                </s:link>
+            </rich:column>
+            
+        </rich:dataTable>
+
+    </h:form>
+    	<div class="actionButtons">
+       		<s:button  value="Crear" view="/fulltime/DepartamentoAutorizacionEdit.xhtml" rendered="#{contexts.applicationContext.get('permisoCrear')}">
+           		<f:param name="departamentoId" value="#{horarioHome.instance.horaId}"/>
+           		<f:param name="departamentoFrom" value="Departamento"/>
+        	</s:button>
+    	</div>
+    </rich:tab>
+
+	</rich:tabPanel>
+
+</ui:define>
+
+</ui:composition>

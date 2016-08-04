@@ -1,0 +1,31 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.Arrays;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.EmpleadoPeriodoVacacion;
+
+@Name("empleadoPeriodoVacacionList")
+public class EmpleadoPeriodoVacacionList extends EntityQuery<EmpleadoPeriodoVacacion> {
+
+	private static final long serialVersionUID = -6430582967971312809L;
+
+	private static final String EJBQL = "select empleadoPeriodoVacacion from EmpleadoPeriodoVacacion empleadoPeriodoVacacion";
+
+	private static final String[] RESTRICTIONS = {};
+
+	private EmpleadoPeriodoVacacion empleadoPeriodoVacacion = new EmpleadoPeriodoVacacion();
+
+	public EmpleadoPeriodoVacacionList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+	}
+
+	public EmpleadoPeriodoVacacion getEmpleadoPeriodoVacacion() {
+		return empleadoPeriodoVacacion;
+	}
+}

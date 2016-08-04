@@ -1,0 +1,118 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Empleado</f:facet>
+
+
+        <s:decorate id="cedula" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#233;dula</ui:define>
+            <h:outputText value="#{empleadoHome.instance.cedula}"/>
+        </s:decorate>
+
+        <s:decorate id="apellido" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Apellido</ui:define>
+            <h:outputText value="#{empleadoHome.instance.apellido}"/>
+        </s:decorate>
+
+        <s:decorate id="nombre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Nombre</ui:define>
+            <h:outputText value="#{empleadoHome.instance.nombre}"/>
+        </s:decorate>
+
+        <s:decorate id="fechaNacimiento" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha nacimiento</ui:define>
+            <h:outputText value="#{empleadoHome.instance.fechaNacimiento}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="fechaIngreso" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha ingreso</ui:define>
+            <h:outputText value="#{empleadoHome.instance.fechaIngreso}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="fechaSalida" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha salida</ui:define>
+            <h:outputText value="#{empleadoHome.instance.fechaSalida}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="fechaContrato" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha contrato</ui:define>
+            <h:outputText value="#{empleadoHome.instance.fechaContrato}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <!--<s:decorate id="fechaUltVacacion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha ult vacacion</ui:define>
+            <h:outputText value="#{empleadoHome.instance.fechaUltVacacion}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        --><s:decorate id="horasTrabaja" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas trabaja</ui:define>
+            <h:outputText value="#{empleadoHome.instance.horasTrabaja}"/>
+        </s:decorate>
+
+        <s:decorate id="sueldo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Sueldo</ui:define>
+            <h:outputText value="#{empleadoHome.instance.sueldo}">
+                <f:convertNumber/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="partida" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Partida</ui:define>
+            <h:outputText value="#{empleadoHome.instance.partida}"/>
+        </s:decorate>
+
+        <s:decorate id="partidaIndividual" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Partida individual</ui:define>
+            <h:outputText value="#{empleadoHome.instance.partidaIndividual}"/>
+        </s:decorate>
+
+        <!--<s:decorate id="entradaSalida" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Entrada salida</ui:define>
+            <h:outputText value="#{empleadoHome.instance.entradaSalida}"/>
+        </s:decorate>
+
+        <s:decorate id="numeroTimbre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Numero timbre</ui:define>
+            <h:outputText value="#{empleadoHome.instance.numeroTimbre}"/>
+        </s:decorate>
+
+        -->
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/EmpleadoEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty empleadoFrom ? 'EmpleadoList' : empleadoFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

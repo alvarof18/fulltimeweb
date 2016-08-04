@@ -1,0 +1,88 @@
+package com.casapazmino.fulltime.comun;
+
+public class Constantes 
+{
+	/**
+	 * CONSULTAS
+	 */
+	public final static int MAX_RESULTS = 10;
+	public final static String SEPARADOR_LISTAS = ",";
+	
+	/**
+	 * ESTADOS
+	 */
+	public final static long ESTADO = 3;
+	public final static long SEXO = 1;
+	public final static long ESTADO_CIVIL = 4;
+	public final static long ESTADO_ACTIVO = 5;
+	public final static long ESTADO_INACTIVO = 6;
+	public final static long DECISION = 2;
+	
+	public final static long DECISION_NO = 4;
+	
+	/**
+	 * ESTADOS ASISTENCIA
+	 */	
+	
+	public final static String ASISTENCIA_FALTA = "FT";
+	public final static String ASISTENCIA_REGISTRADO = "R";
+	public final static String ASISTENCIA_VACACIONES = "V";
+	public final static String ASISTENCIA_PERMISO = "P";
+	public final static String ASISTENCIA_MANUAL = "RM";
+
+	/**
+	 * VARIOS
+	 */	
+	
+	public final static long TIPO_PERMISO = 5;	
+	public final static long NIVEL_ACADEMICO= 7;
+	public final static long TIPO_CONTACTO = 11;
+	public final static long PERIODO_VACACIONES = 13;
+	/***
+	 * REPORTES
+	 */
+	public final static String DATA_SOURCE = "java:/fulltimeDatasource";
+
+	
+	/**
+	 * RUTAS PARA REPORTES
+	 */
+	public final static String LOGO = "./img/logo.png";
+	public final static String RUTA_LISTADOS_FUENTES = "C:\\PROYECTO\\fulltime\\view\\reportes\\";
+	public final static String RUTA_LISTADOS_SERVIDOR = "\\reportes\\";
+
+	/**
+	 * EXTENCION ARCHIVOS
+	 */
+	public final static String EXT_JASPER = ".jasper";
+	public final static String EXT_JRXML = ".jrxml";
+	public final static String EXT_PDF = ".pdf";
+	public final static String EXT_EXCEL = ".xls";
+	public final static String EXT_CSV = ".csv";
+	public final static String EXT_HTML = ".html";
+	public final static String EXT_XML = ".xml";
+	
+	public final static String PDF = "Pdf";
+	public final static String EXCEL = "Xls";
+	public final static String CSV = "Csv";
+	public final static String HTML = "Html";
+	public final static String XML = "Xml";	
+	public final static String MSG_ARCHIVO_NS = "Extension de archivo no soportada";
+
+	public static String NombreEmpresa = "CASA LUIS PAZMINO";
+	public final static long ID_EMPRESA  = 12;
+	
+	/**
+	 * MENSAJES
+	 */
+	public final static String MENSAJE_TITULO="Seleccione un titulo para agregar.";
+	public final static String MENSAJE_NIVEL_TITULO="Seleccione un nivel del titulo.";
+	public final static String MENSAJE_ACTUALIZAR_TITULO="Seleccione el dato que desea actualizar.";
+	public final static String MENSAJE_CARNET_CONADIS="Ingrese el número del carnet del CONADIS.";
+	public final static String MENSAJE_DISCAPACIDAD="Ingrese la discapacidad.";
+	public final static String MENSAJE_PORCENTAJE_DISCAPACIDAD="Ingrese el nivel de discapacidad.";
+	public final static String MENSAJE_ACTUALIZAR_DISCAPACIDAD="Seleccione el dato que desea actualizar.";
+	public final static String MENSAJE_TIPO_TITULO="Seleccione el tipo de contacto.";
+	public final static String MENSAJE_CONTACTO="Ingrese el contacto.";
+	public final static String MENSAJE_ACTUALIZAR_CONTACTO="Seleccione el dato que desea actualizar.";
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="#{requestScope.contextPath}/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="tipoCargoSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Tipo Cargo - Criterios de B&#250;squeda"
+				switchType="ajax">
+
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Descripci&#243;n</ui:define>
+					<h:inputText id="descripcion"
+						value="#{tipoCargoList.tipoCargo.descripcion}" />
+				</s:decorate>
+
+
+			</rich:simpleTogglePanel>
+
+			<table width="100%">
+				<tr>
+					<td width="70%"><s:div styleClass="actionButtons"
+						rendered="#{empty from}">
+						<s:button view="/fulltime/TipoCargoEdit.xhtml" id="create"
+							propagation="none" value="Crear"
+							rendered="#{contexts.applicationContext.get('permisoCrear')}">
+							<f:param name="tipoCargoTicaId" />
+						</s:button>
+						<h:commandButton id="search" value="Buscar"
+							action="/fulltime/TipoCargoList.xhtml" />
+						<s:button id="reset" value="Cancelar" includePageParams="false" />
+					</s:div></td>
+
+					<td align="right"><h:selectOneRadio
+						value="#{tipoCargoList.extensionArchivo}">
+						<s:selectItems label="#{tipoArchivo}"
+							value="#{enumeraciones.tipoArchivo}" var="tipoArchivo">
+						</s:selectItems>
+					</h:selectOneRadio></td>
+					<td align="right"><h:commandLink id="imprimir"
+						value="Imprimir" action="#{reportesFulltime.listadoTipoCargos}" /></td>
+				</tr>
+			</table>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">Resultados B&#250;squeda</f:facet>
+			<div class="results" id="tipoCargoList"><h:outputText
+				value="No existe resultados"
+				rendered="#{empty tipoCargoList.resultList}" /> <rich:dataTable
+				id="tipoCargoList" var="_tipoCargo"
+				value="#{tipoCargoList.resultList}"
+				rendered="#{not empty tipoCargoList.resultList}">
+				<!--           
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{tipoCargoList}"/>
+                    <ui:param name="propertyLabel" value="Tica id"/>
+                    <ui:param name="propertyPath" value="tipoCargo.ticaId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_tipoCargo.ticaId}"/>
+        </h:column>
+-->
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{tipoCargoList}" />
+							<ui:param name="propertyLabel" value="Descripci&#243;n" />
+							<ui:param name="propertyPath" value="tipoCargo.descripcion" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_tipoCargo.descripcion}" />
+				</h:column>
+				<rich:column styleClass="action">
+					<f:facet name="header">Acci&#243;n</f:facet>
+					<s:link view="/fulltime/#{empty from ? 'TipoCargo' : from}.xhtml"
+						value="#{empty from ? 'Ver' : 'Seleccionar'}"
+						propagation="#{empty from ? 'none' : 'default'}" id="tipoCargo"
+						rendered="#{contexts.applicationContext.get('permisoVer')}">
+						<f:param name="tipoCargoTicaId" value="#{_tipoCargo.ticaId}" />
+					</s:link>
+            #{' '}
+            <s:link view="/fulltime/TipoCargoEdit.xhtml" value="Editar"
+						propagation="none" id="tipoCargoEdit" rendered="#{empty from}">
+						<f:param name="tipoCargoTicaId" value="#{_tipoCargo.ticaId}" />
+					</s:link>
+				</rich:column>
+			</rich:dataTable></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link
+			view="/fulltime/TipoCargoList.xhtml"
+			rendered="#{tipoCargoList.previousExists}"
+			value="#{messages.left}#{messages.left} Primera P&#225;gina" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/fulltime/TipoCargoList.xhtml"
+			rendered="#{tipoCargoList.previousExists}"
+			value="#{messages.left} P&#225;gina Anterior" id="previousPage">
+			<f:param name="firstResult"
+				value="#{tipoCargoList.previousFirstResult}" />
+		</s:link> <s:link view="/fulltime/TipoCargoList.xhtml"
+			rendered="#{tipoCargoList.nextExists}"
+			value="P&#225;gina Siguiente #{messages.right}" id="nextPage">
+			<f:param name="firstResult" value="#{tipoCargoList.nextFirstResult}" />
+		</s:link> <s:link view="/fulltime/TipoCargoList.xhtml"
+			rendered="#{tipoCargoList.nextExists}"
+			value="Ultima P&#225;gina #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult" value="#{tipoCargoList.lastFirstResult}" />
+		</s:link></div>
+
+
+	</ui:define>
+
+</ui:composition>

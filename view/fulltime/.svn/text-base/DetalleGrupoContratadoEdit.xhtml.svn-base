@@ -1,0 +1,271 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="detalleGrupoContratado" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{detalleGrupoContratadoHome.managed ? 'Editar' : 'A&#241;adir'} Detalle grupo contratado</f:facet>
+
+
+				<s:decorate id="grupoContratadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Grupo Contratado</ui:define>
+					<h:selectOneMenu id="listaGrupoContratados"
+						value="#{detalleGrupoContratadoHome.instance.grupoContratado}">
+						<s:selectItems id="itemsGrupoContratados"
+							value="#{grupoContratadoList.listaGrupoContratado}" var="grupoContratado"
+							label="#{grupoContratado.descripcion}"
+							noSelectionLabel="Seleccione Grupo Contratados..." />
+						<s:convertEntity />
+						<a:support id="gruposContratados" event="onchange"
+							reRender="grupoContratado,listaGrupoContratados,grupoContratados"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                              value="#{detalleGrupoContratadoHome.instance.descripcion}"/>
+            </s:decorate>
+
+
+
+            <s:decorate id="diasVacacionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">D&#237;as vacacion</ui:define>
+                <h:inputText id="diasVacacion"
+                          value="#{detalleGrupoContratadoHome.instance.diasVacacion}">
+                    <a:support event="onblur" reRender="diasVacacionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="diasIncrementoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">D&#237;as incremento</ui:define>
+                <h:inputText id="diasIncremento"
+                          value="#{detalleGrupoContratadoHome.instance.diasIncremento}">
+                    <a:support event="onblur" reRender="diasIncrementoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="aniosField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">A&#241;os</ui:define>
+                <h:inputText id="anios"
+                          value="#{detalleGrupoContratadoHome.instance.anios}">
+                    <a:support event="onblur" reRender="aniosField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="totalDiasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Total d&#237;as</ui:define>
+                <h:inputText id="totalDias"
+                          value="#{detalleGrupoContratadoHome.instance.totalDias}">
+                    <a:support event="onblur" reRender="totalDiasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="maximoDiasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">M&#225;ximo d&#237;as</ui:define>
+                <h:inputText id="maximoDias"
+                          value="#{detalleGrupoContratadoHome.instance.maximoDias}">
+                    <a:support event="onblur" reRender="maximoDiasField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{detalleGrupoContratadoHome.persist}"
+                       disabled="#{!detalleGrupoContratadoHome.wired}"
+                       rendered="#{!detalleGrupoContratadoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{detalleGrupoContratadoHome.update}"
+                       rendered="#{detalleGrupoContratadoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{detalleGrupoContratadoHome.remove}"
+                      immediate="true"
+                       rendered="#{detalleGrupoContratadoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/DetalleGrupoContratado.xhtml"
+                rendered="#{detalleGrupoContratadoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty detalleGrupoContratadoFrom ? 'DetalleGrupoContratadoList' : detalleGrupoContratadoFrom}.xhtml"
+                rendered="#{!detalleGrupoContratadoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Grupo contratado">
+    <div class="association" id="grupoContratadoParent">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{detalleGrupoContratadoHome.instance.grupoContratado == null}"/>
+
+        <rich:dataTable var="_grupoContratado"
+                   value="#{detalleGrupoContratadoHome.instance.grupoContratado}"
+                rendered="#{detalleGrupoContratadoHome.instance.grupoContratado != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="grupoContratadoTable">
+            <h:column>
+                <f:facet name="header">Grco id</f:facet>
+                <h:outputText value="#{_grupoContratado.grcoId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_grupoContratado.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{detalleGrupoContratadoHome.instance.grupoContratado != null ? 'Change' : 'Select'} grupoContratado"
+                       view="/fulltime/GrupoContratadoList.xhtml">
+                <f:param name="from" value="DetalleGrupoContratadoEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Empleados">
+        <h:form styleClass="association" id="empleadosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleGrupoContratadoHome.empleados}"/>
+
+            <rich:dataTable value="#{detalleGrupoContratadoHome.empleados}"
+                           var="_empleado"
+                      rendered="#{not empty detalleGrupoContratadoHome.empleados}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadosTable">
+                <rich:column sortBy="#{_empleado.emplId}">
+                    <f:facet name="header">Empl id</f:facet>
+                    <h:outputText value="#{_empleado.emplId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.cedula}">
+                    <f:facet name="header">Cedula</f:facet>
+                    <h:outputText value="#{_empleado.cedula}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.apellido}">
+                    <f:facet name="header">Apellido</f:facet>
+                    <h:outputText value="#{_empleado.apellido}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_empleado.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                    <f:facet name="header">Fecha nacimiento</f:facet>
+                    <h:outputText value="#{_empleado.fechaNacimiento}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_empleado.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaSalida}">
+                    <f:facet name="header">Fecha salida</f:facet>
+                    <h:outputText value="#{_empleado.fechaSalida}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaContrato}">
+                    <f:facet name="header">Fecha contrato</f:facet>
+                    <h:outputText value="#{_empleado.fechaContrato}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_empleado.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.horasTrabaja}">
+                    <f:facet name="header">Horas trabaja</f:facet>
+                    <h:outputText value="#{_empleado.horasTrabaja}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_empleado.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partida}">
+                    <f:facet name="header">Partida</f:facet>
+                    <h:outputText value="#{_empleado.partida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partidaIndividual}">
+                    <f:facet name="header">Partida individual</f:facet>
+                    <h:outputText value="#{_empleado.partidaIndividual}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.entradaSalida}">
+                    <f:facet name="header">Entrada salida</f:facet>
+                    <h:outputText value="#{_empleado.entradaSalida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.numeroTimbre}">
+                    <f:facet name="header">Numero timbre</f:facet>
+                    <h:outputText value="#{_empleado.numeroTimbre}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleGrupoContratadoHome.managed}" id="empleados">
+        <div class="actionButtons">
+            <s:button id="addempleado"
+                   value="Crear"
+                    view="/fulltime/EmpleadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleGrupoContratadoDgcoId"
+                         value="#{detalleGrupoContratadoHome.instance.dgcoId}"/>
+                 <f:param name="empleadoFrom" value="DetalleGrupoContratado"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+
+-->
+
+</ui:define>
+
+</ui:composition>

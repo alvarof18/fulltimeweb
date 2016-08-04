@@ -1,0 +1,837 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ejb.Stateless;
+
+import org.jboss.seam.Component;
+import org.jboss.seam.annotations.Name;
+
+import com.casapazmino.fulltime.comun.Comunes;
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.reportes.ReporteBean;
+
+/**
+ * @author SndVll
+ */
+@Stateless
+@Name("reportesFulltime")
+public class ReportesFulltimeBean extends ReporteBean implements ReportesFulltime {
+	
+	public ReportesFulltimeBean() {
+	}
+	
+	@Override
+	public void listadoRegiones() {
+		
+		// FUNCIONA IGUAL QUE @In
+		RegionList regionList = (RegionList) Component.getInstance("regionList",true);
+		
+		String descripcion = regionList.getRegion().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoRegiones", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Regiones", regionList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoAtrasos() {
+		AtrasoList atrasoList = (AtrasoList) Component.getInstance("atrasoList",true);
+
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			this.crearArchivo("listadoAtrasos", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Atrasos", atrasoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void listadoEmpleados() {
+		EmpleadoList empleadoList = (EmpleadoList) Component.getInstance("empleadoList",true);
+		String cedula = empleadoList.getEmpleado().getCedula() + "%";
+		String apellido = empleadoList.getEmpleado().getApellido() + "%";
+		String nombre = empleadoList.getEmpleado().getNombre() + "%";
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("cedula", cedula);
+			parametros.put("apellido", apellido);
+			parametros.put("nombre", nombre);
+			this.crearArchivo("listadoEmpleados", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+			"Lista Empleados", empleadoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	@Override
+	public void listadoCargos() {
+		CargoList cargoList = (CargoList) Component.getInstance("cargoList",true);
+		
+		String descripcion = cargoList.getCargo().getDescripcion() + "%";		
+		
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoCargos", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Cargos", cargoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoCiudades() {
+		CiudadList ciudadList = (CiudadList) Component.getInstance("ciudadList",true);
+		
+		String descripcion = ciudadList.getCiudad().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoCiudades", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Ciudades", ciudadList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoCiudadFeriado() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void listadoDepartamentos() {
+		DepartamentoList departamentoList = (DepartamentoList) Component.getInstance("departamentoList",true);
+		
+		String descripcion = departamentoList.getDepartamento().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoDepartamentos", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Departamentos", departamentoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoDetalleGrupoContratados() {
+		DetalleGrupoContratadoList detalleGrupoContratadoList = (DetalleGrupoContratadoList) Component.getInstance("detalleGrupoContratadoList",true);
+		
+		String descripcion = detalleGrupoContratadoList.getDetalleGrupoContratado().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoDetalleGrupoContratados", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Detalle Grupo Contratados", detalleGrupoContratadoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoDetalleHorarios() {
+		DetalleHorarioList detalleHorarioList = (DetalleHorarioList) Component.getInstance("detalleHorarioList",true);
+		// descripcion de horario para listar detalle horario
+		//String descripcion = detalleHorarioList.getDetalleHorario().getHorario().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			//parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoDetalleHorarios", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Detalle Horario", detalleHorarioList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoDetalleTipoParametros() {
+		DetalleTipoParametroList detalleTipoParametroList = (DetalleTipoParametroList) Component.getInstance("detalleTipoParametroList",true);
+
+		String descripcion = detalleTipoParametroList.getDetalleTipoParametro().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoDetalleTipoParametros", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Tipo Permisos", detalleTipoParametroList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoTipoPermisos() {
+		TipoPermisoList tipoPermisoList = (TipoPermisoList) Component.getInstance("tipoPermisoList",true);
+
+		String descripcion = tipoPermisoList.getTipoPermiso().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoTipoPermisos", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Detalle  Tipo ParametroList", tipoPermisoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoDiscapacidades() {
+		DiscapacidadList discapacidadList = (DiscapacidadList) Component.getInstance("discapacidadList",true);
+
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			this.crearArchivo("listadoDiscapacidades", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Discapacidades", discapacidadList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void listadoEmpleadoDeclaraBienes() {
+	}
+
+	@Override
+	public void listadoFeriados() {
+		FeriadoList feriadoList = (FeriadoList) Component.getInstance("feriadoList",true);
+
+		String descripcion = feriadoList.getFeriado().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoFeriados", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Feriados", feriadoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoGrupoContratados() {
+		GrupoContratadoList grupoContratadoList = (GrupoContratadoList) Component.getInstance("grupoContratadoList",true);
+
+		String descripcion = grupoContratadoList.getGrupoContratado().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoGrupoContratados", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Grupos Contratados", grupoContratadoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoHorasExtras() {
+		HoraExtraList horaExtraList = (HoraExtraList) Component.getInstance("horaExtraList",true);
+
+		String descripcion = horaExtraList.getHoraExtra().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoHorasExtras", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Horas Extras", horaExtraList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void listadoHorarios() {
+		HorarioList horarioList = (HorarioList) Component.getInstance("horarioList",true);
+
+		String descripcion = horarioList.getHorario().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoHorarios", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Horarios", horarioList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoPermisos() {
+		PermisoList permisoList = (PermisoList) Component.getInstance("permisoList",true);
+
+		String descripcion = permisoList.getPermiso().getFechaDesde() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoPermisos", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Permisos", permisoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoProgramacionVacaciones() {
+		ProgramaVacacionList prograVacacionList = (ProgramaVacacionList) Component.getInstance("prograVacacionList",true);
+
+		//String descripcion = prograVacacionList.getProgramaVacacion().getPeriodo() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			//parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoProgramaVacaciones", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Programa Vacaciones", prograVacacionList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoProvincias() {
+		ProvinciaList provinciaList = (ProvinciaList) Component.getInstance("provinciaList",true);
+
+		String descripcion = provinciaList.getProvincia().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoProvincias", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Provincias", provinciaList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoRelojes() {
+		RelojList relojList = (RelojList) Component.getInstance("relojList",true);
+
+		String descripcion = relojList.getReloj().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoRelojes", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Relojes", relojList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoSolicitudVacaciones() {
+		SolicitudVacacionList solicitudVacacionList = (SolicitudVacacionList) Component.getInstance("solicitudVacacionList",true);
+
+		String descripcion = solicitudVacacionList.getSolicitudVacacion().getFechaDesde() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoSolicitudVacaciones", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Solicitudes Vacaciones", solicitudVacacionList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoTipoCargos() {
+		TipoCargoList tipoCargoList = (TipoCargoList) Component.getInstance("tipoCargoList",true);
+
+		String descripcion = tipoCargoList.getTipoCargo().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoTipoCargos", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Tipos Cargos", tipoCargoList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoTipoParametros() {
+		TipoParametroList tipoParametroList = (TipoParametroList) Component.getInstance("tipoParametroList",true);
+
+		String descripcion = tipoParametroList.getTipoParametro().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoTipoParametros", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Tipos Parametros", tipoParametroList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void listadoTitulos() {
+		TituloList tituloList = (TituloList) Component.getInstance("tituloList",true);
+
+		String descripcion = tituloList.getTitulo().getDescripcion() + "%";
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		try {
+			parametros.put("descripcion", descripcion);
+			this.crearArchivo("listadoTitulos", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+					"Lista Titulos", tituloList.getExtensionArchivo());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void reporteAtrasos() {
+		
+		AsistenciaList asistenciaList = (AsistenciaList) Component.getInstance("asistenciaList",true);
+		Map<String, Object> parametros = new HashMap<String, Object>();		
+				
+		Date fechaInicial = asistenciaList.getAsistencia().getFechaDesde();
+		Date fechaFinal = asistenciaList.getAsistencia().getFechaHasta();
+
+		// controlar estos cuando el usuario no haya selecionado el parametro
+		// porque da error null pointer exception
+
+		Long[] arregloCiudades = asistenciaList.getCiudades();
+		String ciudades = Comunes.arrayToString(arregloCiudades, Constantes.SEPARADOR_LISTAS);
+		 		
+		try {
+
+			parametros.put("ciudades",ciudades);
+			parametros.put("fechaInicial",fechaInicial);
+			parametros.put("fechaFinal",fechaFinal);
+			
+			if (asistenciaList.getTipoReporte().equals("Cargo")){
+				String cargos = null;
+				Long[] arregloCargos = asistenciaList.getCargos();
+				
+				if (arregloCargos.length != 0) {
+					cargos = Comunes.arrayToString(arregloCargos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("cargos",cargos);
+				
+				this.crearArchivo("reporteAtrasosCargo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Atrasos", asistenciaList.getExtensionArchivo());
+				
+			} else if(asistenciaList.getTipoReporte().equals("Departamento")){
+				String departamentos = null;
+				Long[] arregloDepartamentos = asistenciaList.getDepartamentos();
+								
+				if (arregloDepartamentos.length != 0) {
+					departamentos = Comunes.arrayToString(arregloDepartamentos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("departamentos",departamentos);
+				
+				this.crearArchivo("reporteAtrasosDepartamento", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Atrasos", asistenciaList.getExtensionArchivo());
+				
+			} else if(asistenciaList.getTipoReporte().equals("Grupo")){
+				String detalleGrupo = null;
+				Long[] arregloDetalleGrupo = asistenciaList.getDetalleGrupoContratados();
+				
+				if (arregloDetalleGrupo.length != 0) {
+					detalleGrupo = Comunes.arrayToString(arregloDetalleGrupo, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("detalleGrupo",detalleGrupo);
+				
+				this.crearArchivo("reporteAtrasosDetalleGrupo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Atrasos", asistenciaList.getExtensionArchivo());
+				
+			} else if(asistenciaList.getTipoReporte().equals("Empleado")) {
+				String cedula = asistenciaList.getAsistencia().getEmpleado().getCedula();
+				parametros.put("cedula",cedula);
+				this.crearArchivo("reporteAtrasoEmpleado", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Atrasos", asistenciaList.getExtensionArchivo());
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void reporteAsistenciaDetalle() {
+		
+		AsistenciaList asistenciaList = (AsistenciaList) Component.getInstance("asistenciaList",true);
+		Map<String, Object> parametros = new HashMap<String, Object>();		
+				
+		Date fechaInicial = asistenciaList.getAsistencia().getFechaDesde();
+		Date fechaFinal = asistenciaList.getAsistencia().getFechaHasta();
+
+		// controlar estos cuando el usuario no haya selecionado el parametro
+		// porque da error null pointer exception
+
+		Long[] arregloCiudades = asistenciaList.getCiudades();
+		String ciudades = Comunes.arrayToString(arregloCiudades, Constantes.SEPARADOR_LISTAS);
+		 		
+		try {
+
+			parametros.put("ciudades",ciudades);
+			parametros.put("fechaInicial",fechaInicial);
+			parametros.put("fechaFinal",fechaFinal);
+			
+			if (asistenciaList.getTipoReporte().equals("Cargo")){
+				String cargos = null;
+				Long[] arregloCargos = asistenciaList.getCargos();
+				
+				if (arregloCargos.length != 0) {
+					cargos = Comunes.arrayToString(arregloCargos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("cargos",cargos);
+				
+				this.crearArchivo("reporteAsistenciaDetalleCargo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Asistencia Detalle", asistenciaList.getExtensionArchivo());
+			} else if(asistenciaList.getTipoReporte().equals("Departamento")){
+				// IMPLEMENTAR
+			} else if(asistenciaList.getTipoReporte().equals("Grupo")){
+				// IMPLEMENTAR				
+			} else if(asistenciaList.getTipoReporte().equals("Empleado")) {
+				String cedula = asistenciaList.getAsistencia().getEmpleado().getCedula();
+				System.out.println("=========================== Cedula " + cedula);
+				parametros.put("cedula",cedula);
+				this.crearArchivo("reporteAsistenciaDetalleEmpleado", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Asistencia Detalle", asistenciaList.getExtensionArchivo());
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void reporteEntradasSalidas() {
+		
+		AsistenciaList asistenciaList = (AsistenciaList) Component.getInstance("asistenciaList",true);
+		Map<String, Object> parametros = new HashMap<String, Object>();		
+				
+		Date fechaInicial = asistenciaList.getAsistencia().getFechaDesde();
+		Date fechaFinal = asistenciaList.getAsistencia().getFechaHasta();
+
+		// controlar estos cuando el usuario no haya selecionado el parametro
+		// porque da error null pointer exception
+
+		Long[] arregloCiudades = asistenciaList.getCiudades();
+		String ciudades = Comunes.arrayToString(arregloCiudades, Constantes.SEPARADOR_LISTAS);
+		 		
+		try {
+
+			parametros.put("ciudades",ciudades);
+			parametros.put("fechaInicial",fechaInicial);
+			parametros.put("fechaFinal",fechaFinal);
+			
+			if (asistenciaList.getTipoReporte().equals("Cargo")){
+				String cargos = null;
+				Long[] arregloCargos = asistenciaList.getCargos();
+				
+				if (arregloCargos.length != 0) {
+					cargos = Comunes.arrayToString(arregloCargos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("cargos",cargos);
+				
+				this.crearArchivo("reporteEntradasSalidasCargo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Atrasos", asistenciaList.getExtensionArchivo());
+			} else if(asistenciaList.getTipoReporte().equals("Departamento")){
+				// IMPLEMENTAR
+			} else if(asistenciaList.getTipoReporte().equals("Grupo")){
+				// IMPLEMENTAR				
+			} else if(asistenciaList.getTipoReporte().equals("Empleado")) {
+				String cedula = asistenciaList.getAsistencia().getEmpleado().getCedula();
+				System.out.println("=========================== Cedula " + cedula);
+				parametros.put("cedula",cedula);
+				this.crearArchivo("reporteAtrasoEmpleado", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Atrasos", asistenciaList.getExtensionArchivo());
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void reporteFaltas() {
+		
+		AsistenciaList asistenciaList = (AsistenciaList) Component.getInstance("asistenciaList",true);
+		Map<String, Object> parametros = new HashMap<String, Object>();		
+				
+		Date fechaInicial = asistenciaList.getAsistencia().getFechaDesde();
+		Date fechaFinal = asistenciaList.getAsistencia().getFechaHasta();
+
+		// controlar estos cuando el usuario no haya selecionado el parametro
+		// porque da error null pointer exception
+
+		Long[] arregloCiudades = asistenciaList.getCiudades();
+		String ciudades = Comunes.arrayToString(arregloCiudades, Constantes.SEPARADOR_LISTAS);
+		 		
+		try {
+
+			parametros.put("ciudades",ciudades);
+			parametros.put("fechaInicial",fechaInicial);
+			parametros.put("fechaFinal",fechaFinal);
+			
+			if (asistenciaList.getTipoReporte().equals("Cargo")){
+				String cargos = null;
+				Long[] arregloCargos = asistenciaList.getCargos();
+				
+				if (arregloCargos.length != 0) {
+					cargos = Comunes.arrayToString(arregloCargos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("cargos",cargos);
+				
+				this.crearArchivo("reporteFaltasCargo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Faltas", asistenciaList.getExtensionArchivo());
+			} else if(asistenciaList.getTipoReporte().equals("Departamento")){
+				// IMPLEMENTAR
+			} else if(asistenciaList.getTipoReporte().equals("Grupo")){
+				// IMPLEMENTAR				
+			} else if(asistenciaList.getTipoReporte().equals("Empleado")) {
+				String cedula = asistenciaList.getAsistencia().getEmpleado().getCedula();
+				System.out.println("=========================== Cedula " + cedula);
+				parametros.put("cedula",cedula);
+				this.crearArchivo("reporteFaltasEmpleado", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Faltas", asistenciaList.getExtensionArchivo());
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void reporteHorasExtras() {
+		
+		AsistenciaList asistenciaList = (AsistenciaList) Component.getInstance("asistenciaList",true);
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();		
+		
+		Date fechaInicial = asistenciaList.getAsistencia().getFechaDesde();
+		Date fechaFinal = asistenciaList.getAsistencia().getFechaHasta();
+
+		// controlar estos cuando el usuario no haya selecionado el parametro
+		// porque da error null pointer exception
+
+		Long[] arregloCiudades = asistenciaList.getCiudades();
+		String ciudades = Comunes.arrayToString(arregloCiudades, Constantes.SEPARADOR_LISTAS);
+		 		
+		try {
+
+			parametros.put("ciudades",ciudades);
+			parametros.put("fechaInicial",fechaInicial);
+			parametros.put("fechaFinal",fechaFinal);
+			
+			if (asistenciaList.getTipoReporte().equals("Cargo")){
+				String cargos = null;
+				Long[] arregloCargos = asistenciaList.getCargos();
+				
+				if (arregloCargos.length != 0) {
+					cargos = Comunes.arrayToString(arregloCargos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("cargos",cargos);
+				
+				this.crearArchivo("reporteHorasExtrasCargo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Horas Extras", asistenciaList.getExtensionArchivo());
+			} else if(asistenciaList.getTipoReporte().equals("Departamento")){
+				// IMPLEMENTAR
+			} else if(asistenciaList.getTipoReporte().equals("Grupo")){
+				// IMPLEMENTAR				
+			} else if(asistenciaList.getTipoReporte().equals("Empleado")) {
+				String cedula = asistenciaList.getAsistencia().getEmpleado().getCedula();
+				System.out.println("=========================== Cedula " + cedula);
+				parametros.put("cedula",cedula);
+				this.crearArchivo("reporteFaltasEmpleado", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Faltas", asistenciaList.getExtensionArchivo());
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void reporteHorasTrabajadas() {
+		AsistenciaList asistenciaList = (AsistenciaList) Component.getInstance("asistenciaList",true);
+		
+		Map<String, Object> parametros = new HashMap<String, Object>();		
+		
+		Date fechaInicial = asistenciaList.getAsistencia().getFechaDesde();
+		Date fechaFinal = asistenciaList.getAsistencia().getFechaHasta();
+
+		// controlar estos cuando el usuario no haya selecionado el parametro
+		// porque da error null pointer exception
+
+		Long[] arregloCiudades = asistenciaList.getCiudades();
+		String ciudades = Comunes.arrayToString(arregloCiudades, Constantes.SEPARADOR_LISTAS);
+		 		
+		try {
+
+			parametros.put("ciudades",ciudades);
+			parametros.put("fechaInicial",fechaInicial);
+			parametros.put("fechaFinal",fechaFinal);
+			
+			if (asistenciaList.getTipoReporte().equals("Cargo")){
+				String cargos = null;
+				Long[] arregloCargos = asistenciaList.getCargos();
+				
+				if (arregloCargos.length != 0) {
+					cargos = Comunes.arrayToString(arregloCargos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("cargos",cargos);
+				
+				this.crearArchivo("reporteHorasTrabajadasCargo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Horas Trabajadas", asistenciaList.getExtensionArchivo());
+			} else if(asistenciaList.getTipoReporte().equals("Departamento")){
+				// IMPLEMENTAR
+			} else if(asistenciaList.getTipoReporte().equals("Grupo")){
+				// IMPLEMENTAR				
+			} else if(asistenciaList.getTipoReporte().equals("Empleado")) {
+				String cedula = asistenciaList.getAsistencia().getEmpleado().getCedula();
+				System.out.println("=========================== Cedula " + cedula);
+				parametros.put("cedula",cedula);
+				this.crearArchivo("reporteFaltasEmpleado", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Faltas", asistenciaList.getExtensionArchivo());
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void reporteSalidasAntes() {
+		
+		AsistenciaList asistenciaList = (AsistenciaList) Component.getInstance("asistenciaList",true);
+		Map<String, Object> parametros = new HashMap<String, Object>();		
+				
+		Date fechaInicial = asistenciaList.getAsistencia().getFechaDesde();
+		Date fechaFinal = asistenciaList.getAsistencia().getFechaHasta();
+
+		// controlar estos cuando el usuario no haya selecionado el parametro
+		// porque da error null pointer exception
+
+		Long[] arregloCiudades = asistenciaList.getCiudades();
+		String ciudades = Comunes.arrayToString(arregloCiudades, Constantes.SEPARADOR_LISTAS);
+		 		
+		try {
+
+			parametros.put("ciudades",ciudades);
+			parametros.put("fechaInicial",fechaInicial);
+			parametros.put("fechaFinal",fechaFinal);
+			
+			if (asistenciaList.getTipoReporte().equals("Cargo")){
+				String cargos = null;
+				Long[] arregloCargos = asistenciaList.getCargos();
+				
+				if (arregloCargos.length != 0) {
+					cargos = Comunes.arrayToString(arregloCargos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("cargos",cargos);
+				
+				this.crearArchivo("reporteSalidasAntesCargo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Salidas Antes", asistenciaList.getExtensionArchivo());
+			} else if(asistenciaList.getTipoReporte().equals("Departamento")){
+				// IMPLEMENTAR
+			} else if(asistenciaList.getTipoReporte().equals("Grupo")){
+				// IMPLEMENTAR				
+			} else if(asistenciaList.getTipoReporte().equals("Empleado")) {
+				String cedula = asistenciaList.getAsistencia().getEmpleado().getCedula();
+				System.out.println("=========================== Cedula " + cedula);
+				parametros.put("cedula",cedula);
+				this.crearArchivo("reporteSalidasAntesEmpleados", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Salidas Antes", asistenciaList.getExtensionArchivo());
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
+	
+	@Override
+	public void reporteTimbresIncompletos() {
+		
+		AsistenciaList asistenciaList = (AsistenciaList) Component.getInstance("asistenciaList",true);
+		Map<String, Object> parametros = new HashMap<String, Object>();		
+				
+		Date fechaInicial = asistenciaList.getAsistencia().getFechaDesde();
+		Date fechaFinal = asistenciaList.getAsistencia().getFechaHasta();
+
+		// controlar estos cuando el usuario no haya selecionado el parametro
+		// porque da error null pointer exception
+
+		Long[] arregloCiudades = asistenciaList.getCiudades();
+		String ciudades = Comunes.arrayToString(arregloCiudades, Constantes.SEPARADOR_LISTAS);
+		 		
+		try {
+
+			parametros.put("ciudades",ciudades);
+			parametros.put("fechaInicial",fechaInicial);
+			parametros.put("fechaFinal",fechaFinal);
+			
+			if (asistenciaList.getTipoReporte().equals("Cargo")){
+				String cargos = null;
+				Long[] arregloCargos = asistenciaList.getCargos();
+				
+				if (arregloCargos.length != 0) {
+					cargos = Comunes.arrayToString(arregloCargos, Constantes.SEPARADOR_LISTAS);
+				} else {
+					// crear lista cargos en Comunes
+				}
+				parametros.put("cargos",cargos);
+				
+				this.crearArchivo("reporteTimbresIncompletosCargo", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Timbres Incompletos", asistenciaList.getExtensionArchivo());
+			} else if(asistenciaList.getTipoReporte().equals("Departamento")){
+				// IMPLEMENTAR
+			} else if(asistenciaList.getTipoReporte().equals("Grupo")){
+				// IMPLEMENTAR				
+			} else if(asistenciaList.getTipoReporte().equals("Empleado")) {
+				String cedula = asistenciaList.getAsistencia().getEmpleado().getCedula();
+				System.out.println("=========================== Cedula " + cedula);
+				parametros.put("cedula",cedula);
+				this.crearArchivo("reporteTibresIncompletosEmpleados", parametros, Constantes.RUTA_LISTADOS_FUENTES, Constantes.RUTA_LISTADOS_SERVIDOR,
+						"Timbres Incompletos", asistenciaList.getExtensionArchivo());
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
+}

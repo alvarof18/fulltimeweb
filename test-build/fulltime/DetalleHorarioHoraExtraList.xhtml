@@ -1,0 +1,284 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"    
+    xmlns:a="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="detalleHorarioHoraExtraSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Criterios de B&#250;squeda" switchType="ajax">
+
+			<s:decorate id="id_dethorario" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Detalle Horario</ui:define>
+					<h:selectOneMenu id="DetalleHorarios" value="#{detalleHorarioHoraExtraList.detalleHorarioHoraExtra.detalleHorario}">
+						<s:selectItems id="listaDetale_horario" value="#{detalleHorarioList.listaDetalleHorarioSalida}" var="detalleHorario" 
+						label="#{detalleHorario.horario.descripcion} - #{detalleHorario.hora}"
+						 noSelectionLabel="Seleccione un valor..." />
+						<s:convertEntity />
+						<a:support id="tipoPermiso" event="onchange" reRender="DetalleHorarios" bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+			</s:decorate>	
+			
+			<s:decorate id="horaExtraField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Hora Extra</ui:define>
+					<h:selectOneMenu id="listaHoraExtras" value="#{detalleHorarioHoraExtraList.detalleHorarioHoraExtra.horaExtra}">
+						<s:selectItems id="itemsHoraExtra"
+							value="#{horaExtraList.listaHoraExtra}" var="horaExtra"
+							label="#{horaExtra.descripcion} - #{horaExtra.desde} - #{horaExtra.hasta}"
+							noSelectionLabel="Seleccione Hora Extra..." />		
+							<s:convertEntity />	
+							<a:support id="tipoPermiso" event="onchange" reRender="listaHoraExtras" bypassUpdates="true" ajaxSingle="true" />			
+					</h:selectOneMenu>
+			</s:decorate>	
+		
+			<s:decorate id="detalleGrupoContratadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Detalle Grupo Contratado</ui:define>
+					<h:selectOneMenu id="listaDetalleGrupoContratado"
+						value="#{detalleHorarioHoraExtraList.detalleHorarioHoraExtra.detalleGrupoContratado}">
+						<s:selectItems id="itemsDetalleGrupoContratado"
+							value="#{detalleGrupoContratadoList.listaDetalleGrupoContratado}" var="detalleGrupoContratado"
+							label="#{detalleGrupoContratado.descripcion}"
+							noSelectionLabel="Seleccione Detalle Grupo Contratado..." />		
+							<s:convertEntity />		
+							<a:support id="tipoPermiso" event="onchange" reRender="listaDetalleGrupoContratado" bypassUpdates="true" ajaxSingle="true" />	
+			</h:selectOneMenu>
+		</s:decorate>
+		
+
+        </rich:simpleTogglePanel>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/fulltime/DetalleHorarioHoraExtraEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear"
+                 rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            <f:param name="detalleHorarioHoraExtraDhheId"/>
+        </s:button>
+        
+        <h:commandButton id="search" value="Buscar" action="/fulltime/DetalleHorarioHoraExtraList.xhtml"/>
+        <s:button id="reset" value="Cancelar" includePageParams="false"/>
+        
+    </s:div>
+
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+    <div class="results" id="detalleHorarioHoraExtraList">
+
+    <h:outputText value="No existe resultados"
+               rendered="#{empty detalleHorarioHoraExtraList.resultList}"/>
+
+    <rich:dataTable id="detalleHorarioHoraExtraList"
+                var="_detalleHorarioHoraExtra"
+              value="#{detalleHorarioHoraExtraList.resultList}"
+           rendered="#{not empty detalleHorarioHoraExtraList.resultList}">
+<!--
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Dhhe id"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.dhheId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.dhheId}"/>
+        </h:column>
+-->
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Horario"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.detalleHorario.horario.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.detalleHorario.horario.descripcion}"/>
+        </h:column>
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Hora"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.detalleHorario.hora"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.detalleHorario.hora}">
+            	<s:convertDateTime type="time" pattern="HH:mm"/>
+           	</h:outputText>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Hora Extra"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.horaExtra.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.horaExtra.descripcion}"/>
+        </h:column>
+        
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Suple."/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.horaExtra.desde"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.horaExtra.desde}">
+            	<s:convertDateTime type="time" pattern="HH:mm"/>
+           	</h:outputText>
+        </h:column>
+
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Suple."/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.horaExtra.hasta"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.horaExtra.hasta}">
+            	<s:convertDateTime type="time" pattern="HH:mm"/>
+           	</h:outputText>
+        </h:column>
+        
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Extr.L-V"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.horaExtra.desde1"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.horaExtra.desde1}">
+            	<s:convertDateTime type="time" pattern="HH:mm"/>
+           	</h:outputText>
+        </h:column>
+
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Extr.L-V"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.horaExtra.hasta1"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.horaExtra.hasta1}">
+            	<s:convertDateTime type="time" pattern="HH:mm"/>
+           	</h:outputText>
+        </h:column>
+
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Extr.S-D"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.horaExtra.desde2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.horaExtra.desde2}">
+            	<s:convertDateTime type="time" pattern="HH:mm"/>
+           	</h:outputText>
+        </h:column>
+
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Extr.S-D"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.horaExtra.hasta2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.horaExtra.hasta2}">
+            	<s:convertDateTime type="time" pattern="HH:mm"/>
+           	</h:outputText>
+        </h:column>
+        
+		<h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{detalleHorarioHoraExtraList}"/>
+                    <ui:param name="propertyLabel" value="Grupo"/>
+                    <ui:param name="propertyPath" value="detalleHorarioHoraExtra.detalleGrupoContratado.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_detalleHorarioHoraExtra.detalleGrupoContratado.descripcion}">
+            	<s:convertDateTime type="time" pattern="HH:mm"/>
+           	</h:outputText>
+        </h:column>
+
+                
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/fulltime/#{empty from ? 'DetalleHorarioHoraExtra' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="detalleHorarioHoraExtra">
+                <f:param name="detalleHorarioHoraExtraDhheId"
+                        value="#{_detalleHorarioHoraExtra.dhheId}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/fulltime/DetalleHorarioHoraExtraEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="detalleHorarioHoraExtraEdit"
+                rendered="#{empty from}">
+                <f:param name="detalleHorarioHoraExtraDhheId"
+                        value="#{_detalleHorarioHoraExtra.dhheId}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/fulltime/DetalleHorarioHoraExtraList.xhtml"
+            rendered="#{detalleHorarioHoraExtraList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/fulltime/DetalleHorarioHoraExtraList.xhtml"
+            rendered="#{detalleHorarioHoraExtraList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{detalleHorarioHoraExtraList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/DetalleHorarioHoraExtraList.xhtml"
+            rendered="#{detalleHorarioHoraExtraList.nextExists}"
+               value="P&#225;gina Siguiente #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{detalleHorarioHoraExtraList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/DetalleHorarioHoraExtraList.xhtml"
+            rendered="#{detalleHorarioHoraExtraList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{detalleHorarioHoraExtraList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

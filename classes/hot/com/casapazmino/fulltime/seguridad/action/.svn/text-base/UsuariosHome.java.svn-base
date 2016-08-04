@@ -1,0 +1,362 @@
+package com.casapazmino.fulltime.seguridad.action;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
+import javax.persistence.Query;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.log.Log;
+
+import com.casapazmino.fulltime.action.DetalleTipoParametroHome;
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.comun.Fechas;
+import com.casapazmino.fulltime.model.DetalleTipoParametro;
+import com.casapazmino.fulltime.seguridad.model.Roles;
+import com.casapazmino.fulltime.seguridad.model.Usuarios;
+import com.casapazmino.fulltime.seguridad.model.UsuariosRoles;
+
+@Name("usuariosHome")
+public class UsuariosHome extends EntityHome<Usuarios> {
+
+	private static final long serialVersionUID = 1L;
+	@Logger
+	Log log;
+	
+	@In(create = true)
+	DetalleTipoParametroHome detalleTipoParametroHome;
+
+	@In private FacesMessages facesMessages;
+	
+	private Long idRol=Long.valueOf(0);
+	private List<SelectItem> listRol;
+	private RolesList rolesLista;
+	private UsuariosRolesHome usuarioRolesHome;
+	private Roles rol;
+	private RolesHome rolHome;
+	private Usuarios user;
+	private UsuariosHome userHome;
+	private Boolean checkEstado;
+	private Long idEstado;
+	private Long idUserRol;
+
+	public void setUsuariosId(Long id) {
+		setId(id);
+	}
+
+	public Long getUsuariosId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Usuarios createInstance() {
+		Usuarios usuarios = new Usuarios();
+		return usuarios;
+	}
+
+	public void wire() {
+		getInstance();
+		this.llenarListaRoles();
+		if(isManaged())
+		{
+			this.obtenerIdRol();
+			this.obtenetActivo();
+			this.idUserRol=this.getUsuarioRol().getId();
+		}
+		DetalleTipoParametro estado = detalleTipoParametroHome.getDefinedInstance();
+		if (estado != null) {
+			getInstance().setEstado(estado);
+		}
+		
+		this.instance.setFechaCreacion(Fechas.fechaActual());
+		 
+	}
+
+	public boolean isWired() {
+		return true;
+	}
+
+	public Usuarios getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	public List<UsuariosRoles> getUsuariosRoleses() {
+		return getInstance() == null ? null : new ArrayList<UsuariosRoles>(
+				getInstance().getUsuariosRoleses());
+	}
+	
+	public void guardar()
+	{
+		log.info("ENTRO EN GUARDAR");
+		this.rol=new Roles();
+		this.rolHome=new RolesHome();
+		this.user=new Usuarios();
+		this.userHome=new UsuariosHome();
+		UsuariosRoles usersRoles=new UsuariosRoles();
+		try
+		{
+			this.rol.setId(this.getIdRol());
+			this.rolHome.setRolesId(rol.getId());
+			this.rolHome.find();
+			DetalleTipoParametro estado=new DetalleTipoParametro();
+			estado.setDtpaId(this.asignarActivo());
+			this.getInstance().setEstado(estado);
+			this.persist();
+
+			this.userHome.setUsuariosId(this.getInstance().getId());
+			this.userHome.find();
+
+			usersRoles.setRoles(rol);
+			usersRoles.setUsuarios(this.userHome.getInstance());
+			this.guardarUserRoles(usersRoles);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			//log.info("ERROR EN GUARDAR: ", e);
+			e.printStackTrace();
+		}
+		//return null;
+	}
+	
+	public String actualizar()
+	{
+		log.info("ENTRO EN ACTUALIZAR");
+		UsuariosRoles usersRoles=new UsuariosRoles();
+		try
+		{
+			DetalleTipoParametro estado=new DetalleTipoParametro();
+			estado.setDtpaId(this.asignarActivo());
+			this.getInstance().setEstado(estado);
+			this.update();
+			
+			usersRoles.getRoles().setId(this.getIdRol());
+			usersRoles.getUsuarios().setId(this.getInstance().getId());
+			usersRoles.setId(this.idUserRol);
+			return this.actualizarUsuarioRoles(usersRoles);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+	
+	private String guardarUserRoles(UsuariosRoles usersRoles)
+	{
+		this.usuarioRolesHome=new UsuariosRolesHome();
+		this.usuarioRolesHome.setInstance(usersRoles);
+		return this.usuarioRolesHome.persist();
+	}
+	
+	private String actualizarUsuarioRoles(UsuariosRoles usersRoles)
+	{
+		this.usuarioRolesHome=new UsuariosRolesHome();
+		this.usuarioRolesHome.setId(usersRoles.getId());
+		this.usuarioRolesHome.find();
+
+		this.usuarioRolesHome.getInstance().setRoles(usersRoles.getRoles());
+		this.usuarioRolesHome.getInstance().setUsuarios(usersRoles.getUsuarios());
+		return this.usuarioRolesHome.update();		
+	}
+	private void llenarListaRoles()
+	{
+		log.info("ENTRO EN LLENAR LISTA ROLES");
+		this.listRol=new ArrayList<SelectItem>();
+		this.rolesLista=new RolesList();
+		try
+		{
+			if(listRol.isEmpty())
+			{
+				for(Roles rol:rolesLista.getlistadoRoles())
+				{
+					this.listRol.add(new SelectItem(rol.getId(),rol.getDescripcion()));
+				}
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN LLENAR LISTA ROLES: ", e);
+		}
+	}
+	
+	public void obtenerIdRol()
+	{
+		log.info("ENTRO EN OBTENER ID");
+		log.info("VALOR DE ID USER: "+this.getUsuariosId());
+		log.info("VALOR DE GETINSTANCE: "+this.getInstance());
+		try
+		{
+			String consulta="SELECT userRol FROM UsuariosRoles userRol "+
+							"WHERE userRol.usuarios.id=?1";
+			Query q=this.getEntityManager().createQuery(consulta);
+			q.setParameter(1, this.getUsuariosId());
+			UsuariosRoles usrol=new UsuariosRoles();
+			if(!q.getResultList().isEmpty())
+			{
+				for(UsuariosRoles ur:(List<UsuariosRoles>)q.getResultList())
+				{
+					usrol=ur;
+					log.info("DATO DE USER ROL: "+usrol.getId());
+					log.info("Valor de id rol: "+usrol.getRoles().getId());
+					this.setIdRol(usrol.getRoles().getId());
+				}
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			log.info("ERROR EN OBTENER ID ROL: ",e);
+		}
+	}
+	
+	public void obtenetActivo()
+	{
+		log.info("ENTRO EN OBTENER ACTIVO");
+		if(this.getInstance().getEstado().getDtpaId().equals(Long.valueOf(Constantes.ESTADO_ACTIVO)))
+		{
+			this.setCheckEstado(true);
+		}
+		else
+		{
+			this.setCheckEstado(false);
+		}
+	}
+	
+	public Long asignarActivo()
+	{
+		log.info("VALOR DE CHAECK DE ACTIVO: "+this.getCheckEstado());
+		
+		if(this.getCheckEstado())
+		{
+			this.setIdEstado(Long.valueOf(Constantes.ESTADO_ACTIVO));
+		}
+		else
+		{
+			this.setIdEstado(Long.valueOf(Constantes.ESTADO_INACTIVO));
+		}
+		return this.getIdEstado();
+	}
+	
+	public UsuariosRoles getUsuarioRol()
+	{
+		log.info("ENTRO EN GET USUARIO ROL");
+		String consulta="SELECT usuariosRoles FROM UsuariosRoles usuariosRoles" +
+				" WHERE usuariosRoles.usuarios.id=?1";
+
+		if(this.getIdRol().equals(null) || this.getIdRol().equals(0))
+		{
+			consulta+=" AND usuariosRoles.roles.id=?2";
+		}
+		Query query=this.getEntityManager().createQuery(consulta);
+		query.setParameter(1,this.getInstance().getId());
+		if(this.getIdRol().equals(null) || this.getIdRol().equals(0))
+		{
+			query.setParameter(2,this.getIdRol());
+		}
+		log.info("TAMAÑO LISTA: "+query.getResultList().size());
+		for(UsuariosRoles userRol:(List<UsuariosRoles>)query.getResultList())
+		{
+			return userRol;
+		}
+		this.usuarioRolesHome=new UsuariosRolesHome();
+		
+		return null;
+	}
+	
+	public String getRoles()
+	{
+		log.info("ENTRO EN GETROLES");
+		
+		for(UsuariosRoles ur:this.getUsuariosRoleses())
+		{
+			RolesHome rolesHome=new RolesHome();
+			rolesHome.setId(ur.getRoles().getId());
+			rolesHome.find();
+			log.info("ROL: "+ur.getRoles().getDescripcion());
+			return rolesHome.getInstance().getDescripcion();
+		}
+		return null;
+
+	}
+	
+	public String getEstados()
+	{
+		log.info("ENTRO EN GET ESTADO");
+		DetalleTipoParametroHome estado=new DetalleTipoParametroHome();
+		estado.setId(this.getInstance().getEstado().getDtpaId());
+		estado.find();
+		log.info("ESTADO: "+estado.getInstance().getDescripcion());
+		return estado.getInstance().getDescripcion();
+	}
+	
+	public void verificarFechaCaducidad(ValueChangeEvent e) throws ValidatorException {
+	
+		try {
+			Date fecha = (Date) e.getNewValue();
+			if (fecha.before(Fechas.fechaActual())) {
+				facesMessages.add("No puede eliminar", null);
+			}
+		} catch (Exception e2) {
+			log.info(e);
+		}
+	}
+	
+	/*
+	 * GETERS AND SETERS
+	 */
+	
+	public Long getIdRol() {
+		return idRol;
+	}
+
+	public void setIdRol(Long idRol) {
+		this.idRol = idRol;
+	}
+
+	public List<SelectItem> getListRol() {
+		return listRol;
+	}
+
+	public void setListRol(List<SelectItem> listRol) {
+		this.listRol = listRol;
+	}
+	
+	public Boolean getCheckEstado() {
+		return checkEstado;
+	}
+
+	public void setCheckEstado(Boolean checkEstado) {
+		this.checkEstado = checkEstado;
+	}
+	
+	public Long getIdEstado() {
+		return idEstado;
+	}
+
+	public void setIdEstado(Long idEstado) {
+		this.idEstado = idEstado;
+	}
+	
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+	
+/*	protected void initDefaultMessages()
+	{
+	Expressions expressions = new Expressions();
+	if (createdMessage == null) { createdMessage = expressions.createValueExpression(StatusMessage.getBundleMessage("successfully.created", "Successfully created")); }
+	if (updatedMessage == null) { updatedMessage = expressions.createValueExpression(StatusMessage.getBundleMessage("successfully.updated", "Successfully updated")); }
+	if (deletedMessage == null) { deletedMessage = expressions.createValueExpression(StatusMessage.getBundleMessage("successfully.deleted", "Successfully deleted")); }
+	}*/
+}

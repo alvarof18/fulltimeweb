@@ -1,0 +1,232 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml"
+    xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+    
+	<ui:define name="body">
+	
+		<style type="text/css">
+			.panelAprobacion {   					
+   					overflow: auto;
+  					}
+		
+  			.panelPopUpEdit {
+   					height: 100px;   					
+   					overflow: auto;
+  					}
+  					
+  			.divPopUpRemove {
+   					height: 50px;
+   					width:  300px;
+   					font-family : Arial;
+    				font-size : 130%;
+  					}
+  					
+  			.panelPopUpEditHorario {
+   					height: 120px;   					
+   					overflow: auto;
+  					}
+  					
+  			.rich-filter-input{
+            		width:50px;
+        			}
+		</style> 
+		
+    	<h:form id="PermisosMultipleSearch" styleClass="edit" bodyClass="panelPermisos" style="width:1157px;">
+    		    
+        	<rich:simpleTogglePanel label="Permisos M&#250;ltiples" switchType="ajax">        		
+				<h:panelGrid columns="1" > 		
+					<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+						<ui:define name="label">
+							Seleccione Par&#225;metros				
+						</ui:define>
+							<h:selectOneRadio id="listaParametros" value="#{permisosMultiples.tipoGrupo}">
+								<s:selectItems value="#{enumeraciones.tipoReporte2}" var="tipoReporte" label="#{tipoReporte}" />						
+								<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,departamentoField,listaDepartamento,itemsDepartamento,
+															detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+															ciudadField,listaCiudades"
+								ajaxSingle="true" />
+							</h:selectOneRadio>
+					</s:decorate>
+			 
+					<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+						<h:selectManyListbox id="listaCargo" value="#{permisosMultiples.cargos}"
+							size="10" rendered="#{permisosMultiples.tipoGrupo != 'Departamento' and permisosMultiples.tipoGrupo != 'Grupo'}" >
+							<s:selectItems id="itemsCargo"  
+								value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+								itemValue="#{cargo.cargId}" >
+							</s:selectItems>
+							<f:convertNumber/>
+						</h:selectManyListbox>
+					</s:decorate>
+					
+					<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+						<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{permisosMultiples.detalleGrupoContratados}"
+							size="8" rendered="#{permisosMultiples.tipoGrupo != 'Departamento' and permisosMultiples.tipoGrupo != 'Cargo'}" >
+								<s:selectItems id="itemsDetalleGrupoContratado"  
+									value="#{detalleGrupoContratadoList.resultList}" 
+									var="detalleGrupoContratado" 
+									label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+									itemValue="#{detalleGrupoContratado.dgcoId}" >
+								</s:selectItems>
+								<f:convertNumber />
+							</h:selectManyListbox>
+					</s:decorate>
+					
+					<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/display.xhtml"  >
+						<h:selectManyListbox id="listaDepartamento" value="#{permisosMultiples.departamentos}"
+								size="8" rendered="#{permisosMultiples.tipoGrupo != 'Cargo' and permisosMultiples.tipoGrupo != 'Grupo'}">
+								<s:selectItems id="itemsDepartamento" value="#{departamentoList.listaDepartamentos}" var="departamento" label="#{departamento.descripcion}" itemValue="#{departamento.depaId}"/>
+								<f:convertNumber />
+						</h:selectManyListbox>
+					</s:decorate> 
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2" styleClass="vertical-align: top">		
+					<h:panelGrid columns="1" >			
+						<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/display.xhtml">
+							<ui:define name="label" rendered="#{permisosMultiples.tipoGrupo != 'Empleado'}">Ciudad</ui:define>
+								<h:selectManyListbox id="listaCiudades" value="#{permisosMultiples.ciudades}" size="5" > 
+									<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad" 
+										value="#{usuarioCiudadList.listaCiudadesUsuarios}" 
+										var="usuarioCiudad" 
+										label="#{usuarioCiudad.ciudad.provincia.descripcion} - #{usuarioCiudad.ciudad.descripcion}"
+										itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+									<f:convertNumber />
+							</h:selectManyListbox>
+						</s:decorate>
+					
+					 <s:decorate id="fechaDesdeField"
+						template="#{requestScope.contextPath}/layout/edit.xhtml">
+						<ui:define name="label">Fecha Desde</ui:define>
+						<rich:calendar id="fechaDesde" required="true"
+							showApplyButton="true" value="#{permisosMultiples.fechaDesde}"
+							datePattern="dd/MM/yyyy HH:mm">
+						</rich:calendar>
+					</s:decorate>
+					
+					<s:decorate id="fechaHastaField"
+						template="#{requestScope.contextPath}/layout/edit.xhtml">
+						<ui:define name="label">Fecha Hasta</ui:define>
+						<rich:calendar id="fechaHasta" required="true"
+							showApplyButton="true" value="#{permisosMultiples.fechaHasta}"
+							datePattern="dd/MM/yyyy HH:mm">
+						</rich:calendar>
+					</s:decorate>
+						
+					<s:decorate id="tipoPermisoField"
+						template="#{requestScope.contextPath}/layout/edit.xhtml">
+						<ui:define name="label">Tipo Permiso</ui:define>
+						<h:selectOneMenu id="listaTipoPermiso" required="true"
+							value="#{permisosMultiples.tipoPermiso}"
+							valueChangeListener="#{permisoHome.buscarTipoPermiso}"
+							immediate="true">
+							<s:selectItems id="itemsTipoPermiso"
+								value="#{tipoPermisoList.listaTipoPermiso}" var="tipoPermiso"
+								label="#{tipoPermiso.descripcion}"
+								noSelectionLabel="Seleccione Tipo Permiso..." />
+							<s:convertEntity />
+						</h:selectOneMenu>
+				    </s:decorate>
+				    
+				    <s:decorate id="observacionField"
+						template="#{requestScope.contextPath}/layout/edit.xhtml">
+						<ui:define name="label">Observaci&#243;n</ui:define>
+						<h:inputText id="lugar" size="50"
+							value="#{permisosMultiples.observacion}" />
+					</s:decorate>
+					
+					<s:decorate id="lugarField"
+						template="#{requestScope.contextPath}/layout/edit.xhtml">
+						<ui:define name="label">Lugar</ui:define>
+						<h:inputText id="lugar" value="#{permisosMultiples.lugar}" />
+					</s:decorate>
+
+					</h:panelGrid>
+				</h:panelGrid>
+			</rich:simpleTogglePanel>
+			
+			<div>		
+				<table width="100%">				
+					<tr>
+						<td width="70%">
+							
+							<h:commandButton id="verificar" value="Verificar" action="#{permisosMultiples.verificar()}"/>
+				
+							<rich:spacer width="7"/>					
+							
+							<h:commandButton id="procesar" value="Procesar" action="#{permisosMultiples.procesar()}" 
+											 rendered = "#{permisosMultiples.dspProcesar}" />						
+							<rich:spacer width="7"/>	
+									
+							<h:commandButton id="cancelar" value="Cancelar"	action="#{permisosMultiples.cancelar()}"/>
+						
+						</td>
+					</tr>				
+				</table>			
+			</div>
+			
+			
+		
+		<rich:panel bodyClass="panelAprobacion" style="width:1157px;" rendered="#{permisosMultiples.listaPermisos.size()>0}">
+			  
+	       		<f:facet name="header">
+	       			Permisos Procesados
+	       		</f:facet>	       		
+	       			       		
+	       		<rich:dataTable id="listaPermisos" var="key" value="#{permisosMultiples.listaPermisos.keySet().toArray()}"
+					rendered= "true" reRender="ds">
+            		          		            	
+            		<rich:column id="ColEmpl">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="Empleado"/> 
+			            	</f:facet>		            	
+			            	<h:outputText value="#{key.empleadoByEmplId.apellido}  #{key.empleadoByEmplId.apellido}"/>		        
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="ColCargo">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="Cargo"/> 
+			            	</f:facet>		            	
+			            	<h:outputText value="#{key.empleadoByEmplId.cargo.descripcion}"/>		        
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="ColDepartamento">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="Departamento"/> 
+			            	</f:facet>		            	
+			            	<h:outputText value="#{key.empleadoByEmplId.departamento.descripcion}"/>		        
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<rich:column id="ColObservacion">
+            			<div align="center">
+			           		<f:facet name="header">
+			            		<h:outputText value="Mensaje"/> 
+			            	</f:facet>		            	
+			            	<h:outputText value="#{permisosMultiples.listaPermisos.get(key)}"/>		        
+		            	</div>    
+		   			</rich:column>
+		   			
+		   			<f:facet name="footer">
+                		<rich:datascroller id="ds"></rich:datascroller>
+            		</f:facet>
+		   			
+            	</rich:dataTable>
+           </rich:panel>
+		</h:form>			
+	</ui:define>
+</ui:composition>

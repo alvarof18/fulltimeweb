@@ -1,0 +1,68 @@
+package com.casapazmino.fulltime.action;
+
+import com.casapazmino.fulltime.model.*;
+import java.util.ArrayList;
+import java.util.List;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+
+@Name("tituloHome")
+public class TituloHome extends EntityHome<Titulo> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+	
+	public void setTituloTituId(Long id) {
+		setId(id);
+	}
+
+	public Long getTituloTituId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Titulo createInstance() {
+		Titulo titulo = new Titulo();
+		return titulo;
+	}
+
+	public void wire() {
+		getInstance();
+	}
+
+	public boolean isWired() {
+		return true;
+	}
+
+	public Titulo getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+	
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}
+
+	public List<EmpleadoTitulo> getEmpleadoTitulos() {
+		return getInstance() == null ? null : new ArrayList<EmpleadoTitulo>(
+				getInstance().getEmpleadoTitulos());
+	}
+
+}

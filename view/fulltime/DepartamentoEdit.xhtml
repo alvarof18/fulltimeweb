@@ -1,0 +1,307 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="departamento" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{departamentoHome.managed ? 'Editar' : 'A&#241;adir'} Departamento</f:facet>
+
+            <s:decorate id="codigoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="codigo"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{departamentoHome.instance.codigo}">
+                    <a:support event="onblur" reRender="codigoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{departamentoHome.instance.descripcion}"/>
+            </s:decorate>
+
+				<s:decorate id="departamentoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Departamento</ui:define>
+					<h:selectOneMenu id="listaDepartamento"
+						value="#{departamentoHome.instance.departamento}">
+						<s:selectItems id="itemsDepartamento"
+							value="#{departamentoList.listaDepartamentos}" var="departamentos"
+							label="#{departamentos.descripcion}"
+							noSelectionLabel="Seleccione Nivel Superior..." />
+						<s:convertEntity />
+						<a:support id="departamentos" event="onchange"
+							reRender="empleadoField,listaEmpleados,itemsEmpleado"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+				
+			<!--  ><s:decorate id="empleadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Jefe</ui:define>
+						<h:selectOneMenu id="listaEmpleados" 
+							value="#{departamentoHome.instance.empleado}">
+							<s:selectItems id="itemsEmpleado" required="true"
+								value="#{empleadoList.listaEmpleado}" var="empleado"
+								label="#{empleado.apellido} - #{empleado.nombre}"
+								noSelectionLabel="Seleccione Jefe..." />
+							<s:convertEntity />
+							<a:support id="empleados" event="onchange" reRender="empleadoField,listaEmpleado" bypassUpdates="true" ajaxSingle="true" />
+						</h:selectOneMenu>
+			</s:decorate>-->
+			
+			<s:decorate id="empleadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Jefe</ui:define>
+				<h:selectOneMenu id="listaEmpleados" required="false" style="width:350px;" 
+					value="#{departamentoHome.instance.empleado}" >
+					<s:selectItems id="itemsEmpleado" value="#{empleadoList.listaDeEmpleadosDepartamento(departamentoHome.instance.depaId,departamentoHome.instance)}" var="empleado" 
+						label="#{empleado.apellido} - #{empleado.nombre}" noSelectionLabel="Seleccione Jefe..." />						
+					<s:convertEntity />					
+				</h:selectOneMenu>
+			</s:decorate>					
+			
+			<s:decorate id="nivelField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Nivel</ui:define>
+                <h:inputText id="nivel" size="10"
+                	required="true"
+                    value="#{departamentoHome.instance.nivel}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{departamentoHome.persist}"
+                       disabled="#{!departamentoHome.wired}"
+                       rendered="#{!departamentoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{departamentoHome.update}"
+                       rendered="#{departamentoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{departamentoHome.remove}"
+                      immediate="true"
+                       rendered="#{departamentoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Departamento.xhtml"
+                rendered="#{departamentoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty departamentoFrom ? 'DepartamentoList' : departamentoFrom}.xhtml"
+                rendered="#{!departamentoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Departamento">
+    <div class="association" id="departamentoParent">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{departamentoHome.instance.departamento == null}"/>
+
+        <rich:dataTable var="_departamento"
+                   value="#{departamentoHome.instance.departamento}"
+                rendered="#{departamentoHome.instance.departamento != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="departamentoTable">
+            <h:column>
+                <f:facet name="header">Depa id</f:facet>
+                <h:outputText value="#{_departamento.depaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Departamento depa id</f:facet>
+                <h:outputText value="#{_departamento.departamento.depaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">C&#243;digo</f:facet>
+                <h:outputText value="#{_departamento.codigo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_departamento.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Empleados">
+        <h:form styleClass="association" id="empleadosChildren">
+
+            <h:outputText value="No existe resultados"
+                       rendered="#{empty departamentoHome.empleados}"/>
+
+            <rich:dataTable value="#{departamentoHome.empleados}"
+                           var="_empleado"
+                      rendered="#{not empty departamentoHome.empleados}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadosTable">
+                <rich:column sortBy="#{_empleado.emplId}">
+                    <f:facet name="header">Empl id</f:facet>
+                    <h:outputText value="#{_empleado.emplId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.cedula}">
+                    <f:facet name="header">Cedula</f:facet>
+                    <h:outputText value="#{_empleado.cedula}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.apellido}">
+                    <f:facet name="header">Apellido</f:facet>
+                    <h:outputText value="#{_empleado.apellido}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_empleado.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                    <f:facet name="header">Fecha nacimiento</f:facet>
+                    <h:outputText value="#{_empleado.fechaNacimiento}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_empleado.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaSalida}">
+                    <f:facet name="header">Fecha salida</f:facet>
+                    <h:outputText value="#{_empleado.fechaSalida}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaContrato}">
+                    <f:facet name="header">Fecha contrato</f:facet>
+                    <h:outputText value="#{_empleado.fechaContrato}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_empleado.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.horasTrabaja}">
+                    <f:facet name="header">Horas trabaja</f:facet>
+                    <h:outputText value="#{_empleado.horasTrabaja}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_empleado.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partida}">
+                    <f:facet name="header">Partida</f:facet>
+                    <h:outputText value="#{_empleado.partida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partidaIndividual}">
+                    <f:facet name="header">Partida individual</f:facet>
+                    <h:outputText value="#{_empleado.partidaIndividual}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.entradaSalida}">
+                    <f:facet name="header">Entrada salida</f:facet>
+                    <h:outputText value="#{_empleado.entradaSalida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.numeroTimbre}">
+                    <f:facet name="header">Numero timbre</f:facet>
+                    <h:outputText value="#{_empleado.numeroTimbre}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{departamentoHome.managed}" id="empleados">
+        <div class="actionButtons">
+            <s:button id="addempleado"
+                   value="Crear"
+                    view="/fulltime/EmpleadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="departamentoDepaId"
+                         value="#{departamentoHome.instance.depaId}"/>
+                 <f:param name="empleadoFrom" value="Departamento"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Departamentos">
+        <h:form styleClass="association" id="departamentosChildren">
+
+            <h:outputText value="No existe resultados"
+                       rendered="#{empty departamentoHome.departamentos}"/>
+
+            <rich:dataTable value="#{departamentoHome.departamentos}"
+                           var="_departamento"
+                      rendered="#{not empty departamentoHome.departamentos}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="departamentosTable">
+                <rich:column sortBy="#{_departamento.depaId}">
+                    <f:facet name="header">Depa id</f:facet>
+                    <h:outputText value="#{_departamento.depaId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_departamento.codigo}">
+                    <f:facet name="header">C&#243;digo</f:facet>
+                    <h:outputText value="#{_departamento.codigo}"/>
+                </rich:column>
+                <rich:column sortBy="#{_departamento.descripcion}">
+                    <f:facet name="header">Descripci&#243;n</f:facet>
+                    <h:outputText value="#{_departamento.descripcion}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{departamentoHome.managed}" id="departamentos">
+        <div class="actionButtons">
+            <s:button id="adddepartamento"
+                   value="Crear"
+                    view="/fulltime/DepartamentoEdit.xhtml"
+             propagation="none">
+                 <f:param name="departamentoDepaId"
+                         value="#{departamentoHome.instance.depaId}"/>
+                 <f:param name="departamentoFrom" value="Departamento"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+
+-->
+
+</ui:define>
+
+</ui:composition>

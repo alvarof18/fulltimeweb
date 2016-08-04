@@ -1,0 +1,857 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="detalleTipoParametro" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{detalleTipoParametroHome.managed ? 'Editar' : 'A&#241;adir'} Detalle tipo parametro</f:facet>
+	
+			<s:decorate id="detalleTipoParametroField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Par&#225;metro</ui:define>
+					<h:selectOneMenu id="listaTipoParametro" required="true" value="#{detalleTipoParametroHome.instance.tipoParametro}">
+						<s:selectItems id="itemsTipoParametro" value="#{tipoParametroList.listaTipoParametro}" var="tipoParametro"
+							label="#{tipoParametro.descripcion}" noSelectionLabel="Seleccione Tipo Par&#225;metro..." />
+						<s:convertEntity />
+						<a:support event="onchange" reRender="detalleTipoParametro,valor1Field,valor1,valor2Field,valor3Field,valor4Field,valor2,valor3,valor4"/>
+					</h:selectOneMenu>
+			</s:decorate>
+			
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100" required="false" value="#{detalleTipoParametroHome.instance.descripcion}"/>
+            </s:decorate>
+
+            <s:decorate id="valor1Field" template="#{requestScope.contextPath}/layout/edit.xhtml"
+            rendered="#{detalleTipoParametroHome.instance.tipoParametro.tipaId=='8'}">
+                <ui:define name="label">Valor1</ui:define>
+                <h:inputText id="valor1" value="#{detalleTipoParametroHome.instance.valor1}" size="15" />
+            </s:decorate>
+
+            <s:decorate id="valor2Field" template="#{requestScope.contextPath}/layout/edit.xhtml"
+            rendered="#{detalleTipoParametroHome.instance.tipoParametro.tipaId=='8'}">
+                <ui:define name="label">Valor2</ui:define>
+                <h:inputText id="valor2" value="#{detalleTipoParametroHome.instance.valor2}" size="15" />
+            </s:decorate>
+
+            <s:decorate id="valor3Field" template="#{requestScope.contextPath}/layout/edit.xhtml"
+            rendered="#{detalleTipoParametroHome.instance.tipoParametro.tipaId=='8'}">
+                <ui:define name="label">Valor3</ui:define>
+                <h:inputText id="valor3" value="#{detalleTipoParametroHome.instance.valor3}" size="15" />
+            </s:decorate>
+
+            <s:decorate id="valor4Field" template="#{requestScope.contextPath}/layout/edit.xhtml" 
+            rendered="#{detalleTipoParametroHome.instance.tipoParametro.tipaId=='8'}">
+                <ui:define name="label">Valor4</ui:define>
+                <h:inputText id="valor4" value="#{detalleTipoParametroHome.instance.valor4}" size="15" />
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{detalleTipoParametroHome.persist}"
+                       disabled="#{!detalleTipoParametroHome.wired}"
+                       rendered="#{!detalleTipoParametroHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{detalleTipoParametroHome.update}"
+                       rendered="#{detalleTipoParametroHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{detalleTipoParametroHome.remove}"
+                      immediate="true"
+                       rendered="false"/>
+                       <!-- rendered="#{detalleTipoParametroHome.managed}" -->
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/DetalleTipoParametro.xhtml"
+                rendered="#{detalleTipoParametroHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty detalleTipoParametroFrom ? 'DetalleTipoParametroList' : detalleTipoParametroFrom}.xhtml"
+                rendered="#{!detalleTipoParametroHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Tipo parametro">
+    <div class="association" id="tipoParametroParent">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{detalleTipoParametroHome.instance.tipoParametro == null}"/>
+
+        <rich:dataTable var="_tipoParametro"
+                   value="#{detalleTipoParametroHome.instance.tipoParametro}"
+                rendered="#{detalleTipoParametroHome.instance.tipoParametro != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="tipoParametroTable">
+            <h:column>
+                <f:facet name="header">Tipa id</f:facet>
+                <h:outputText value="#{_tipoParametro.tipaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_tipoParametro.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{detalleTipoParametroHome.instance.tipoParametro != null ? 'Change' : 'Select'} tipoParametro"
+                       view="/fulltime/TipoParametroList.xhtml">
+                <f:param name="from" value="DetalleTipoParametroEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Solicitud vacacions">
+        <h:form styleClass="association" id="solicitudVacacionsChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.solicitudVacacions}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.solicitudVacacions}"
+                           var="_solicitudVacacion"
+                      rendered="#{not empty detalleTipoParametroHome.solicitudVacacions}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="solicitudVacacionsTable">
+                <rich:column sortBy="#{_solicitudVacacion.sova}">
+                    <f:facet name="header">Sova</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.sova}"/>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.fechaDesde}">
+                    <f:facet name="header">Fecha desde</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.fechaDesde}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.fechaHasta}">
+                    <f:facet name="header">Fecha hasta</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.fechaHasta}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.telefono}">
+                    <f:facet name="header">Telefono</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.telefono}"/>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.direccion}">
+                    <f:facet name="header">Direccion</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.direccion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.correo}">
+                    <f:facet name="header">Correo</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.correo}"/>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.diasPermiso}">
+                    <f:facet name="header">Dias permiso</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.diasPermiso}"/>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.diasPendientes}">
+                    <f:facet name="header">Dias pendientes</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.diasPendientes}"/>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.liceFechaDesde}">
+                    <f:facet name="header">Lice fecha desde</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.liceFechaDesde}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.liceFechaHasta}">
+                    <f:facet name="header">Lice fecha hasta</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.liceFechaHasta}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.statusAccion}">
+                    <f:facet name="header">Status accion</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.statusAccion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.suspencion}">
+                    <f:facet name="header">Suspencion</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.suspencion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.suspFechaDesde}">
+                    <f:facet name="header">Susp fecha desde</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.suspFechaDesde}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_solicitudVacacion.suspFechaHasta}">
+                    <f:facet name="header">Susp fecha hasta</f:facet>
+                    <h:outputText value="#{_solicitudVacacion.suspFechaHasta}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="solicitudVacacions">
+        <div class="actionButtons">
+            <s:button id="addsolicitudVacacion"
+                   value="Crear"
+                    view="/fulltime/SolicitudVacacionEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="solicitudVacacionFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Permisos for autorizado">
+        <h:form styleClass="association" id="permisosForAutorizadoChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.permisosForAutorizado}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.permisosForAutorizado}"
+                           var="_permiso"
+                      rendered="#{not empty detalleTipoParametroHome.permisosForAutorizado}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="permisosForAutorizadoTable">
+                <rich:column sortBy="#{_permiso.permId}">
+                    <f:facet name="header">Perm id</f:facet>
+                    <h:outputText value="#{_permiso.permId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fecha}">
+                    <f:facet name="header">Fecha</f:facet>
+                    <h:outputText value="#{_permiso.fecha}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.lugar}">
+                    <f:facet name="header">Lugar</f:facet>
+                    <h:outputText value="#{_permiso.lugar}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fechaDesde}">
+                    <f:facet name="header">Fecha desde</f:facet>
+                    <h:outputText value="#{_permiso.fechaDesde}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fechaHasta}">
+                    <f:facet name="header">Fecha hasta</f:facet>
+                    <h:outputText value="#{_permiso.fechaHasta}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.dias}">
+                    <f:facet name="header">Dias</f:facet>
+                    <h:outputText value="#{_permiso.dias}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.horaSalida}">
+                    <f:facet name="header">Hora salida</f:facet>
+                    <h:outputText value="#{_permiso.horaSalida}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.horaRetorno}">
+                    <f:facet name="header">Hora retorno</f:facet>
+                    <h:outputText value="#{_permiso.horaRetorno}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.numeroHoras}">
+                    <f:facet name="header">Numero horas</f:facet>
+                    <h:outputText value="#{_permiso.numeroHoras}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="permisosForAutorizado">
+        <div class="actionButtons">
+            <s:button id="addpermiso"
+                   value="Crear"
+                    view="/fulltime/PermisoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="permisoFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Empleados for estado civil">
+        <h:form styleClass="association" id="empleadosForEstadoCivilChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.empleadosForEstadoCivil}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.empleadosForEstadoCivil}"
+                           var="_empleado"
+                      rendered="#{not empty detalleTipoParametroHome.empleadosForEstadoCivil}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadosForEstadoCivilTable">
+                <rich:column sortBy="#{_empleado.emplId}">
+                    <f:facet name="header">Empl id</f:facet>
+                    <h:outputText value="#{_empleado.emplId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.cedula}">
+                    <f:facet name="header">Cedula</f:facet>
+                    <h:outputText value="#{_empleado.cedula}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.apellido}">
+                    <f:facet name="header">Apellido</f:facet>
+                    <h:outputText value="#{_empleado.apellido}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_empleado.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                    <f:facet name="header">Fecha nacimiento</f:facet>
+                    <h:outputText value="#{_empleado.fechaNacimiento}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_empleado.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaSalida}">
+                    <f:facet name="header">Fecha salida</f:facet>
+                    <h:outputText value="#{_empleado.fechaSalida}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaContrato}">
+                    <f:facet name="header">Fecha contrato</f:facet>
+                    <h:outputText value="#{_empleado.fechaContrato}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_empleado.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.horasTrabaja}">
+                    <f:facet name="header">Horas trabaja</f:facet>
+                    <h:outputText value="#{_empleado.horasTrabaja}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_empleado.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partida}">
+                    <f:facet name="header">Partida</f:facet>
+                    <h:outputText value="#{_empleado.partida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partidaIndividual}">
+                    <f:facet name="header">Partida individual</f:facet>
+                    <h:outputText value="#{_empleado.partidaIndividual}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.entradaSalida}">
+                    <f:facet name="header">Entrada salida</f:facet>
+                    <h:outputText value="#{_empleado.entradaSalida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.numeroTimbre}">
+                    <f:facet name="header">Numero timbre</f:facet>
+                    <h:outputText value="#{_empleado.numeroTimbre}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="empleadosForEstadoCivil">
+        <div class="actionButtons">
+            <s:button id="addempleado"
+                   value="Crear"
+                    view="/fulltime/EmpleadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="empleadoFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Cargos">
+        <h:form styleClass="association" id="cargosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.cargos}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.cargos}"
+                           var="_cargo"
+                      rendered="#{not empty detalleTipoParametroHome.cargos}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="cargosTable">
+                <rich:column sortBy="#{_cargo.cargId}">
+                    <f:facet name="header">Carg id</f:facet>
+                    <h:outputText value="#{_cargo.cargId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_cargo.descripcion}">
+                    <f:facet name="header">Descripci&#243;n</f:facet>
+                    <h:outputText value="#{_cargo.descripcion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_cargo.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_cargo.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="cargos">
+        <div class="actionButtons">
+            <s:button id="addcargo"
+                   value="Crear"
+                    view="/fulltime/CargoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="cargoFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Feriados">
+        <h:form styleClass="association" id="feriadosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.feriados}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.feriados}"
+                           var="_feriado"
+                      rendered="#{not empty detalleTipoParametroHome.feriados}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="feriadosTable">
+                <rich:column sortBy="#{_feriado.feriId}">
+                    <f:facet name="header">Feri id</f:facet>
+                    <h:outputText value="#{_feriado.feriId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_feriado.fecha}">
+                    <f:facet name="header">Fecha</f:facet>
+                    <h:outputText value="#{_feriado.fecha}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_feriado.descripcion}">
+                    <f:facet name="header">Descripci&#243;n</f:facet>
+                    <h:outputText value="#{_feriado.descripcion}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="feriados">
+        <div class="actionButtons">
+            <s:button id="addferiado"
+                   value="Crear"
+                    view="/fulltime/FeriadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="feriadoFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Empleados for estado">
+        <h:form styleClass="association" id="empleadosForEstadoChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.empleadosForEstado}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.empleadosForEstado}"
+                           var="_empleado"
+                      rendered="#{not empty detalleTipoParametroHome.empleadosForEstado}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadosForEstadoTable">
+                <rich:column sortBy="#{_empleado.emplId}">
+                    <f:facet name="header">Empl id</f:facet>
+                    <h:outputText value="#{_empleado.emplId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.cedula}">
+                    <f:facet name="header">Cedula</f:facet>
+                    <h:outputText value="#{_empleado.cedula}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.apellido}">
+                    <f:facet name="header">Apellido</f:facet>
+                    <h:outputText value="#{_empleado.apellido}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_empleado.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                    <f:facet name="header">Fecha nacimiento</f:facet>
+                    <h:outputText value="#{_empleado.fechaNacimiento}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_empleado.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaSalida}">
+                    <f:facet name="header">Fecha salida</f:facet>
+                    <h:outputText value="#{_empleado.fechaSalida}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaContrato}">
+                    <f:facet name="header">Fecha contrato</f:facet>
+                    <h:outputText value="#{_empleado.fechaContrato}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_empleado.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.horasTrabaja}">
+                    <f:facet name="header">Horas trabaja</f:facet>
+                    <h:outputText value="#{_empleado.horasTrabaja}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_empleado.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partida}">
+                    <f:facet name="header">Partida</f:facet>
+                    <h:outputText value="#{_empleado.partida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partidaIndividual}">
+                    <f:facet name="header">Partida individual</f:facet>
+                    <h:outputText value="#{_empleado.partidaIndividual}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.entradaSalida}">
+                    <f:facet name="header">Entrada salida</f:facet>
+                    <h:outputText value="#{_empleado.entradaSalida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.numeroTimbre}">
+                    <f:facet name="header">Numero timbre</f:facet>
+                    <h:outputText value="#{_empleado.numeroTimbre}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="empleadosForEstado">
+        <div class="actionButtons">
+            <s:button id="addempleado"
+                   value="Crear"
+                    view="/fulltime/EmpleadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="empleadoFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Permisos for dtpa id">
+        <h:form styleClass="association" id="permisosForDtpaIdChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.permisosForDtpaId}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.permisosForDtpaId}"
+                           var="_permiso"
+                      rendered="#{not empty detalleTipoParametroHome.permisosForDtpaId}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="permisosForDtpaIdTable">
+                <rich:column sortBy="#{_permiso.permId}">
+                    <f:facet name="header">Perm id</f:facet>
+                    <h:outputText value="#{_permiso.permId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fecha}">
+                    <f:facet name="header">Fecha</f:facet>
+                    <h:outputText value="#{_permiso.fecha}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.lugar}">
+                    <f:facet name="header">Lugar</f:facet>
+                    <h:outputText value="#{_permiso.lugar}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fechaDesde}">
+                    <f:facet name="header">Fecha desde</f:facet>
+                    <h:outputText value="#{_permiso.fechaDesde}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fechaHasta}">
+                    <f:facet name="header">Fecha hasta</f:facet>
+                    <h:outputText value="#{_permiso.fechaHasta}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.dias}">
+                    <f:facet name="header">Dias</f:facet>
+                    <h:outputText value="#{_permiso.dias}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.horaSalida}">
+                    <f:facet name="header">Hora salida</f:facet>
+                    <h:outputText value="#{_permiso.horaSalida}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.horaRetorno}">
+                    <f:facet name="header">Hora retorno</f:facet>
+                    <h:outputText value="#{_permiso.horaRetorno}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.numeroHoras}">
+                    <f:facet name="header">Numero horas</f:facet>
+                    <h:outputText value="#{_permiso.numeroHoras}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="permisosForDtpaId">
+        <div class="actionButtons">
+            <s:button id="addpermiso"
+                   value="Crear"
+                    view="/fulltime/PermisoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="permisoFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Empleados for sexo">
+        <h:form styleClass="association" id="empleadosForSexoChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.empleadosForSexo}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.empleadosForSexo}"
+                           var="_empleado"
+                      rendered="#{not empty detalleTipoParametroHome.empleadosForSexo}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadosForSexoTable">
+                <rich:column sortBy="#{_empleado.emplId}">
+                    <f:facet name="header">Empl id</f:facet>
+                    <h:outputText value="#{_empleado.emplId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.cedula}">
+                    <f:facet name="header">Cedula</f:facet>
+                    <h:outputText value="#{_empleado.cedula}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.apellido}">
+                    <f:facet name="header">Apellido</f:facet>
+                    <h:outputText value="#{_empleado.apellido}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_empleado.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                    <f:facet name="header">Fecha nacimiento</f:facet>
+                    <h:outputText value="#{_empleado.fechaNacimiento}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_empleado.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaSalida}">
+                    <f:facet name="header">Fecha salida</f:facet>
+                    <h:outputText value="#{_empleado.fechaSalida}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaContrato}">
+                    <f:facet name="header">Fecha contrato</f:facet>
+                    <h:outputText value="#{_empleado.fechaContrato}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_empleado.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.horasTrabaja}">
+                    <f:facet name="header">Horas trabaja</f:facet>
+                    <h:outputText value="#{_empleado.horasTrabaja}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_empleado.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partida}">
+                    <f:facet name="header">Partida</f:facet>
+                    <h:outputText value="#{_empleado.partida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partidaIndividual}">
+                    <f:facet name="header">Partida individual</f:facet>
+                    <h:outputText value="#{_empleado.partidaIndividual}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.entradaSalida}">
+                    <f:facet name="header">Entrada salida</f:facet>
+                    <h:outputText value="#{_empleado.entradaSalida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.numeroTimbre}">
+                    <f:facet name="header">Numero timbre</f:facet>
+                    <h:outputText value="#{_empleado.numeroTimbre}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="empleadosForSexo">
+        <div class="actionButtons">
+            <s:button id="addempleado"
+                   value="Crear"
+                    view="/fulltime/EmpleadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="empleadoFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Empleado titulos">
+        <h:form styleClass="association" id="empleadoTitulosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.empleadoTitulos}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.empleadoTitulos}"
+                           var="_empleadoTitulo"
+                      rendered="#{not empty detalleTipoParametroHome.empleadoTitulos}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadoTitulosTable">
+                <rich:column sortBy="#{_empleadoTitulo.emtiId}">
+                    <f:facet name="header">Emti id</f:facet>
+                    <h:outputText value="#{_empleadoTitulo.emtiId}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="empleadoTitulos">
+        <div class="actionButtons">
+            <s:button id="addempleadoTitulo"
+                   value="Crear"
+                    view="/fulltime/EmpleadoTituloEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="empleadoTituloFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Contactos">
+        <h:form styleClass="association" id="contactosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty detalleTipoParametroHome.contactos}"/>
+
+            <rich:dataTable value="#{detalleTipoParametroHome.contactos}"
+                           var="_contacto"
+                      rendered="#{not empty detalleTipoParametroHome.contactos}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="contactosTable">
+                <rich:column sortBy="#{_contacto.contId}">
+                    <f:facet name="header">Cont id</f:facet>
+                    <h:outputText value="#{_contacto.contId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_contacto.descripcion}">
+                    <f:facet name="header">Descripci&#243;n</f:facet>
+                    <h:outputText value="#{_contacto.descripcion}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{detalleTipoParametroHome.managed}" id="contactos">
+        <div class="actionButtons">
+            <s:button id="addcontacto"
+                   value="Crear"
+                    view="/fulltime/ContactoEdit.xhtml"
+             propagation="none">
+                 <f:param name="detalleTipoParametroDtpaId"
+                         value="#{detalleTipoParametroHome.instance.dtpaId}"/>
+                 <f:param name="contactoFrom" value="DetalleTipoParametro"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+
+-->
+
+</ui:define>
+
+</ui:composition>

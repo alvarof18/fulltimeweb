@@ -1,0 +1,114 @@
+package com.casapazmino.fulltime.action;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
+import org.jboss.seam.Component;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.security.Credentials;
+import org.jboss.seam.security.Identity;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.comun.Fechas;
+import com.casapazmino.fulltime.menu.action.ConstruirMenu;
+import com.casapazmino.fulltime.model.DetalleTipoParametro;
+import com.casapazmino.fulltime.seguridad.action.UsuariosList;
+import com.casapazmino.fulltime.seguridad.model.Usuarios;
+
+@Name("authenticator")
+public class Authenticator {
+	@Logger
+	private Log log;
+
+	@In
+	Identity identity;
+	@In
+	Credentials credentials;
+	@In
+	private FacesContext facesContext;
+	@In(create = true)
+	UsuariosList usuariosList;
+	
+	ConstruirMenu construirMenu=new ConstruirMenu();
+	
+	private Usuarios usuarios;
+
+	public boolean authenticate() {
+		log.info("ENTRO EN AUTHENTICATE");
+		log.info("authenticating {0}", credentials.getUsername());
+		//write your authentication logic here,
+		//return true if the authentication was
+		//successful, false otherwise
+		if(credentials.getUsername().length()!=0 && credentials.getPassword().length()!=0) {
+			usuarios=usuariosList.obtenerUsuario(credentials.getUsername().toString(),credentials.getPassword().toString(),null);
+
+//			log.info("=================================== Usuario: "+usuarios.getUsuario());
+			
+			if(usuarios==null) {
+				log.info("ENTRO SI USUARIO ES NULL");
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Usuario no se encuentra en el sistema.", null));
+				return false;
+			}
+			
+			if(usuarios!=null && usuarios.getEstado()!=null && usuarios.getEstado().equals(Constantes.ESTADO_INACTIVO))
+			{
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Usuario no se encuentra activado.", null));
+				return false;
+			}
+			if(usuarios!=null && usuarios.getFechaVencimiento().before(Fechas.fechaActual()) ) {
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Fecha de Acceso Finalizada", null));
+				return false;
+			}
+			
+			if(credentials.getPassword().equals(usuarios.getContrasena())) {
+				log.info("COMPROBAR SI CLAVE ES CORRECTA");
+				this.adminMenus();
+				
+				// CONSULTAR EL NOMBRE DE LA EMPRESA
+				DetalleTipoParametroList detalleTipoParametroList = (DetalleTipoParametroList) Component.getInstance("detalleTipoParametroList",true);
+				DetalleTipoParametro detalleTipoParametro = detalleTipoParametroList.getListaEmpresa(); 
+				Constantes.NombreEmpresa = detalleTipoParametro.getDescripcion();
+				
+				return true;
+			} else {
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Clave incorrecta.", null));
+				return false;				
+			}
+		}
+		facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ingrese Usuario y Clave", null));
+		return false;
+	}
+	
+	public void adminMenus()
+	{
+		log.info("ENTRO EN ADMIN MENUS DE AUTHENTICATOR");
+		this.construirMenu.cargarMenu(this.credentials.getUsername());
+		this.construirMenu.eliminarVarSessionMenu();
+	}
+	public void eliminarVariableSesion()
+	{
+		this.construirMenu.eliminarVarSessionMenu();
+		this.eliminarVariableSessionPanelMenu();
+	}
+	public void eliminarVariableSessionPanelMenu()
+	{
+		Contexts.getSessionContext().remove("panelMenuSesion");
+	}
+	public void logout()
+	{
+		this.eliminarVariableSesion();
+		this.identity.logout();
+	}
+	public Usuarios getUsuario()
+	{
+		return usuarios;
+	}
+	public void setUsuario(Usuarios usuario)
+	{
+		usuarios=usuario;
+	}
+}

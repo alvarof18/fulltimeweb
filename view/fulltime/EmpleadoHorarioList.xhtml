@@ -1,0 +1,179 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="empleadoHorarioSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Empleado Horario - Criterios de B&#250;squeda" switchType="ajax">
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Buscar" action="/fulltime/EmpleadoHorarioList.xhtml"/>
+            <s:button id="reset" value="Cancelar" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+    <div class="results" id="empleadoHorarioList">
+
+    <h:outputText value="No existe resultados"
+               rendered="#{empty empleadoHorarioList.resultList}"/>
+
+    <rich:dataTable id="empleadoHorarioList"
+                var="_empleadoHorario"
+              value="#{empleadoHorarioList.resultList}"
+           rendered="#{not empty empleadoHorarioList.resultList}">
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHorarioList}"/>
+                    <ui:param name="propertyLabel" value="Fecha Inicial"/>
+                    <ui:param name="propertyPath" value="empleadoHorario.fechaIni"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHorario.fechaIni}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHorarioList}"/>
+                    <ui:param name="propertyLabel" value="Fecha Final"/>
+                    <ui:param name="propertyPath" value="empleadoHorario.fechaFin"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHorario.fechaFin}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </h:column>
+<!-- 
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHorarioList}"/>
+                    <ui:param name="propertyLabel" value="D&#237;as Frecuencia"/>
+                    <ui:param name="propertyPath" value="empleadoHorario.diasFrecuencia"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHorario.diasFrecuencia}"/>
+        </h:column>
+-->
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHorarioList}"/>
+                    <ui:param name="propertyLabel" value="D&#237;as Planificar"/>
+                    <ui:param name="propertyPath" value="empleadoHorario.diasPlanificar"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHorario.diasPlanificar}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHorarioList}"/>
+                    <ui:param name="propertyLabel" value="Apellido"/>
+                    <ui:param name="propertyPath" value="empleadoHorario.empleado.apellido"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHorario.empleado.apellido}"/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoHorarioList}"/>
+                    <ui:param name="propertyLabel" value="Horario"/>
+                    <ui:param name="propertyPath" value="empleadoHorario.horario.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleadoHorario.horario.descripcion}"/>
+        </h:column>
+        
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/fulltime/#{empty from ? 'EmpleadoHorario' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="empleadoHorario">
+                <f:param name="empleadoHorarioEmhoId"
+                        value="#{_empleadoHorario.emhoId}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/fulltime/EmpleadoHorarioEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="empleadoHorarioEdit"
+                rendered="#{empty from}">
+                <f:param name="empleadoHorarioEmhoId"
+                        value="#{_empleadoHorario.emhoId}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/fulltime/EmpleadoHorarioList.xhtml"
+            rendered="#{empleadoHorarioList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/fulltime/EmpleadoHorarioList.xhtml"
+            rendered="#{empleadoHorarioList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{empleadoHorarioList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/EmpleadoHorarioList.xhtml"
+            rendered="#{empleadoHorarioList.nextExists}"
+               value="P&#225;gina Siguiente #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{empleadoHorarioList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/EmpleadoHorarioList.xhtml"
+            rendered="#{empleadoHorarioList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{empleadoHorarioList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/fulltime/EmpleadoHorarioEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear">
+            <f:param name="empleadoHorarioEmhoId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

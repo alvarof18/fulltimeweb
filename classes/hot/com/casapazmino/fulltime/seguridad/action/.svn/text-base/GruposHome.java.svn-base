@@ -1,0 +1,79 @@
+package com.casapazmino.fulltime.seguridad.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+
+import com.casapazmino.fulltime.seguridad.model.Grupos;
+import com.casapazmino.fulltime.seguridad.model.ItemMenu;
+import com.casapazmino.fulltime.seguridad.model.ItemsMenuRoles;
+import com.casapazmino.fulltime.seguridad.model.Subgrupos;
+
+@Name("gruposHome")
+public class GruposHome extends EntityHome<Grupos> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+	
+	public void setGruposId(Long id) {
+		setId(id);
+	}
+
+	public Long getGruposId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Grupos createInstance() {
+		return new Grupos();
+	}
+
+	public void wire() {
+		getInstance();
+	}
+
+	public boolean isWired() {
+		return true;
+	}
+
+	public Grupos getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}
+	
+	public List<ItemMenu> getItemMenus() {
+		return getInstance() == null ? null : new ArrayList<ItemMenu>(
+				getInstance().getItemMenus());
+	}
+	public List<ItemsMenuRoles> getItemsMenuRoleses() {
+		return getInstance() == null ? null : new ArrayList<ItemsMenuRoles>(
+				getInstance().getItemsMenuRoleses());
+	}
+	public List<Subgrupos> getSubgruposes() {
+		return getInstance() == null ? null : new ArrayList<Subgrupos>(
+				getInstance().getSubgruposes());
+	}
+}

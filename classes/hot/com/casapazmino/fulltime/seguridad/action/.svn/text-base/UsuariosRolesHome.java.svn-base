@@ -1,0 +1,90 @@
+package com.casapazmino.fulltime.seguridad.action;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.persistence.PersistenceProvider;
+
+import com.casapazmino.fulltime.seguridad.model.Roles;
+import com.casapazmino.fulltime.seguridad.model.Usuarios;
+import com.casapazmino.fulltime.seguridad.model.UsuariosRoles;
+
+@Name("usuariosRolesHome")
+public class UsuariosRolesHome extends EntityHome<UsuariosRoles> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@In(create = true)
+	RolesHome rolesHome;
+	@In(create = true)
+	UsuariosHome usuariosHome;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setUsuariosRolesId(Long id) {
+		setId(id);
+	}
+
+	public Long getUsuariosRolesId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected UsuariosRoles createInstance() {
+		UsuariosRoles usuariosRoles = new UsuariosRoles();
+		return usuariosRoles;
+	}
+
+	public void wire() {
+		getInstance();
+		Roles roles = rolesHome.getDefinedInstance();
+		if (roles != null) {
+			getInstance().setRoles(roles);
+		}
+		Usuarios usuarios = usuariosHome.getDefinedInstance();
+		if (usuarios != null) {
+			getInstance().setUsuarios(usuarios);
+		}
+	}
+
+	public boolean isWired() {
+		if (getInstance().getRoles() == null)
+			return false;
+		if (getInstance().getUsuarios() == null)
+			return false;
+		return true;
+	}
+
+	public UsuariosRoles getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+	
+	@Transactional
+	public String persist()
+	{
+		getEntityManager().persist(getInstance());
+		getEntityManager().flush();
+		assignId(PersistenceProvider.instance().getId(getInstance(),getEntityManager()));
+		raiseAfterTransactionSuccessEvent();
+		return "persisted";
+	}
+	
+	@Transactional
+	public String update()
+	{
+		joinTransaction();
+		getEntityManager().flush();
+		raiseAfterTransactionSuccessEvent();
+		return "updated";
+	}
+}

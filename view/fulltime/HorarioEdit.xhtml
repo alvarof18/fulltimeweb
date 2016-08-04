@@ -1,0 +1,98 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="horario" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{horarioHome.managed ? 'Editar' : 'A&#241;adir'} Horario</f:facet>
+
+            <s:decorate id="codigoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="codigo" size="20"
+                           required="true"
+                              value="#{horarioHome.instance.codigo}"/>
+            </s:decorate>
+            
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{horarioHome.instance.descripcion}"/>
+            </s:decorate>
+
+            <s:decorate id="almuerzoMinutos" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Minutos Alimentaci&#243;n</ui:define>
+                <h:inputText id="descripcion" required="true"
+                              value="#{horarioHome.instance.almuerzoMinutos}"/>
+            </s:decorate>
+            
+            <s:decorate id="horasTrabajo" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Trabajo</ui:define>
+                <h:inputText id="descripcion" required="true" size = "3"
+                              value="#{horarioHome.instance.horasTrabajo}"/>
+            </s:decorate>
+			
+			<s:decorate id="estado" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Estado</ui:define>			
+				<h:selectOneRadio id="tipoFecha" value="#{horarioHome.instance.estado}" required="true">
+					<s:selectItems value="#{enumeraciones.tipoFecha}" var="tipoFecha"
+						label="#{tipoFecha}" />
+					<a:support event="onchange" ajaxSingle="true" />
+				</h:selectOneRadio>
+			</s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{horarioHome.persist}"
+                       disabled="#{!horarioHome.wired}"
+                       rendered="#{!horarioHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{horarioHome.update}"
+                       rendered="#{horarioHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{horarioHome.remove}"
+                      immediate="true"
+                       rendered="#{horarioHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Horario.xhtml"
+                rendered="#{horarioHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty horarioFrom ? 'HorarioList' : horarioFrom}.xhtml"
+                rendered="#{!horarioHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

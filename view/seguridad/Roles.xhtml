@@ -1,0 +1,71 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+	
+    <rich:panel>
+        <f:facet name="header">Rol</f:facet>
+
+		<!-- <s:decorate id="usuarios" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Usuarios</ui:define>
+            <h:outputText value="#{rolesHome.instance.usuarios}"/>
+        </s:decorate> -->
+        
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{rolesHome.instance.descripcion}" />
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+    <rich:spacer width="20" height="20"/>
+    
+    <rich:panel rendered="#{not empty rolesHome.permisosMenus}" >
+		<f:facet name="header">Permisos</f:facet>
+    
+    	<rich:dataTable id="idPermisosFieldTable" value="#{rolesHome.permisosMenus}" rows="1" var="permiso">
+    		<rich:column >
+    		<f:facet name="header">Crear</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.crear}" disabled="true"/>
+    	</rich:column>
+    	<rich:column>
+    		<f:facet name="header">Editar</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.modificar}" disabled="true"/>
+    	</rich:column>
+    	<rich:column >
+    		<f:facet name="header">Eliminar</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.eliminar}" disabled="true"/>
+    	</rich:column>
+    	<rich:column>
+    		<f:facet name="header">Ver</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.ver}" disabled="true"/>
+    	</rich:column>
+    	<rich:column >
+    		<f:facet name="header">Imprimir</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.imprimir}" disabled="true"/>
+    	</rich:column>
+    	</rich:dataTable>
+    </rich:panel>
+	
+	
+	<rich:spacer width="20" height="20"/>
+	
+    <div class="actionButtons">
+
+        <s:button view="/seguridad/RolesEdit.xhtml" id="edit" value="Editar"/>
+
+        <s:button view="/seguridad/#{empty rolesFrom ? 'RolesList' : rolesFrom}.xhtml" id="done" value="Salir"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

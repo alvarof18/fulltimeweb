@@ -1,0 +1,130 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Solicitud Vacacion</f:facet>
+
+        <s:decorate id="empleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Empleado</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.empleado.apellido} - #{solicitudVacacionHome.instance.empleado.nombre}"  />
+        </s:decorate>
+
+        <s:decorate id="fechaDesde" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Desde</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.fechaDesde}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="fechaHasta" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Hasta</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.fechaHasta}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="telefono" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Telefono</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.telefono}"/>
+        </s:decorate>
+
+        <s:decorate id="direccion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Direccion</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.direccion}"/>
+        </s:decorate>
+
+        <s:decorate id="correo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Correo</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.correo}"/>
+        </s:decorate>
+<!-- 
+        <s:decorate id="fechaIngreso" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha ingreso</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.fechaIngreso}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="fechaUltVacacion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha ult vacacion</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.fechaUltVacacion}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="diasPermiso" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Dias permiso</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.diasPermiso}"/>
+        </s:decorate>
+
+        <s:decorate id="diasPendientes" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Dias pendientes</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.diasPendientes}"/>
+        </s:decorate>
+
+        <s:decorate id="liceFechaDesde" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Lice fecha desde</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.liceFechaDesde}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="liceFechaHasta" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Lice fecha hasta</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.liceFechaHasta}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="statusAccion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Status accion</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.statusAccion}"/>
+        </s:decorate>
+ -->
+        <s:decorate id="suspencion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Suspencion</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.suspencion}"/>
+        </s:decorate>
+
+        <s:decorate id="suspFechaDesde" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Desde</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.suspFechaDesde}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="suspFechaHasta" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Hasta</ui:define>
+            <h:outputText value="#{solicitudVacacionHome.instance.suspFechaHasta}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/SolicitudVacacionEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty solicitudVacacionFrom ? 'SolicitudVacacionList' : solicitudVacacionFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

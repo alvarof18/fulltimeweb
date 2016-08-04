@@ -1,0 +1,150 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="funtions" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{FuncionesHome.managed ? 'Editar' : 'A&#241;adir'} Funciones</f:facet>
+
+            <s:decorate id="FuncionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Funci&#243;n</ui:define>
+                <h:inputText id="funcion" size="150"
+                           required="true" 
+                              value="#{funcionesHome.instance.func_resp}"/>
+            </s:decorate>
+            <s:decorate id="ActividadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Actividad</ui:define>
+                <h:inputText id="actividad" size="150"
+                           required="true" 
+                              value="#{funcionesHome.instance.actividad}"/>
+            </s:decorate>
+            <h:panelGrid columns="2" style="width:800px;">
+            
+            <s:decorate id="HorasLaboralesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Laborales</ui:define>
+                <h:inputText id="horaslaborales" size="3"
+                           required="true" 
+                              value="#{funcionesHome.instance.horas_laborales}"/>
+            </s:decorate>
+            <s:decorate id="SaldoHorasLaboralesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Saldo Horas Laborales</ui:define>
+                <h:inputText id="saldohoraslaborales" size="3"
+                           disabled="true"
+                              value="#{funcionesHome.saldo_laborales}"/>
+            </s:decorate>
+            <s:decorate id="HorasSuplementariasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Suplementarias</ui:define>
+                <h:inputText id="horassuplementarias" size="3"
+                           required="true" 
+                              value="#{funcionesHome.instance.horas_suplementarias}"/>
+            </s:decorate>
+            <s:decorate id="SaldoHorasSuplementariasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Saldo Horas Suplementarias</ui:define>
+                <h:inputText id="saldohorassuplementarias" size="3"
+                           disabled="true" 
+                              value="#{funcionesHome.salado_suplementarias}"/>
+            </s:decorate>            
+            <s:decorate id="HorasExtraordinariasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Extraordinarias</ui:define>
+                <h:inputText id="horasextraordinarias" size="3"
+                           required="true" 
+                              value="#{funcionesHome.instance.horas_extraordinarias}"/>
+            </s:decorate>
+            <s:decorate id="SaldoHorasExtraordinariasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Saldo Horas Extraordinarias</ui:define>
+                <h:inputText id="saldohorasextraordinarias" size="3"
+                           disabled="true"
+                              value="#{funcionesHome.saldo_extraordinarias}"/>
+            </s:decorate>
+            
+            </h:panelGrid>            
+            
+            <s:decorate id="JustificacionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Justificaci&#243;n</ui:define>
+                <h:inputText id="justificacion"
+                           required="true" size="150"
+                              value="#{funcionesHome.instance.justificacion}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml" rendered="false">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fecha" value="#{funcionesHome.instance.fecha}" datePattern="dd/MM/yyyy" immediate="true" required="true"
+                				/>
+            </s:decorate>
+            
+            <s:decorate id="desdeField" template="#{requestScope.contextPath}/layout/edit.xhtml" rendered="false">
+                <ui:define name="label">Desde</ui:define>
+                <h:inputText id="desde"
+                           size="5"
+                       required="true"
+                          value="#{funcionesHome.instance.desde}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="desdeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+  			<s:decorate id="hastaField" template="#{requestScope.contextPath}/layout/edit.xhtml" rendered="false">
+                <ui:define name="label">Hasta</ui:define>
+                <h:inputText id="hasta"
+                           size="5"
+                       required="true"
+                          value="#{funcionesHome.instance.hasta}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="hastaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{funcionesHome.persist}"
+                       disabled="#{!funcionesHome.wired}"
+                       rendered="#{!funcionesHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{funcionesHome.update}"
+                       rendered="#{funcionesHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{funcionesHome.remove}"
+                      immediate="true"                      
+                       rendered="#{funcionesHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Funciones.xhtml"
+                rendered="#{funcionesHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty funcionesFrom ? 'FuncionesList' : funcionesFrom}.xhtml"
+                rendered="#{!funcionesHome.managed}"/>
+
+        </div>
+    </h:form>
+    
+</ui:define>
+
+</ui:composition>

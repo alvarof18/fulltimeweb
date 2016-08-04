@@ -1,0 +1,59 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"    
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+<ui:define name="body">
+
+    <h:form id="planificacionHorarios" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Generar Periodos Vacaci&#243;n" switchType="ajax">
+							
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Ciudad</ui:define>
+					<h:selectManyListbox id="listaCiudades" value="#{generarEmpleadoPeriodoVacacion.ciudades}" size="10">
+						<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad..." 
+							value="#{usuarioCiudadList.listaCiudadesUsuarios}" var="usuarioCiudad"
+							label="#{usuarioCiudad.ciudad.provincia.descripcion} -  #{usuarioCiudad.ciudad.descripcion}"
+							itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+			
+            <s:decorate id="fechaInicioField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Desde</ui:define>
+                <rich:calendar id="fechaIni"
+                       required="true" showApplyButton="false"  
+                          value="#{generarEmpleadoPeriodoVacacion.fechaInicio}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            </s:decorate>
+            
+            <s:decorate id="fechaFinField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hasta</ui:define>
+                <rich:calendar id="fechaFin"
+                       required="true" showApplyButton="false"  
+                          value="#{generarEmpleadoPeriodoVacacion.fechaFin}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            </s:decorate>		
+
+        </rich:simpleTogglePanel>
+  
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+
+        <h:commandButton id="procesar" value="Crear"
+        rendered="#{contexts.applicationContext.get('permisoCrear')}"
+				action="#{generarEmpleadoPeriodoVacacion.generarPeriodosVacacion}"/>
+		<rich:spacer width="7"/>		
+
+    </s:div>
+	<rich:spacer height="20px"/>
+    </h:form>
+    
+</ui:define>
+
+</ui:composition>

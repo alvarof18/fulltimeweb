@@ -1,0 +1,222 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="itemMenuSearch" styleClass="edit">
+    
+    	<h1 id="segmotmanalce" align="center">Item Men&#250;</h1>
+
+        <rich:simpleTogglePanel label="Criterio de Busqueda" switchType="ajax">
+			
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{itemMenuList.itemMenu.nombre}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Etiqueta</ui:define>
+                <h:inputText id="etiqueta" value="#{itemMenuList.itemMenu.etiqueta}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" value="#{itemMenuList.itemMenu.descripcion}"/>
+            </s:decorate>
+
+            <!-- <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Link</ui:define>
+                <h:inputText id="link" value="#{itemMenuList.itemMenu.link}"/>
+            </s:decorate> -->
+
+        </rich:simpleTogglePanel>
+
+        <s:div styleClass="actionButtons" rendered="#{empty from}">
+        	<s:button view="/seguridad/ItemMenuEdit.xhtml" id="create" propagation="none" value="Crear">
+            	<f:param name="itemMenuId"/>
+        	</s:button>
+    
+            <h:commandButton id="search" value="Buscar" action="/seguridad/ItemMenuList.xhtml"/>
+            <s:button id="reset" value="Cancelar" includePageParams="false"/>
+       </s:div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados de Busqueda</f:facet>
+    <div class="results" id="itemMenuList">
+
+    <h:outputText value="No se encontro resultados."
+               rendered="#{empty itemMenuList.resultList}"/>
+
+    <rich:dataTable id="itemMenuList"
+                var="_itemMenu"
+              value="#{itemMenuList.resultList}"
+           rendered="#{not empty itemMenuList.resultList}">
+        <!-- <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="itemMenu.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.id}"/>
+        </h:column> -->
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Men&#250;"/>
+                    <ui:param name="propertyPath" value="itemMenu.grupos.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.grupos.nombre}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Submen&#250;"/>
+                    <ui:param name="propertyPath" value="itemMenu.subgrupos.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.subgrupos.nombre}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Nombre"/>
+                    <ui:param name="propertyPath" value="itemMenu.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.nombre}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Etiqueta"/>
+                    <ui:param name="propertyPath" value="itemMenu.etiqueta"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.etiqueta}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Descripci&#243;n"/>
+                    <ui:param name="propertyPath" value="itemMenu.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.descripcion}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Link"/>
+                    <ui:param name="propertyPath" value="itemMenu.link"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.link}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Orden"/>
+                    <ui:param name="propertyPath" value="itemMenu.orden"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.orden}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{itemMenuList}"/>
+                    <ui:param name="propertyLabel" value="Expandible"/>
+                    <ui:param name="propertyPath" value="itemMenu.expandible"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_itemMenu.expandible}"/>
+        </h:column>
+        
+        <rich:column styleClass="action">
+            <f:facet name="header">Acti&#243;n</f:facet>
+            <s:link view="/seguridad/#{empty from ? 'ItemMenu' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="itemMenu">
+                <f:param name="itemMenuId"
+                        value="#{_itemMenu.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/seguridad/ItemMenuEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="itemMenuEdit"
+                rendered="#{empty from}">
+                <f:param name="itemMenuId"
+                        value="#{_itemMenu.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/seguridad/ItemMenuList.xhtml"
+            rendered="#{itemMenuList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/seguridad/ItemMenuList.xhtml"
+            rendered="#{itemMenuList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{itemMenuList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/ItemMenuList.xhtml"
+            rendered="#{itemMenuList.nextExists}"
+               value="Siguiente P&#225;gina #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{itemMenuList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/ItemMenuList.xhtml"
+            rendered="#{itemMenuList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{itemMenuList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

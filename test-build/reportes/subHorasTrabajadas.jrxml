@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subHorasTrabajadas" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha" class="java.util.Date"/>
+	<parameter name="emplId" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+     asistencia.FECHA_HORA_HORARIO AS asistencia_FECHA_HORA_HORARIO,
+     asistencia.FECHA_HORA_TIMBRE AS asistencia_FECHA_HORA_TIMBRE,
+     asistencia.ENTRADA_SALIDA AS asistencia_ENTRADA_SALIDA,
+     empleado.EMPL_ID AS empleado_EMPL_ID
+FROM
+     empleado empleado INNER JOIN asistencia asistencia ON empleado.EMPL_ID = asistencia.EMPL_ID
+WHERE
+     date(asistencia.FECHA_HORA_HORARIO) = $P{fecha} AND empleado.EMPL_ID = $P{emplId}
+ORDER BY
+     asistencia.FECHA_HORA_HORARIO ASC]]>
+	</queryString>
+	<field name="asistencia_FECHA_HORA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="asistencia_FECHA_HORA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="asistencia_ENTRADA_SALIDA" class="java.lang.String"/>
+	<field name="empleado_EMPL_ID" class="java.lang.Integer"/>
+	<variable name="totalEntrada" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{asistencia_ENTRADA_SALIDA} == "E" || $F{asistencia_ENTRADA_SALIDA} == "EA" ? $F{asistencia_FECHA_HORA_TIMBRE}.getTime():0]]></variableExpression>
+	</variable>
+	<variable name="totalSalida" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{asistencia_ENTRADA_SALIDA} == "S" || $F{asistencia_ENTRADA_SALIDA} == "SA"? $F{asistencia_FECHA_HORA_TIMBRE}.getTime():0]]></variableExpression>
+	</variable>
+	<variable name="horasTrabajadas" class="java.math.BigDecimal" resetType="None">
+		<variableExpression><![CDATA[$V{totalSalida} - $V{totalEntrada}]]></variableExpression>
+	</variable>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+</jasperReport>

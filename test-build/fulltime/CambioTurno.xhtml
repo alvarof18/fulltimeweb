@@ -1,0 +1,176 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"    
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+<ui:define name="body">
+
+    <h:form id="planificacionMultiple" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Cambio Turno" switchType="ajax">
+        		
+		<h:panelGrid columns="1" > 
+		
+			<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Seleccione Par&#225;metros</ui:define>
+					
+			</s:decorate>
+ 
+			
+			<s:decorate id="empleadoField"
+			template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<h:selectOneMenu  id="Empleado" required="false" value="#{CambioTurno.empleadoselect}"
+					>
+						<s:selectItems id="itemsEmpleado" noSelectionLabel="Seleccione Empleado..." value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}" />
+						<s:convertEntity />
+					</h:selectOneMenu>					
+			</s:decorate>
+
+</h:panelGrid>
+		<h:panelGrid columns="2" styleClass="vertical-align: top"> 
+		<h:panelGrid columns="1" >
+		
+			<s:decorate id="fechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha </ui:define>
+                <rich:calendar id="fechaDesde" 
+                       required="true" showApplyButton="false"  
+                          value="#{CambioTurno.fechaSeleccionada}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            	</s:decorate>
+            	<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Horario</ui:define>					
+					<h:selectOneMenu id="horario" required="false" value="#{CambioTurno.horario1}">
+						<s:selectItems id="itemsHorario" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" />
+						<s:convertEntity />
+					</h:selectOneMenu>					
+			</s:decorate>
+	</h:panelGrid>
+             		
+		</h:panelGrid>
+		
+		
+</rich:simpleTogglePanel>
+<div>
+								
+			<rich:spacer width="7"/>
+			
+				<rich:spacer width="7"/>
+			<h:commandButton id="cargar" value="Buscar"
+				action="#{CambioTurno.buscarAsistencias()}"/>
+			<rich:spacer width="7"/>
+			
+			<h:commandButton id="guardar" value="Guardar"
+					action="#{CambioTurno.guardar}"/>
+					<rich:spacer width="7"/>
+			
+			<h:commandButton id="procesar" value="Procesar"
+					action="#{CambioTurno.procesar()}"/>
+				<rich:spacer width="30"/>
+				
+				<h:outputText value="Registros Procesados " />
+				<rich:spacer />
+				<h:outputText value="#{asistenciaHome.fechasProcesadas}" />
+				<rich:spacer width="15"/>
+				<h:outputText value="Registros No Procesados " />
+				<rich:spacer />
+				<h:outputText value="#{asistenciaHome.fechasNoProcesadas}" />
+				
+				</div>
+				<div></div>
+ 		 </h:form>
+ 		<rich:panel>
+ 		<f:facet name="header">
+            <h:outputText value="Programaci&#243;n"></h:outputText>
+        </f:facet>
+        
+            <rich:spacer height="30" />
+            
+       
+        
+        </rich:panel> 
+        
+        <rich:panel>
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+    <div class="results" id="asistenciaList">
+
+    <h:outputText value="No existe resultados"
+               rendered="#{empty asistenciaList.resultList}"/>
+
+    <rich:dataTable id="asistenciaList"
+                var="_asistencia"
+              value="#{CambioTurno.asistencias}"
+           rendered="true">
+      
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Empleado Apellido"/>
+                    <ui:param name="propertyPath" value="asistencia.empleado.apellido"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.empleado.apellido}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Empleado Nombre"/>
+                    <ui:param name="propertyPath" value="asistencia.empleado.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.empleado.nombre}"/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Fecha Horario"/>
+                    <ui:param name="propertyPath" value="asistencia.fechaHoraHorario"/>
+                </ui:include>
+            </f:facet>
+            
+            <rich:calendar id="fechaHoraHorario" disabled="true" 
+                          value="#{_asistencia.fechaHoraHorario}" datePattern="dd/MM/yyyy HH:mm"/>                
+
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Fecha Timbre"/>
+                    <ui:param name="propertyPath" value="asistencia.fechaHoraTimbre"/>
+                </ui:include>
+            </f:facet>
+            
+            <rich:calendar id="fechaHoraTimbre" disabled="true" 
+                          value="#{_asistencia.fechaHoraTimbre}" datePattern="dd/MM/yyyy HH:mm"/>                
+
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Estado"/>
+                    <ui:param name="propertyPath" value="asistencia.estado"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.estado}"/>
+        </h:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+ 
+</ui:define>
+
+</ui:composition>

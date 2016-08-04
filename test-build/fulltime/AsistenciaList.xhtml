@@ -1,0 +1,251 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="asistenciaSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Asistencia - Criterios de B&#250;squeda" switchType="ajax">
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="codigoEmpleado" value="#{asistenciaList.asistencia.empleado.codigoEmpleado}"/>
+            </s:decorate>
+        
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#233;dula</ui:define>
+                <h:inputText id="cedula" value="#{asistenciaList.asistencia.empleado.cedula}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Apellido</ui:define>
+                <h:inputText id="apellido" value="#{asistenciaList.asistencia.empleado.apellido}"/>
+            </s:decorate>
+			
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{asistenciaList.asistencia.empleado.nombre}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde" value="#{asistenciaList.asistencia.fechaDesde}" datePattern="dd/MM/yyyy"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Hasta</ui:define>
+                <rich:calendar id="fechaHasta" value="#{asistenciaList.asistencia.fechaHasta}" datePattern="dd/MM/yyyy"/>
+            </s:decorate>
+            
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Entrada / Salida</ui:define>
+                <h:inputText id="entradaSalida" value="#{asistenciaList.asistencia.entradaSalida}"/>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+<!--   
+        <s:button view="/fulltime/AsistenciaEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear"
+                 rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            <f:param name="asistenciaAsisId"/>
+        </s:button>
+-->                
+        <h:commandButton id="search" value="Buscar" action="/fulltime/AsistenciaList.xhtml"/>
+        
+        <s:button id="reset" value="Cancelar" includePageParams="false"/>
+    </s:div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+    <div class="results" id="asistenciaList">
+
+    <h:outputText value="No existe resultados"
+               rendered="#{empty asistenciaList.resultList}"/>
+
+    <rich:dataTable id="asistenciaList"
+                var="_asistencia"
+              value="#{asistenciaList.resultList}"
+           rendered="#{not empty asistenciaList.resultList}">
+<!--            
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Asis id"/>
+                    <ui:param name="propertyPath" value="asistencia.asisId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.asisId}"/>
+        </h:column>
+         
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Empleado empl id"/>
+                    <ui:param name="propertyPath" value="asistencia.empleado.emplId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.empleado.emplId}"/>
+        </h:column>
+ -->       
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Empleado Apellido"/>
+                    <ui:param name="propertyPath" value="asistencia.empleado.apellido"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.empleado.apellido}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Empleado Nombre"/>
+                    <ui:param name="propertyPath" value="asistencia.empleado.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.empleado.nombre}"/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Fecha Horario"/>
+                    <ui:param name="propertyPath" value="asistencia.fechaHoraHorario"/>
+                </ui:include>
+            </f:facet>
+            
+            <rich:calendar id="fechaHoraHorario" disabled="true" 
+                          value="#{_asistencia.fechaHoraHorario}" datePattern="dd/MM/yyyy HH:mm"/>                
+
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Fecha Timbre"/>
+                    <ui:param name="propertyPath" value="asistencia.fechaHoraTimbre"/>
+                </ui:include>
+            </f:facet>
+            
+            <rich:calendar id="fechaHoraTimbre" disabled="true" 
+                          value="#{_asistencia.fechaHoraTimbre}" datePattern="dd/MM/yyyy HH:mm"/>                
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="E / S"/>
+                    <ui:param name="propertyPath" value="asistencia.entradaSalida"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.entradaSalida}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Registro"/>
+                    <ui:param name="propertyPath" value="asistencia.asisOrden"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.asisOrden}"/>
+        </h:column>
+                
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{asistenciaList}"/>
+                    <ui:param name="propertyLabel" value="Estado"/>
+                    <ui:param name="propertyPath" value="asistencia.estado"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_asistencia.estado}"/>
+        </h:column>
+        
+
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/fulltime/#{empty from ? 'Asistencia' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="asistencia" rendered="#{contexts.applicationContext.get('permisoVer')}">
+                <f:param name="asistenciaAsisId"
+                        value="#{_asistencia.asisId}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/fulltime/AsistenciaEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="asistenciaEdit"
+                rendered="#{empty from}">
+                <f:param name="asistenciaAsisId"
+                        value="#{_asistencia.asisId}"/>
+            </s:link>
+            
+        </rich:column>
+        
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/fulltime/AsistenciaList.xhtml"
+            rendered="#{asistenciaList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/fulltime/AsistenciaList.xhtml"
+            rendered="#{asistenciaList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{asistenciaList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/AsistenciaList.xhtml"
+            rendered="#{asistenciaList.nextExists}"
+               value="P&#225;gina Siguiente #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{asistenciaList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/AsistenciaList.xhtml"
+            rendered="#{asistenciaList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{asistenciaList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

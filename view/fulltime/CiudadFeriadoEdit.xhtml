@@ -1,0 +1,166 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="ciudadFeriado" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{ciudadFeriadoHome.managed ? 'Editar' : 'A&#241;adir'} Ciudad feriado</f:facet>
+
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Ciudad</ui:define>
+					<h:selectOneMenu id="listaCiudades" required="true" value="#{ciudadFeriadoHome.instance.ciudad}">
+						<s:selectItems id="itemsCiudad" value="#{ciudadList.listaCiudades}" var="ciudad"
+							label="#{ciudad.descripcion}" noSelectionLabel="Seleccione Ciudad..." />
+						<s:convertEntity />
+						<a:support id="ciudad" event="onchange" reRender="ciudadField,listaCiudades"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+			</s:decorate>
+
+			<s:decorate id="feriadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Feriado</ui:define>
+					<h:selectOneMenu id="listaFeriados" required="true" value="#{ciudadFeriadoHome.instance.feriado}">
+						<s:selectItems id="itemsFeriado" value="#{feriadoList.listaFeriado}" var="feriado"
+							label="#{feriado.descripcion}" noSelectionLabel="Seleccione Feriado..." />
+						<s:convertEntity />
+						<a:support id="feriado" event="onchange" reRender="feriadoField,listaFeriados"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+			</s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{ciudadFeriadoHome.persist}"
+                       disabled="#{!ciudadFeriadoHome.wired}"
+                       rendered="#{!ciudadFeriadoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{ciudadFeriadoHome.update}"
+                       rendered="#{ciudadFeriadoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{ciudadFeriadoHome.remove}"
+                      immediate="true"
+                       rendered="#{ciudadFeriadoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/CiudadFeriado.xhtml"
+                rendered="#{ciudadFeriadoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty ciudadFeriadoFrom ? 'CiudadFeriadoList' : ciudadFeriadoFrom}.xhtml"
+                rendered="#{!ciudadFeriadoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Feriado">
+    <div class="association" id="feriadoParent">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{ciudadFeriadoHome.instance.feriado == null}"/>
+
+        <rich:dataTable var="_feriado"
+                   value="#{ciudadFeriadoHome.instance.feriado}"
+                rendered="#{ciudadFeriadoHome.instance.feriado != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="feriadoTable">
+            <h:column>
+                <f:facet name="header">Feri id</f:facet>
+                <h:outputText value="#{_feriado.feriId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Detalle tipo parametro dtpa id</f:facet>
+                <h:outputText value="#{_feriado.detalleTipoParametro.dtpaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha</f:facet>
+                <h:outputText value="#{_feriado.fecha}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_feriado.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{ciudadFeriadoHome.instance.feriado != null ? 'Change' : 'Select'} feriado"
+                       view="/fulltime/FeriadoList.xhtml">
+                <f:param name="from" value="CiudadFeriadoEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Ciudad">
+    <div class="association" id="ciudadParent">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{ciudadFeriadoHome.instance.ciudad == null}"/>
+
+        <rich:dataTable var="_ciudad"
+                   value="#{ciudadFeriadoHome.instance.ciudad}"
+                rendered="#{ciudadFeriadoHome.instance.ciudad != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="ciudadTable">
+            <h:column>
+                <f:facet name="header">Ciud id</f:facet>
+                <h:outputText value="#{_ciudad.ciudId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Provincia prov id</f:facet>
+                <h:outputText value="#{_ciudad.provincia.provId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">C&#243;digo</f:facet>
+                <h:outputText value="#{_ciudad.codigo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_ciudad.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{ciudadFeriadoHome.instance.ciudad != null ? 'Change' : 'Select'} ciudad"
+                       view="/fulltime/CiudadList.xhtml">
+                <f:param name="from" value="CiudadFeriadoEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+--></ui:define>
+
+</ui:composition>

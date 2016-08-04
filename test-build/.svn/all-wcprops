@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/fulltime/!svn/ver/21/test-build
+END
+components.properties
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fulltime/!svn/ver/21/test-build/components.properties
+END
+seam-gen.reveng.xml
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fulltime/!svn/ver/21/test-build/seam-gen.reveng.xml
+END
+seam.properties
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/fulltime/!svn/ver/21/test-build/seam.properties
+END
+login.page.xml
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fulltime/!svn/ver/21/test-build/login.page.xml
+END
+home.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fulltime/!svn/ver/21/test-build/home.xhtml
+END
+error.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fulltime/!svn/ver/21/test-build/error.xhtml
+END
+messages_en.properties
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fulltime/!svn/ver/21/test-build/messages_en.properties
+END
+security.drl
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/fulltime/!svn/ver/21/test-build/security.drl
+END
+messages_fr.properties
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fulltime/!svn/ver/21/test-build/messages_fr.properties
+END
+magap.ico
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/fulltime/!svn/ver/21/test-build/magap.ico
+END
+favicon.ico
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fulltime/!svn/ver/21/test-build/favicon.ico
+END
+messages_it.properties
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fulltime/!svn/ver/21/test-build/messages_it.properties
+END
+login.xhtml
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fulltime/!svn/ver/21/test-build/login.xhtml
+END
+messages_tr.properties
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fulltime/!svn/ver/21/test-build/messages_tr.properties
+END
+import.sql
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fulltime/!svn/ver/21/test-build/import.sql
+END
+messages_bg.properties
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fulltime/!svn/ver/21/test-build/messages_bg.properties
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/fulltime/!svn/ver/21/test-build/index.html
+END
+messages_de.properties
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fulltime/!svn/ver/21/test-build/messages_de.properties
+END

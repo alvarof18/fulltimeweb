@@ -1,0 +1,111 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Grupo Contratado</f:facet>
+
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{grupoContratadoHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/GrupoContratadoEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty grupoContratadoFrom ? 'GrupoContratadoList' : grupoContratadoFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <!--<rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Detalle Grupo Contratados</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="detalleGrupoContratadosChildren">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{empty grupoContratadoHome.detalleGrupoContratados}"/>
+
+        <rich:dataTable value="#{grupoContratadoHome.detalleGrupoContratados}"
+                       var="_detalleGrupoContratado"
+                  rendered="#{not empty grupoContratadoHome.detalleGrupoContratados}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="detalleGrupoContratadosTable">
+                        
+            <rich:column sortBy="#{_detalleGrupoContratado.dgcoId}">
+                <f:facet name="header">Dgco id</f:facet>
+                <h:outputText value="#{_detalleGrupoContratado.dgcoId}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_detalleGrupoContratado.descripcion}">
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_detalleGrupoContratado.descripcion}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleGrupoContratado.diasVacacion}">
+                <f:facet name="header">Dias Vacaci&#243;n</f:facet>
+                <h:outputText value="#{_detalleGrupoContratado.diasVacacion}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleGrupoContratado.diasIncremento}">
+                <f:facet name="header">D&#237;as incremento</f:facet>
+                <h:outputText value="#{_detalleGrupoContratado.diasIncremento}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleGrupoContratado.anios}">
+                <f:facet name="header">A&#241;os</f:facet>
+                <h:outputText value="#{_detalleGrupoContratado.anios}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleGrupoContratado.totalDias}">
+                <f:facet name="header">Total D&#237;as</f:facet>
+                <h:outputText value="#{_detalleGrupoContratado.totalDias}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleGrupoContratado.maximoDias}">
+                <f:facet name="header">Max D&#237;as</f:facet>
+                <h:outputText value="#{_detalleGrupoContratado.maximoDias}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectdetalleGrupoContratado"
+                     value="Select"
+                      view="/fulltime/DetalleGrupoContratado.xhtml">
+                    <f:param name="detalleGrupoContratadoDgcoId"
+                            value="#{_detalleGrupoContratado.dgcoId}"/>
+                    <f:param name="detalleGrupoContratadoFrom" value="GrupoContratado"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/DetalleGrupoContratadoEdit.xhtml">
+            <f:param name="grupoContratadoGrcoId"
+                    value="#{grupoContratadoHome.instance.grcoId}"/>
+            <f:param name="detalleGrupoContratadoFrom" value="GrupoContratado"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+--></ui:define>
+
+</ui:composition>

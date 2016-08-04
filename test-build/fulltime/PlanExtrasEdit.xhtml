@@ -1,0 +1,131 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="planextra" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{planExtrasHome.managed ? 'Editar' : 'A&#241;adir'} Planificaci&#243;n Horas Extras</f:facet>
+
+			<s:decorate id="empleadoField"
+				template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label" >Empleado</ui:define>
+				<h:selectOneMenu id="listaEmpleados" required="true"
+						  valueChangeListener="#{planExtrasHome.valueChangedEventEmpleado}" immediate="true" 
+					value="#{planExtrasHome.instance.empleado}" >
+					<s:selectItems id="itemsEmpleado"
+						value="#{empleadoList.listaEmpleado}" var="empleado"
+						label="#{empleado.apellido} - #{empleado.nombre}"
+						noSelectionLabel="Seleccione Empleado..." />
+					<s:convertEntity />
+					<a:support id="empleados"
+					 		event="onchange"
+					 	 reRender="SupleField,ExtraorField,LaborableField"
+						bypassUpdates="true" ajaxSingle="true"/>
+				</h:selectOneMenu>
+								
+			</s:decorate>
+			
+            <s:decorate id="MesField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Mes</ui:define>
+                <h:inputText id="mes" size="100"
+                           required="true"
+                              value="#{planExtrasHome.instance.mes}"/>
+            </s:decorate>
+			
+			<s:decorate id="AñoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">A&#241;o</ui:define>
+                <h:inputText id="año" size="100"
+                           required="true"
+                              value="#{planExtrasHome.instance.anio}"/>
+            </s:decorate>
+            
+            <s:decorate id="LaborableField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Laborables</ui:define>
+                <h:inputText id="laborable" size="100"
+                           required="true" disabled="true"
+                              value="#{planExtrasHome.instance.total_horas_laborales}"/>
+            </s:decorate>            
+                      
+            <s:decorate id="SupleField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Suplementarias</ui:define>
+                <h:inputText id="suplementarias" size="100"
+                           required="true" disabled="true"
+                              value="#{planExtrasHome.instance.total_horas_suplementarias}"/>
+            </s:decorate>
+            <s:decorate id="ExtraorField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas Extraordinarias</ui:define>
+                <h:inputText id="extraordinarias" size="100"
+                           required="true" disabled="true"
+                              value="#{planExtrasHome.instance.total_horas_extraordinarias}"/>
+            </s:decorate>
+            
+            <s:decorate id="jefeField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Autorizado Por</ui:define>
+					<h:selectOneMenu id="listaJefe" required="true"
+						value="#{planExtrasHome.instance.empl_empl_id_pla_ex}">
+						<s:selectItems id="itemsJefe"
+							value="#{empleadoList.listaEmpleado}" var="empleadojefe"
+							label="#{empleadojefe.apellido} - #{empleadojefe.nombre}"
+							noSelectionLabel="Seleccione Jefe Superior..." />
+						<s:convertEntity />
+						<a:support id="jefes" event="onchange"
+							reRender="jefeField,listaJefe,jefes"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{planExtrasHome.persist}"
+                       disabled="#{!planExtrasHome.wired}"
+                       rendered="#{!planExtrasHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{planExtrasHome.update}"
+                       rendered="#{planExtrasHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{planExtrasHome.remove}"
+                      immediate="true"
+                       rendered="#{planExtrasHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/PlanExtras.xhtml"
+                rendered="#{planExtrasHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty planExtrasFrom ? 'PlanExtrasList' : planExtrasFrom}.xhtml"
+                rendered="#{!planExtrasHome.managed}"/>
+
+        </div>
+    </h:form>
+    
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,52 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+<ui:define name="body">
+
+    <h:form id="empleadoSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Modificar Clave" switchType="ajax">
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Clave Actual</ui:define>
+                <h:inputSecret id="contrasena_actual" value="#{recuperar_contraseña.contraseña_actual}" 
+                />
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nueva Clave</ui:define>
+                <h:inputSecret id="contrasena_nueva" value="#{recuperar_contraseña.contraseña_nueva}" 
+                onkeypress="if(event.keyCode==32){return false;}"/>
+            </s:decorate>
+			
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Repetir Clave</ui:define>
+                <h:inputSecret id="rep_contrasena_nueva" value="#{recuperar_contraseña.rep_contraseña_nueva}" 
+                onkeypress="if(event.keyCode==32){return false;}"/>
+            </s:decorate>        
+            			
+        </rich:simpleTogglePanel>
+        
+         <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Cambiar Clave"
+                         action="#{recuperar_contraseña.contraseña_usuario()}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/home.xhtml"/>
+        </div>
+
+    </h:form>
+    
+</ui:define>
+</ui:composition>

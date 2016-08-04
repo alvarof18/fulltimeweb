@@ -1,0 +1,97 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Tipo Cargo</f:facet>
+
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{tipoCargoHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/TipoCargoEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty tipoCargoFrom ? 'TipoCargoList' : tipoCargoFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Cargos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="cargosChildren">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{empty tipoCargoHome.cargos}"/>
+
+        <rich:dataTable value="#{tipoCargoHome.cargos}"
+                       var="_cargo"
+                  rendered="#{not empty tipoCargoHome.cargos}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="cargosTable">
+<!--            
+            <rich:column sortBy="#{_cargo.cargId}">
+                <f:facet name="header">Carg id</f:facet>
+                <h:outputText value="#{_cargo.cargId}"/>
+            </rich:column>
+-->            
+            <rich:column sortBy="#{_cargo.descripcion}">
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_cargo.descripcion}"/>
+            </rich:column>
+            <rich:column sortBy="#{_cargo.sueldo}">
+                <f:facet name="header">Sueldo</f:facet>
+                <h:outputText value="#{_cargo.sueldo}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectcargo"
+                     value="Select"
+                      view="/fulltime/Cargo.xhtml">
+                    <f:param name="cargoCargId"
+                            value="#{_cargo.cargId}"/>
+                    <f:param name="cargoFrom" value="TipoCargo"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/CargoEdit.xhtml">
+            <f:param name="tipoCargoTicaId"
+                    value="#{tipoCargoHome.instance.ticaId}"/>
+            <f:param name="cargoFrom" value="TipoCargo"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,189 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="asistenciaHoraExtra" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{asistenciaHoraExtraHome.managed ? 'Edit' : 'A&#241;adir'} Horas Extras - Asistencia </f:facet>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{asistenciaHoraExtraHome.persist}"
+                       disabled="#{!asistenciaHoraExtraHome.wired}"
+                       rendered="#{!asistenciaHoraExtraHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{asistenciaHoraExtraHome.update}"
+                       rendered="#{asistenciaHoraExtraHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{asistenciaHoraExtraHome.remove}"
+                      immediate="true"
+                       rendered="#{asistenciaHoraExtraHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/AsistenciaHoraExtra.xhtml"
+                rendered="#{asistenciaHoraExtraHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty asistenciaHoraExtraFrom ? 'AsistenciaHoraExtraList' : asistenciaHoraExtraFrom}.xhtml"
+                rendered="#{!asistenciaHoraExtraHome.managed}"/>
+
+        </div>
+    </h:form>
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Asistencia *" labelClass="required">
+    <div class="association" id="asistenciaParent">
+
+        <h:outputText value="There is no asistencia associated with this asistenciaHoraExtra."
+                   rendered="#{asistenciaHoraExtraHome.instance.asistencia == null}"/>
+
+        <rich:dataTable var="_asistencia"
+                   value="#{asistenciaHoraExtraHome.instance.asistencia}"
+                rendered="#{asistenciaHoraExtraHome.instance.asistencia != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="asistenciaTable">
+            <h:column>
+                <f:facet name="header">Asis id</f:facet>
+                <h:outputText value="#{_asistencia.asisId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Asis max minuto</f:facet>
+                <h:outputText value="#{_asistencia.asisMaxMinuto}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Asis orden</f:facet>
+                <h:outputText value="#{_asistencia.asisOrden}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Codigo empleado</f:facet>
+                <h:outputText value="#{_asistencia.codigoEmpleado}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Empleado empl id</f:facet>
+                <h:outputText value="#{_asistencia.empleado.emplId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Entrada salida</f:facet>
+                <h:outputText value="#{_asistencia.entradaSalida}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Estado</f:facet>
+                <h:outputText value="#{_asistencia.estado}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha hora horario</f:facet>
+                <h:outputText value="#{_asistencia.fechaHoraHorario}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha hora timbre</f:facet>
+                <h:outputText value="#{_asistencia.fechaHoraTimbre}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{asistenciaHoraExtraHome.instance.asistencia != null ? 'Change' : 'Select'} asistencia"
+                       view="/AsistenciaList.xhtml">
+                <f:param name="from" value="AsistenciaHoraExtraEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Hora extra *" labelClass="required">
+    <div class="association" id="horaExtraParent">
+
+        <h:outputText value="There is no horaExtra associated with this asistenciaHoraExtra."
+                   rendered="#{asistenciaHoraExtraHome.instance.horaExtra == null}"/>
+
+        <rich:dataTable var="_horaExtra"
+                   value="#{asistenciaHoraExtraHome.instance.horaExtra}"
+                rendered="#{asistenciaHoraExtraHome.instance.horaExtra != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="horaExtraTable">
+            <h:column>
+                <f:facet name="header">Hora extra id</f:facet>
+                <h:outputText value="#{_horaExtra.horaExtraId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_horaExtra.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Desde</f:facet>
+                <h:outputText value="#{_horaExtra.desde}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Dia libre</f:facet>
+                <h:outputText value="#{_horaExtra.diaLibre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Hasta</f:facet>
+                <h:outputText value="#{_horaExtra.hasta}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Maximo dia</f:facet>
+                <h:outputText value="#{_horaExtra.maximoDia}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Maximo mes</f:facet>
+                <h:outputText value="#{_horaExtra.maximoMes}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Porcentaje</f:facet>
+                <h:outputText value="#{_horaExtra.porcentaje}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{asistenciaHoraExtraHome.instance.horaExtra != null ? 'Change' : 'Select'} horaExtra"
+                       view="/HoraExtraList.xhtml">
+                <f:param name="from" value="AsistenciaHoraExtraEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+-->
+</ui:define>
+
+</ui:composition>

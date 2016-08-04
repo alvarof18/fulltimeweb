@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view contentType="text/html"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:a="http://richfaces.org/a4j"
+        xmlns:s="http://jboss.com/products/seam/taglib"
+        xmlns:rich="http://richfaces.org/rich">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>fulltime</title>
+    <link rel="shortcut icon" href="#{request.contextPath}/magap.ico"/>
+    <a:loadStyle src="resource:///stylesheet/theme.xcss"/>
+    <a:loadStyle src="/stylesheet/theme.css"/>
+    <a:loadStyle src="/stylesheet/themefulltime.css"/>
+    <ui:insert name="head"/>
+</head>
+
+<body id="botuytemplate">
+	<div id="myHeader" styleClass="nomarginspace">
+	
+		<table styleClass="nomarginspacetable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="100%" bgcolor="#28576a"></td>
+			</tr>
+		</table>
+	</div>
+	
+    <ui:include src="menu.xhtml">
+        <ui:param name="projectName" value="fulltime"/>
+    </ui:include>
+
+	<table>
+		<tr>
+			<th align="left" valign="top" id="templalleto">
+				<h:panelGroup layout="block">
+					<ui:include src="menuVertical.xhtml">
+					</ui:include>
+				</h:panelGroup>
+			</th>
+			
+			<th align="left" valign="top" id="templalleto" width="100%">
+				<div class="body">
+    				<h:messages id="messages" globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" rendered="#{showGlobalMessages != 'false'}"/>
+    				<ui:insert name="body"/>
+  				</div>
+
+  				<div align="center" class="footer">
+    				Desarrollado por <a href="http://www.casapazmino.com.ec/">Casa Pazmiño S.A</a>.
+    				<div>
+    					<h:graphicImage value="/img/footer.gif" alt="Seam logo"/>
+    				</div>
+  				</div>
+			</th>
+		</tr>
+	
+	</table>
+</body>
+</html>
+</f:view>

@@ -1,0 +1,223 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+	
+	
+    <rich:panel id="info">
+        <f:facet name="header">Permiso</f:facet>
+
+		<h:panelGrid columns="1" >
+		
+		<s:decorate id="numero" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">N&#250;mero</ui:define>
+            <h:outputText value="#{permisoHome.instance.permId}"/>
+        </s:decorate>
+		
+        <s:decorate id="empleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Empleado</ui:define>
+            <h:outputText value="#{permisoHome.instance.empleadoByEmplId.apellido} - #{permisoHome.instance.empleadoByEmplId.nombre}"  />
+        </s:decorate>
+
+
+        <s:decorate id="fecha" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha</ui:define>
+            
+            <rich:calendar id="calfecha" disabled="true" 
+                          value="#{permisoHome.instance.fecha}" datePattern="dd/MM/yyyy HH:mm"/>                
+            
+        </s:decorate>
+
+        <s:decorate id="fechaDesde" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Desde</ui:define>
+            
+			<rich:calendar id="calFechaDesde" disabled="true" 
+                          value="#{permisoHome.instance.fechaDesde}" datePattern="dd/MM/yyyy HH:mm"/>                
+            
+        </s:decorate>
+
+        <s:decorate id="fechaHasta" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Hasta</ui:define>
+            
+			<rich:calendar id="calFechaHasta" disabled="true" 
+                          value="#{permisoHome.instance.fechaHasta}" datePattern="dd/MM/yyyy HH:mm"/>                
+            
+        </s:decorate>
+
+
+        <s:decorate id="lugar" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Lugar</ui:define>
+            <h:outputText value="#{permisoHome.instance.lugar}"/>
+        </s:decorate>
+
+        <s:decorate id="motivo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Motivo</ui:define>
+            <h:outputText value="#{permisoHome.instance.tipoPermiso.descripcion}"/>
+        </s:decorate>
+             
+             <!-- new -->   
+		
+		</h:panelGrid>			
+				 	       
+        <rich:separator rendered="#{not empty permisoHome.listaPermisoAutoriza}"/>	
+            
+            <br></br>  
+            
+             <rich:dataTable id="listaAutorizacion" var="_auto" value="#{permisoHome.listaPermisoAutoriza}" 
+   					rendered="#{not empty permisoHome.listaPermisoAutoriza}" rowKeyVar="fila" >
+   					
+   				<f:facet name="header">
+                	<h:outputText value="Autorizaciones"/>
+            	</f:facet>
+            	
+   				<rich:column>
+					<div align="center">
+						<f:facet name="header">
+							<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+								<ui:param name="propertyLabel" value="Empleado" />							
+							</ui:include>
+						</f:facet>	
+						
+						<h:outputText value="#{_auto.empleado.apellido} - #{_auto.empleado.nombre}" />
+					</div>
+				</rich:column>	
+   					
+				<rich:column>
+					<div align="center">
+						<f:facet name="header">
+							<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+								<ui:param name="propertyLabel" value="Nivel" />							
+							</ui:include>
+						</f:facet>	
+						
+						<h:outputText value="#{_auto.nivel}" />
+					</div>
+				</rich:column>	
+				
+				<rich:column>
+					<div align="center">
+						<f:facet name="header">
+							<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+								<ui:param name="propertyLabel" value="Departamento" />							
+							</ui:include>
+						</f:facet>	
+						
+						<h:outputText value="#{_auto.empleado.departamento.descripcion}" />
+					</div>
+				</rich:column>	
+				
+			</rich:dataTable>		          
+
+		 	 <br></br>        
+        <rich:separator/>		
+			 <br></br> 
+            <s:label>Subir Archivos</s:label>   
+            <br></br>            
+        
+        	<h:form>
+        	 <div >					
+				<h:outputText  value="#{permisoHome.msgError}" rendered="#{permisoHome.justificacion() != true}" style="color:red;"/>
+			 </div>	
+	      	<rich:fileUpload fileUploadListener="#{permisoHome.subirArchivo}" disabled = "#{permisoHome.justificacion() != true}" listHeight="100px"
+                maxFilesQuantity="5"
+                id="upload"               
+                acceptedTypes="jpg, gif, png, bmp, pdf">
+               <a:support event="onuploadcomplete" reRender="inform"/>              
+            </rich:fileUpload>  
+            
+            <rich:spacer></rich:spacer>
+	     
+	        <br></br>
+	        <div align="center">					
+				<h:outputText value="Archivos Cargados" rendered="#{not empty permisoHome.listaArchivo()}"/>
+			</div>					
+			<br></br>
+
+	        <h:panelGroup id="inform">
+	        
+	        
+	        <rich:dataTable id="Listarchivo" var="_permiso" value="#{permisoHome.listaArchivo()}" 
+   					rendered="#{not empty permisoHome.listaArchivo()}" rowKeyVar="fila" >
+				<rich:column>
+					<div align="center">
+						<f:facet name="header">
+							<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+								<ui:param name="propertyLabel" value="Archivos" />							
+							</ui:include>
+						</f:facet>	
+						
+						<h:outputText value="#{_permiso.archivo}" />
+					</div>
+				</rich:column>				
+				<rich:column>
+					<div align="center">
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="propertyLabel" value="Ver" />							
+						</ui:include>
+						</f:facet>						
+						<s:link view="/Notificar?url=#{_permiso.url}"> 
+							<h:graphicImage value="/img/view.jpg" align="center" alt="Seam logo" height="30" width="30"/>
+						</s:link>	
+							
+					</div>
+				</rich:column>
+				<rich:column styleClass="action">
+					<div align="center">
+						<f:facet name="header">
+							<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+								<ui:param name="propertyLabel" value="Eliminar" />							
+							</ui:include>
+						</f:facet>
+						
+						<h:commandLink action="#{permisoHome.eliminar_Archivo()}" >	
+						<h:graphicImage value="/img/elimina.png" align="center" alt="Seam logo" height="20" width="20" />			
+							<f:setPropertyActionListener value="#{_permiso.url}" 
+	  	    						target="#{permisoHome.url}" />							
+						</h:commandLink>	
+						
+							
+					</div>
+				</rich:column>
+	</rich:dataTable>
+	
+	</h:panelGroup>
+	
+	</h:form>
+
+	<!--end new -->  
+        
+
+    </rich:panel>
+    
+  
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/PermisoEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+		<s:button id="imprimir" value="Imprimir" action="#{reportesFulltime.reporteSolicitudPermisoIndividual}"/>
+
+       	<s:button view="/fulltime/#{empty permisoFrom ? 'PermisoList' : permisoFrom}.xhtml"
+                    id="done" action="#{permisoNiveles.ConsultarPermisos()}"
+                 value="Aceptar"/>
+
+                       		
+        <rich:spacer width="5"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

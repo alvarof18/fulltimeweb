@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      no-conversation-view-id="/DetalleHorarioHoraExtraList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{detalleHorarioHoraExtraHome.wire}"/>
+
+   <param name="detalleHorarioHoraExtraFrom"/>
+   <param name="detalleHorarioHoraExtraDhheId" value="#{detalleHorarioHoraExtraHome.detalleHorarioHoraExtraDhheId}"/>
+   <param name="detalleHorarioFrom"/>
+   <param name="detalleHorarioDehoId" value="#{detalleHorarioHome.detalleHorarioDehoId}"/>
+   <param name="horarioFrom"/>
+   <param name="horarioHoraId" value="#{horarioHome.horarioHoraId}"/>
+
+
+   <param name="horaExtraFrom"/>
+   <param name="horaExtraHoraExtraId" value="#{horaExtraHome.horaExtraHoraExtraId}"/>
+
+   <navigation from-action="#{detalleHorarioHoraExtraHome.persist}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/DetalleHorarioHoraExtra.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{detalleHorarioHoraExtraHome.update}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/DetalleHorarioHoraExtra.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{detalleHorarioHoraExtraHome.remove}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/DetalleHorarioHoraExtraList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

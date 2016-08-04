@@ -1,0 +1,342 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="solicitudVacacion" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{solicitudVacacionHome.managed ? 'Editar' : 'A&#241;adir'} Solicitud Vacaci&#243;n</f:facet>
+            
+           	<h:panelGrid columns="2" >
+            
+				<s:decorate id="empleadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Empleado</ui:define>
+					<h:selectOneMenu id="listaEmpleados" required="true" 
+							disabled="#{((!solicitudVacacionHome.gestionaVacacion) or (solicitudVacacionHome.managed))}" valueChangeListener="#{solicitudVacacionHome.valueChangedEventEmpleado}" immediate="true"
+						value="#{solicitudVacacionHome.instance.empleadoByEmplId}" >
+						<s:selectItems id="itemsEmpleado"
+							value="#{empleadoList.listaEmpleadoMejorado}" var="empleado"
+							label="#{empleado.apellido} #{' '} #{empleado.nombre}"
+							noSelectionLabel="Seleccione Empleado..." />
+						<s:convertEntity />
+						<a:support id="empleados" event="onchange"
+							reRender="empleadoField,listaEmpleados,empleados,periodoField,saldoVacacionField,
+							saldoVacacionDiasField,saldoVacacionHorasField,saldoVacacionMinutosField,
+							autorizadoPorField, JefeField, nivelAprobacionField, nivelAprobacion, diasLaborablesField,diasLibresField,
+							proVacPanel,planificacionVacaciones,planificavacacionList"
+							bypassUpdates="true" ajaxSingle="true"/>
+					</h:selectOneMenu>
+				</s:decorate>
+				
+			<s:decorate id="JefeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Jefe</ui:define>
+                <h:inputText id="jefe" size="50" value="#{solicitudVacacionHome.instance.empleadoByEmpEmplId.apellido} #{' '} #{solicitudVacacionHome.instance.empleadoByEmpEmplId.nombre}" disabled="true" />
+            </s:decorate>
+
+
+				<s:decorate id="periodoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Periodo</ui:define>
+					<h:selectOneMenu id="listaPeriodo" required="true" disabled="#{solicitudVacacionHome.periodoUnico}"
+						value="#{solicitudVacacionHome.instance.empleadoPeriodoVacacion}" valueChangeListener="#{solicitudVacacionHome.valueChangedEventPeriodo}">
+						<s:selectItems id="itemsPeriodo"
+							value="#{empleadoPeriodoVacacionList.listaEmpleadoPeriodoVacacion}" var="empleadoPeriodoVacacion"
+							label="#{empleadoPeriodoVacacion.descripcion}"
+							noSelectionLabel="Seleccione Opci&#243;n..." />
+						<s:convertEntity />
+						<a:support id="periodo" event="onchange"
+						reRender="saldoVacacionDiasField,saldoVacacionHorasField,saldoVacacionMinutosField" 
+						bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+				
+				<rich:spacer/>
+				
+				<s:decorate id="nivelAprobacionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                	<ui:define name="label">Niveles de Aprobaci&#243;n</ui:define>
+                	<h:inputText id="nivelAprobacion" disabled="true" required="false" value="#{solicitudVacacionHome.nivelesRequeridos}">
+                	</h:inputText>
+                </s:decorate>
+                
+                <s:decorate id="nivelesAprobadosField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                	<ui:define name="label">Niveles Aprobados</ui:define>
+                	<h:inputText id="nivelesAprobados" disabled="true" required="false" value="#{solicitudVacacionHome.instance.aprobacion}" size="3">
+                	</h:inputText>
+                </s:decorate>		
+						
+			<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Horario</ui:define>					
+					<h:selectOneMenu id="horario" required="true" value="#{solicitudVacacionHome.instance.horario}">
+						<s:selectItems id="itemsHorario" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" noSelectionLabel="Seleccione Horario..." />
+						<s:convertEntity />
+					</h:selectOneMenu>					
+			</s:decorate>
+      
+            <s:decorate id="saldoVacacionDiasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Saldo Vacaciones Dias</ui:define>
+                <h:inputText id="saldoVacacionDias" disabled="true"
+                              value="#{solicitudVacacionHome.saldoDias}">
+                	<f:convertNumber/>
+                </h:inputText>
+            </s:decorate>            
+	
+            <s:decorate id="fechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde"
+                       required="true"
+                          value="#{solicitudVacacionHome.instance.fechaDesde}" datePattern="dd/MM/yyyy">
+                	<a:support action="#{solicitudVacacionHome.diferenciaFechas}"
+								event="onchanged" reRender="diasLaborablesField,diasLibresField"
+								ajaxSingle="true" />
+                </rich:calendar>                
+            </s:decorate>
+
+            <s:decorate id="saldoVacacionHorasField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Horas</ui:define>
+                <h:inputText id="saldoVacacionHoras" disabled="true"
+                              value="#{solicitudVacacionHome.saldoHoras}">
+                	<f:convertNumber/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="fechaHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Hasta</ui:define>
+                <rich:calendar id="fechaHasta"
+                       required="true"
+                          value="#{solicitudVacacionHome.instance.fechaHasta}" datePattern="dd/MM/yyyy">
+                <a:support action="#{solicitudVacacionHome.diferenciaFechas}"
+								event="onchanged" reRender="diasLaborablesField,diasLibresField"
+								ajaxSingle="true" />
+                </rich:calendar>
+            </s:decorate>
+            
+            <s:decorate id="saldoVacacionMinutosField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Minutos</ui:define>
+                <h:inputText id="saldoVacacionMinutos" disabled="true"
+                              value="#{solicitudVacacionHome.saldoMinutos}">
+                	<f:convertNumber/>
+                </h:inputText>
+            </s:decorate>      
+            
+            <s:decorate id="diasLaborablesField"
+				template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">D&#237;as Laborables</ui:define>
+				<h:inputText id="diasLaborables" disabled="true" required="true"
+					value="#{solicitudVacacionHome.instance.diasLaborables}">
+				</h:inputText>
+			</s:decorate>        
+			
+			 <s:decorate id="diasLibresField"
+				template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">D&#237;as Libres</ui:define>
+				<h:inputText id="diasLibres" disabled="true" required="true"
+					value="#{solicitudVacacionHome.instance.diasLibres}">
+				</h:inputText>
+			</s:decorate>                         
+            
+		</h:panelGrid>
+
+		<div style="clear:both">
+              <span class="required">*</span>
+              Campos requeridos
+        </div>
+               
+        </rich:panel> 
+        
+<!-- 
+        <rich:panel rendered="false" >
+			<f:facet name="header">Suspensi&#243;n Solicitud Vacaci&#243;n </f:facet>
+			
+            <s:decorate id="suspFechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="suspFechaDesde"
+                          value="#{solicitudVacacionHome.instance.suspFechaDesde}" datePattern="MM/dd/yyyy hh:mm a"/>
+            </s:decorate>
+
+
+            <s:decorate id="suspFechaHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Hasta</ui:define>
+                <rich:calendar id="suspFechaHasta"
+                          value="#{solicitudVacacionHome.instance.suspFechaHasta}" datePattern="MM/dd/yyyy hh:mm a"/>
+            </s:decorate>
+			        
+        </rich:panel>
+-->        
+        <div class="actionButtons">
+        	<table width="100%">
+				<tr>
+					<td width="70%">
+						            <h:commandButton id="save"
+						                          value="Grabar"
+						                         action="#{solicitudVacacionHome.persist}"
+						                       disabled="#{!solicitudVacacionHome.wired}"
+						                       rendered="#{!solicitudVacacionHome.managed}"/>
+						
+						            <h:commandButton id="update"
+						                          value="Grabar"
+						                         action="#{solicitudVacacionHome.update}"
+						                       rendered="#{solicitudVacacionHome.managed and solicitudVacacionHome.instance.estado.trim() =='0'}"/>
+						
+						            <h:commandButton id="delete"
+						                          value="Eliminar"
+						                         action="#{solicitudVacacionHome.remove}"
+						                      immediate="true"
+						                       rendered="#{solicitudVacacionHome.managed and solicitudVacacionHome.eliminacion and solicitudVacacionHome.eliminaVacacion}"/>                       				
+						
+						            <s:button id="cancelEdit"
+						                   value="Cancelar"
+						             propagation="end"
+						                    view="/fulltime/SolicitudVacacion.xhtml"
+						                rendered="#{solicitudVacacionHome.managed}"/>
+						
+						            <s:button id="cancelAdd"
+						                   value="Cancelar"
+						             propagation="end"
+						                    view="/fulltime/#{empty solicitudVacacionFrom ? 'SolicitudVacacionList' : solicitudVacacionFrom}.xhtml"
+						                rendered="#{!solicitudVacacionHome.managed}" action="#{solicitudVacacionNiveles.ConsultarSolicitudVacacion()}"/>
+					</td>
+					<td align="right" >						
+						<!--  <label>Autorizar </label>-->
+						<h:commandButton id="autorizar"
+				                          value="Autorizar"
+				                         action="#{solicitudVacacionHome.AutorizarSolicitud}"
+				                       rendered="#{solicitudVacacionHome.autorizar}" />
+				                       
+				        <h:commandButton id="preautorizar"
+				                          value="Pre-Autorizar"
+				                         action="#{solicitudVacacionHome.PreAutorizarSolicitud}"
+				                       rendered="#{solicitudVacacionHome.preAutorizar}" />
+				                       				
+				        <h:commandButton id="no-autorizar"
+				                          value="No-Autorizar"
+				                         action="#{solicitudVacacionHome.NoAutorizarSolicitud}"
+				                       rendered="#{solicitudVacacionHome.noAutorizar}" />
+					</td>
+				</tr>
+			</table> 
+                			
+        </div>
+        
+    <rich:panel id="proVacPanel" rendered="#{solicitudVacacionHome.restriccion}">
+    	<f:facet name="header">Programaci&#243;n de Vacaciones</f:facet>
+    	
+        <h:outputText value="No existe resultados" rendered="#{empty solicitudVacacionHome.listaProgramaVacacion}"/>
+    	<div class="results" id="planificacionVacaciones">       
+    	 	   
+		    <rich:dataTable id="planificavacacionList" var="_planificacion" value="#{solicitudVacacionHome.listaProgramaVacacion}" 
+		    	rendered="#{!empty solicitudVacacionHome.listaProgramaVacacion}" columnClasses="center" rows="5" reRender="ds">
+		           
+		        <f:facet name="header">
+                	<h:outputText value="Planificaci&#243;n de Vacaciones por Periodo"/>
+            	</f:facet>
+            	
+            	<rich:column sortBy="#{_planificacion.periodo}" id="ColPer">
+		            <f:facet name="header">
+		            	<h:outputText value="Periodo"/>        	
+		            </f:facet>		
+		            <h:outputText id="periodo" value="#{empty _planificacion.periodo? '-' : _planificacion.periodo}"/>            
+		   		</rich:column> 
+            	   		
+		   		<rich:column id="ColDiasTomados">
+		   		 	<f:facet name="header">
+		            	<h:outputText value="Días Asignados"/> 
+		            </f:facet>
+		            <!-- <h:outputText id="diasTom" value="#{_planificacion.dias_vacacion}"/> -->
+		            <h:outputText id="diasTom" value="#{programaVacacionMultiple.ObtenerDiasTomados(_planificacion.empleado,_planificacion.fechaInicio,_planificacion.fechaFin,_planificacion.fechaInicio1,_planificacion.fechaFin1,_planificacion.fechaInicio2,_planificacion.fechaFin2,_planificacion.fechaInicio3,_planificacion.fechaFin3)}"/>	
+		            	            
+		   		</rich:column>
+		   		
+		   		<!--  <rich:column filterBy="#{_planificacion.empleado.apellido}" filterEvent="onkeyup" filterValue="#{_planificacion.empleado.apellido}">
+                <h:outputText value="#{_planificacion.empleado.apellido}"/>
+            	</rich:column> -->
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaInicio}" id="ColFecIni">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Inicial"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_inicial" showApplyButton="false" value="#{_planificacion.fechaInicio}" datePattern="dd/MM/yyyy" disabled="true"/>	
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaFin}" id="ColFecFin">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Final"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_final" showApplyButton="false" value="#{_planificacion.fechaFin}" datePattern="dd/MM/yyyy" disabled="true"/>
+		   		</rich:column> 
+		   		
+		   		<!-- fechas adicionales -->
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaInicio1}" id="ColFecIni1">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Inicial"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_inicial1" showApplyButton="false" value="#{_planificacion.fechaInicio1}" datePattern="dd/MM/yyyy" disabled="true"/>
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaFin1}" id="ColFecFin1">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Final"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_final1" showApplyButton="false" value="#{_planificacion.fechaFin1}" datePattern="dd/MM/yyyy" disabled="true"/>
+		   		</rich:column> 
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaInicio2}" id="ColFecIni2">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Inicial"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_inicial2" showApplyButton="false" value="#{_planificacion.fechaInicio2}" datePattern="dd/MM/yyyy" disabled="true"/>	
+		   		</rich:column>	   		
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaFin2}" id="ColFecFin2">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Final"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_final2" showApplyButton="false" value="#{_planificacion.fechaFin2}" datePattern="dd/MM/yyyy" disabled="true"/>		            
+		   		</rich:column> 
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaInicio3}" id="ColFecIni3">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Inicial"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_inicial3" showApplyButton="false" value="#{_planificacion.fechaInicio3}" datePattern="dd/MM/yyyy" disabled="true"/>
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaFin3}" id="ColFecFin3">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Final"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_final3" showApplyButton="false" value="#{_planificacion.fechaFin3}" datePattern="dd/MM/yyyy" disabled="true"/>
+		   		</rich:column> 				
+		   		
+		   		<rich:column sortBy="#{_planificacion.generado}" id="ColGen">
+		            <f:facet name="header">
+		            	<h:outputText value="Autorizado"/>          	
+		            </f:facet>	
+		            <h:outputText  id="generado" value="#{_planificacion.generado==1? 'SI' : 'NO'}"/>	            
+		   		</rich:column> 
+		   		
+		   		<f:facet name="footer">
+                	<rich:datascroller id="ds"></rich:datascroller>
+            	</f:facet>
+            			           
+		   </rich:dataTable>
+		</div>    	
+    </rich:panel>
+        
+        
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{empleadoList.firstResult}"/>
+   <param name="sort" value="#{empleadoList.orderColumn}"/>
+   <param name="dir" value="#{empleadoList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="cedula" value="#{empleadoList.empleado.cedula}"/>
+   <param name="apellido" value="#{empleadoList.empleado.apellido}"/>
+   <param name="nombre" value="#{empleadoList.empleado.nombre}"/>
+   <param name="partida" value="#{empleadoList.empleado.partida}"/>
+   <param name="partidaIndividual" value="#{empleadoList.empleado.partidaIndividual}"/>
+   <param name="entradaSalida" value="#{empleadoList.empleado.entradaSalida}"/>
+   <param name="fechaIngreso" value="#{empleadoList.empleado.fechaIngreso}" converterId="org.jboss.seam.ui.DateTimeConverter"/>
+   <param name="fechaSalida" value="#{empleadoList.empleado.fechaSalida}" converterId="org.jboss.seam.ui.DateTimeConverter"/>
+
+</page>

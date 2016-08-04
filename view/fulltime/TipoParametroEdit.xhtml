@@ -1,0 +1,75 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="tipoParametro" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{tipoParametroHome.managed ? 'Editar' : 'A&#241;adir'} Par&#225;metro General</f:facet>
+
+            <s:decorate id="tipaIdField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">ID</ui:define>
+                <h:inputText id="id" required="true"
+                              value="#{tipoParametroHome.instance.tipaId}"/>
+            </s:decorate>
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{tipoParametroHome.instance.descripcion}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{tipoParametroHome.persist}"
+                       disabled="#{!tipoParametroHome.wired}"
+                       rendered="#{!tipoParametroHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{tipoParametroHome.update}"
+                       rendered="#{tipoParametroHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{tipoParametroHome.remove}"
+                      immediate="true"
+                      rendered="#{tipoParametroHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/TipoParametro.xhtml"
+                rendered="#{tipoParametroHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty tipoParametroFrom ? 'TipoParametroList' : tipoParametroFrom}.xhtml"
+                rendered="#{!tipoParametroHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

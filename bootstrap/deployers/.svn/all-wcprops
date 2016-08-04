@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/fulltime/!svn/ver/21/bootstrap/deployers
+END
+jboss-aspect-library-beans.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/fulltime/!svn/ver/21/bootstrap/deployers/jboss-aspect-library-beans.xml
+END
+aspect-deployer-beans.xml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/fulltime/!svn/ver/21/bootstrap/deployers/aspect-deployer-beans.xml
+END
+metadata-beans.xml
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/fulltime/!svn/ver/21/bootstrap/deployers/metadata-beans.xml
+END
+ejb-deployer-beans.xml
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/fulltime/!svn/ver/21/bootstrap/deployers/ejb-deployer-beans.xml
+END
+jca-deployers-beans.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/fulltime/!svn/ver/21/bootstrap/deployers/jca-deployers-beans.xml
+END
+ejb3-deployers-beans.xml
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/fulltime/!svn/ver/21/bootstrap/deployers/ejb3-deployers-beans.xml
+END
+security-deployer-beans.xml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/fulltime/!svn/ver/21/bootstrap/deployers/security-deployer-beans.xml
+END

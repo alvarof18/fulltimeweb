@@ -1,0 +1,65 @@
+/*.dr-toolbar-ext{
+	background-color: #2a3c49;
+}*/
+
+/*.rich-toolbar{
+	background-color: #2a3c49;
+}*/
+
+/*.dr-toolbar-int{ 
+	background-color: #2a3c49;
+}*/
+
+/*.rich-toolbar-item{
+	background-color: #2a3c49;
+}*/
+
+/*.dr-pnl {
+	background-color: #2a3c49;
+}*/
+
+/*.rich-panel {
+	background-color: #2a3c49;
+}*/
+/*.rich-panel-header{
+	background-color: black;
+	color: red;
+}*/
+
+.dr-pnl-h{
+   padding : 2px;
+   border-width: 1px;
+   border-style: solid;
+   background-position : top left;
+   background-repeat : repeat-x;
+   background-color:red;
+   border-color:1px;
+   font-size:12;
+   color: black;
+   /*background-image:*/
+}
+
+.input.actionButtonssicohi{
+	background-color: #2a3c49;
+}
+
+nomarginspace {
+	margin: 0px 0px 0px 0px;
+	background-color: #2a3c49;
+}
+
+nomarginspacetable {
+	
+	background-color: #2a3c49;
+	border: 0px;
+	padding: 0;
+	padding-top: 0;
+	padding-right: 0;
+	padding-left: 0;
+	padding-bottom: 0;
+	order-collapse: collapse;
+	border-left: 0px;
+	border-bottom: 0px;
+	border-top: 0px;
+	border-right: 0px;
+}

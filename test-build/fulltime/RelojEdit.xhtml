@@ -1,0 +1,212 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="reloj" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{relojHome.managed ? 'Editar' : 'A&#241;adir'} Reloj</f:facet>
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{relojHome.instance.descripcion}" onkeypress="if(event.keyCode==32){return false;}"/>
+            </s:decorate>
+
+            <s:decorate id="ipField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Direcci&#243;n Ip</ui:define>
+                <h:inputText id="ip"
+                              value="#{relojHome.instance.ip}"/>
+            </s:decorate>
+
+            <s:decorate id="marcaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Marca</ui:define>
+                <h:inputText id="marca"
+                              value="#{relojHome.instance.marca}"/>
+            </s:decorate>
+
+            <s:decorate id="modeloField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Modelo</ui:define>
+                <h:inputText id="modelo"
+                              value="#{relojHome.instance.modelo}"/>
+            </s:decorate>
+
+            <s:decorate id="puertoComField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Puerto</ui:define>
+                <h:inputText id="puertoCom"
+                              value="#{relojHome.instance.puertoCom}"/>
+            </s:decorate>
+
+            <s:decorate id="serieField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Serie</ui:define>
+                <h:inputText id="serie"
+                              value="#{relojHome.instance.serie}"/>
+            </s:decorate>
+
+            <s:decorate id="velocidadComField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Velocidad</ui:define>
+                <h:inputText id="velocidadCom"
+                              value="#{relojHome.instance.velocidadCom}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{relojHome.persist}"
+                       disabled="#{!relojHome.wired}"
+                       rendered="#{!relojHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{relojHome.update}"
+                       rendered="#{relojHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{relojHome.remove}"
+                      immediate="true"
+                       rendered="#{relojHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Reloj.xhtml"
+                rendered="#{relojHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty relojFrom ? 'RelojList' : relojFrom}.xhtml"
+                rendered="#{!relojHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Empleados">
+        <h:form styleClass="association" id="empleadosChildren">
+
+            <h:outputText value="No existe resultados"
+                       rendered="#{empty relojHome.empleados}"/>
+
+            <rich:dataTable value="#{relojHome.empleados}"
+                           var="_empleado"
+                      rendered="#{not empty relojHome.empleados}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadosTable">
+                <rich:column sortBy="#{_empleado.emplId}">
+                    <f:facet name="header">Empl id</f:facet>
+                    <h:outputText value="#{_empleado.emplId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.cedula}">
+                    <f:facet name="header">Cedula</f:facet>
+                    <h:outputText value="#{_empleado.cedula}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.apellido}">
+                    <f:facet name="header">Apellido</f:facet>
+                    <h:outputText value="#{_empleado.apellido}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_empleado.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                    <f:facet name="header">Fecha nacimiento</f:facet>
+                    <h:outputText value="#{_empleado.fechaNacimiento}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_empleado.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaSalida}">
+                    <f:facet name="header">Fecha salida</f:facet>
+                    <h:outputText value="#{_empleado.fechaSalida}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaContrato}">
+                    <f:facet name="header">Fecha contrato</f:facet>
+                    <h:outputText value="#{_empleado.fechaContrato}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_empleado.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.horasTrabaja}">
+                    <f:facet name="header">Horas trabaja</f:facet>
+                    <h:outputText value="#{_empleado.horasTrabaja}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_empleado.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partida}">
+                    <f:facet name="header">Partida</f:facet>
+                    <h:outputText value="#{_empleado.partida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partidaIndividual}">
+                    <f:facet name="header">Partida individual</f:facet>
+                    <h:outputText value="#{_empleado.partidaIndividual}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.entradaSalida}">
+                    <f:facet name="header">Entrada salida</f:facet>
+                    <h:outputText value="#{_empleado.entradaSalida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.numeroTimbre}">
+                    <f:facet name="header">Numero timbre</f:facet>
+                    <h:outputText value="#{_empleado.numeroTimbre}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{relojHome.managed}" id="empleados">
+        <div class="actionButtons">
+            <s:button id="addempleado"
+                   value="Crear"
+                    view="/fulltime/EmpleadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="relojReloId"
+                         value="#{relojHome.instance.reloId}"/>
+                 <f:param name="empleadoFrom" value="Reloj"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+
+-->
+
+</ui:define>
+
+</ui:composition>

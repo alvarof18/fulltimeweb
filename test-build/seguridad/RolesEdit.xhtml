@@ -1,0 +1,283 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="roles" styleClass="edit">
+		
+        <rich:panel>
+            <f:facet name="header">#{rolesHome.managed ? 'Editar' : 'A&#241;adir'} Rol</f:facet>
+
+			<!-- <s:decorate id="usuariosField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Usuarios</ui:define>
+                <h:inputText id="usuarios"
+                          value="#{rolesHome.instance.usuarios}">
+                    <a:support event="onblur" reRender="usuariosField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate> -->
+			
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label" required="true">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" value="#{rolesHome.instance.descripcion}" required="true"/>
+            </s:decorate>
+         
+			
+			<rich:spacer width="40" height="40"/>
+			
+			<rich:panel id="idPanelPermisos">
+				<f:facet name="header">Permisos</f:facet>
+				
+				<h:panelGrid columns="3" style="width:700px;">
+		            <s:decorate id="permisoCrear" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Crear</ui:define>
+                		<h:selectBooleanCheckbox id="idCheckCrear" value="#{rolesHome.crear}" required="true"/>
+            		</s:decorate>
+					
+		            <s:decorate id="permisoModificar" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Modificar</ui:define>
+						<h:selectBooleanCheckbox id="idCheckEditar" value="#{rolesHome.editar}" required="true"/>
+            		</s:decorate>
+
+		            <s:decorate id="permisoEliminar" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Eliminar</ui:define>
+						<h:selectBooleanCheckbox id="idCheckEliminar" value="#{rolesHome.eliminar}" required="true"/>
+            		</s:decorate>
+            		
+		            <s:decorate id="permisoVer" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Ver</ui:define>
+						<h:selectBooleanCheckbox id="idCheckVer" value="#{rolesHome.ver}" required="true"/>
+            		</s:decorate>
+            		
+            		<s:decorate id="permisoImprimir" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Imprimir</ui:define>
+						<h:selectBooleanCheckbox id="idCheckImprimir" value="#{rolesHome.imprimir}" required="true"/>
+            		</s:decorate>
+            		
+            		<s:decorate id="permisoGlobal" template="#{requestScope.contextPath}/layout/edit.xhtml" rendered="false">
+                		<ui:define name="label" >Acceso P&#225;ginas</ui:define>
+						<h:selectBooleanCheckbox rendered="false" id="idCheckGlobal" value="#{rolesHome.global}" required="true"/>
+            		</s:decorate> 
+            		            		
+				</h:panelGrid>            		
+				
+				<rich:separator />
+				
+				<rich:spacer/>				
+				Gestionar Solicitudes Permisos - Vacaciones
+				<rich:spacer/>
+					
+				<h:panelGrid columns="3" style="width:700px;">
+
+            		<s:decorate id="permisoPermisos" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Permisos</ui:define>
+						<h:selectBooleanCheckbox id="idCheckPermisos" value="#{rolesHome.permisos}" required="true"/>
+            		</s:decorate>
+            		
+            		<s:decorate id="permisoVacaciones" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Vacaciones</ui:define>
+						<h:selectBooleanCheckbox id="idCheckVacaciones" value="#{rolesHome.vacaciones}" required="true"/>
+            		</s:decorate>
+
+					<rich:spacer/>
+					
+            		<s:decorate id="eliminarPerm" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Eliminar</ui:define>
+						<h:selectBooleanCheckbox id="idCheckPermisos" value="#{rolesHome.eliminarPerm}" required="true"/>
+            		</s:decorate>
+
+            		<s:decorate id="autorizarPerm" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Autorizar</ui:define>
+						<h:selectBooleanCheckbox id="idCheckPermisos" value="#{rolesHome.autorizarPerm}" required="true"/>
+            		</s:decorate>
+
+            		<s:decorate id="legalizarPerm" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Legalizar</ui:define>
+						<h:selectBooleanCheckbox id="idCheckPermisos" value="#{rolesHome.legalizarPerm}" required="true"/>
+            		</s:decorate>
+
+				</h:panelGrid>				
+				
+				<rich:separator />
+				<rich:spacer/>				
+					Planificación Multiple
+				<rich:spacer/>
+				
+				<h:panelGrid columns="3" style="width:700px;">	
+					<s:decorate id="Modificar_Planificacion" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Modificar</ui:define>
+						<h:selectBooleanCheckbox id="idCheckPermisos" value="#{rolesHome.modificar_planificacion}" required="true"/>
+            		</s:decorate>
+				</h:panelGrid>	
+				
+				<rich:separator />
+				<rich:spacer/>				
+					Planificación Vacaciones
+				<rich:spacer/>
+				
+				<h:panelGrid columns="3" style="width:700px;">	
+				
+					<s:decorate id="autorizarVac" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Autorizar</ui:define>
+						<h:selectBooleanCheckbox id="idcheckautvac" value="#{rolesHome.autorizarVacacion}" required="true"/>
+            		</s:decorate>
+					
+					<s:decorate id="ModificarPendiente" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Modificar Pendiente</ui:define>
+						<h:selectBooleanCheckbox id="idchackmodpen" value="#{rolesHome.actualizarPendiente}" required="true"/>
+            		</s:decorate>
+            		
+            		<s:decorate id="Modificarautorizado" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Modificar Autorizado</ui:define>
+						<h:selectBooleanCheckbox id="idcheckmodaut" value="#{rolesHome.actualizarAutorizado}" required="true"/>
+            		</s:decorate>			
+				
+					<s:decorate id="EliminarPendiente" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Eliminar Pendiente</ui:define>
+						<h:selectBooleanCheckbox id="idchackelmpen" value="#{rolesHome.eliminarPendiente}" required="true"/>
+            		</s:decorate>			
+				
+					<s:decorate id="EliminarAutorizado" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                		<ui:define name="label">Eliminar Autorizado</ui:define>
+						<h:selectBooleanCheckbox id="idchackelmaut" value="#{rolesHome.eliminarAutorizado}" required="true"/>
+            		</s:decorate>
+            		
+				</h:panelGrid>		
+				
+				<rich:spacer/>
+				<rich:separator />
+				<rich:spacer/>
+				
+				<h:panelGrid columns="3" style="width:700px;">	
+					<s:decorate id="acesoEmpleados" template="#{requestScope.contextPath}/layout/edit.xhtml">
+						<ui:define name="label">Acceso Empleados</ui:define>
+							<h:selectOneRadio id="listaAcceso" value="#{rolesHome.accesoEmpleados}" >
+								<f:selectItem itemValue="0" itemLabel="Individual" />
+   								<f:selectItem itemValue="1" itemLabel="Subordinados" />
+   								<f:selectItem itemValue="2" itemLabel="Todos" />
+							</h:selectOneRadio>
+					</s:decorate>
+				</h:panelGrid>					
+			</rich:panel>
+			
+			<div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+            
+        </rich:panel>
+		
+		<rich:spacer width="20" height="20"/>
+		
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Guardar"
+                         action="#{rolesHome.guardar}"
+                       disabled="#{!rolesHome.wired}"
+                       rendered="#{!rolesHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{rolesHome.actualizar}"
+                       rendered="#{rolesHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{rolesHome.eliminar}"
+                      immediate="true"
+                       rendered="#{rolesHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/Roles.xhtml"
+                rendered="#{rolesHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/#{empty rolesFrom ? 'RolesList' : rolesFrom}.xhtml"
+                rendered="#{!rolesHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!-- <rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Items menu roleses">
+        <h:form styleClass="association" id="itemsMenuRolesesChildren">
+
+            <h:outputText value="There are no itemsMenuRoleses associated with this roles."
+                       rendered="#{empty rolesHome.itemsMenuRoleses}"/>
+
+            <rich:dataTable value="#{rolesHome.itemsMenuRoleses}"
+                           var="_itemsMenuRoles"
+                      rendered="#{not empty rolesHome.itemsMenuRoleses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="itemsMenuRolesesTable">
+                <rich:column sortBy="#{_itemsMenuRoles.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_itemsMenuRoles.id}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{rolesHome.managed}" id="itemsMenuRoleses">
+        <div class="actionButtons">
+            <s:button id="additemsMenuRoles"
+                   value="Add itemsMenuRoles"
+                    view="/seguridad/ItemsMenuRolesEdit.xhtml"
+             propagation="none">
+                 <f:param name="rolesId"
+                         value="#{rolesHome.instance.id}"/>
+                 <f:param name="itemsMenuRolesFrom" value="Roles"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Usuarios roleses">
+        <h:form styleClass="association" id="usuariosRolesesChildren">
+
+            <h:outputText value="There are no usuariosRoleses associated with this roles."
+                       rendered="#{empty rolesHome.usuariosRoleses}"/>
+
+            <rich:dataTable value="#{rolesHome.usuariosRoleses}"
+                           var="_usuariosRoles"
+                      rendered="#{not empty rolesHome.usuariosRoleses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="usuariosRolesesTable">
+                <rich:column sortBy="#{_usuariosRoles.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_usuariosRoles.id}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{rolesHome.managed}" id="usuariosRoleses">
+        <div class="actionButtons">
+            <s:button id="addusuariosRoles"
+                   value="Add usuariosRoles"
+                    view="/seguridad/UsuariosRolesEdit.xhtml"
+             propagation="none">
+                 <f:param name="rolesId"
+                         value="#{rolesHome.instance.id}"/>
+                 <f:param name="usuariosRolesFrom" value="Roles"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel> -->
+</ui:define>
+
+</ui:composition>

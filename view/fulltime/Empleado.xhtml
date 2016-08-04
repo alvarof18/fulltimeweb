@@ -1,0 +1,448 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+        <!-- new -->
+       
+	<h:form>
+    <rich:panel id="info">
+     <f:facet name="header">Empleado</f:facet>
+    <h:panelGrid columns="2" >
+	
+	    <s:decorate id="codigoEmpleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo</ui:define>
+            <h:outputText value="#{empleadoHome.instance.codigoEmpleado}" style="font-weight:bold; font-size: 25px" />
+        </s:decorate>
+
+		<rich:spacer/>
+
+        <s:decorate id="apellido" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Apellido</ui:define>
+            <h:outputText value="#{empleadoHome.instance.apellido}"/>
+        </s:decorate>
+
+        <s:decorate id="nombre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Nombre</ui:define>
+            <h:outputText value="#{empleadoHome.instance.nombre}"/>
+        </s:decorate>
+
+        <s:decorate id="fechaNacimiento" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Nacimiento</ui:define>
+            
+			<rich:calendar id="calfechaNacimiento" disabled="true" 
+                          value="#{empleadoHome.instance.fechaNacimiento}" datePattern="dd/MM/yyyy"/>
+        </s:decorate>
+
+		<s:decorate id="horasTrabaja" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas Trabaja</ui:define>
+            <h:outputText value="#{empleadoHome.instance.horasTrabaja}"/>
+        </s:decorate>
+ 
+        <s:decorate id="sueldo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Sueldo</ui:define>
+            <h:outputText value="#{empleadoHome.instance.sueldo}">
+                <f:convertNumber/>
+            </h:outputText>
+        </s:decorate>  
+        
+        </h:panelGrid>
+        
+        <rich:separator />
+				
+		<rich:spacer/>	
+        
+        <h:panelGrid columns="2" >
+        
+        <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Subir Foto</ui:define>            
+        </s:decorate> 
+        
+        <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                        
+        </s:decorate> 
+        
+        <rich:fileUpload fileUploadListener="#{empleadoHome.subirArchivo}"
+                maxFilesQuantity="#{empleadoHome.numero_archivos}"
+                id="upload"               
+                acceptedTypes="jpg, gif, png, bmp" autoclear="true">
+               <a:support event="onuploadcomplete" reRender="info,upload"/>              
+    	</rich:fileUpload>       
+         
+         <s:decorate id="empleadoImage" template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label"></ui:define>
+					<h:graphicImage value="/Notificar?url=#{empleadoHome.URLFoto()}" height="220" width="200"/>
+		</s:decorate>         
+		
+
+        <div style="clear:both"/>
+	
+	</h:panelGrid>
+		
+    </rich:panel>  
+  
+  	</h:form>
+  	
+  	 <!-- end new -->
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/EmpleadoEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty empleadoFrom ? 'EmpleadoList' : empleadoFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+    
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Horarios</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoHorariosChildren">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.empleadoHorarios}"/>
+
+        <rich:dataTable value="#{empleadoHome.empleadoHorarios}"
+                       var="_empleadoHorario"
+                  rendered="#{not empty empleadoHome.empleadoHorarios}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadoHorariosTable">
+                        
+            <rich:column sortBy="#{_empleadoHorario.fechaIni}">
+                <f:facet name="header">Fecha Inicial</f:facet>
+                
+                <rich:calendar id="fechaIni"
+                          value="#{_empleadoHorario.fechaIni}" datePattern="dd/MM/yyyy" disabled="true"/>
+                
+                
+            </rich:column>
+            
+            <rich:column sortBy="#{_empleadoHorario.fechaFin}">
+                <f:facet name="header">Fecha Final</f:facet>
+                
+                <rich:calendar id="fechaFin"
+                          value="#{_empleadoHorario.fechaFin}" datePattern="dd/MM/yyyy" disabled="true"/>
+                          
+            </rich:column>
+<!-- 
+            <rich:column sortBy="#{_empleadoHorario.diasFrecuencia}">
+                <f:facet name="header">Dias frecuencia</f:facet>
+                <h:outputText value="#{_empleadoHorario.diasFrecuencia}"/>
+            </rich:column>
+ -->            
+            <rich:column sortBy="#{_empleadoHorario.diasPlanificar}">
+                <f:facet name="header">Dias Planificar</f:facet>
+                <h:outputText value="#{_empleadoHorario.diasPlanificar}"/>
+            </rich:column>
+            
+        	<rich:column sortBy="#{_empleadoHorario.lunes}">
+                <f:facet name="header">Lunes</f:facet>
+                <h:selectBooleanCheckbox value="#{_empleadoHorario.lunes}" disabled="true"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_empleadoHorario.martes}">
+                <f:facet name="header">Martes</f:facet>
+                <h:selectBooleanCheckbox value="#{_empleadoHorario.martes}" disabled="true"/>
+            </rich:column>
+            
+			<rich:column sortBy="#{_empleadoHorario.miercoles}">
+                <f:facet name="header">Mi&#233;rcoles</f:facet>
+                <h:selectBooleanCheckbox value="#{_empleadoHorario.miercoles}" disabled="true"/>
+            </rich:column>
+            
+        	<rich:column sortBy="#{_empleadoHorario.jueves}">
+                <f:facet name="header">Jueves</f:facet>
+                <h:selectBooleanCheckbox value="#{_empleadoHorario.jueves}" disabled="true"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_empleadoHorario.viernes}">
+                <f:facet name="header">Viernes</f:facet>
+                <h:selectBooleanCheckbox value="#{_empleadoHorario.viernes}" disabled="true"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_empleadoHorario.sabado}">
+                <f:facet name="header">S&#225;bado</f:facet>
+                <h:selectBooleanCheckbox value="#{_empleadoHorario.sabado}" disabled="true"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_empleadoHorario.domingo}">
+                <f:facet name="header">Domingo</f:facet>
+                <h:selectBooleanCheckbox value="#{_empleadoHorario.domingo}" disabled="true"/>
+            </rich:column>
+            
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectempleadoHorario"
+                     value="Editar"
+                      view="/fulltime/EmpleadoHorarioEdit.xhtml">
+                    <f:param name="empleadoHorarioEmhoId"
+                            value="#{_empleadoHorario.emhoId}"/>
+                    <f:param name="empleadoHorarioFrom" value="Empleado"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/EmpleadoHorarioEdit.xhtml">
+            <f:param name="empleadoEmplId"
+                    value="#{empleadoHome.instance.emplId}"/>
+            <f:param name="empleadoHorarioFrom" value="Empleado"/>
+        </s:button>
+    </div>
+    </rich:tab>
+    
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Historia Laboral</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="histLabosChildren">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.histLabos}"/>
+
+        <rich:dataTable value="#{empleadoHome.histLabos}"
+                       var="_histLabo"
+                  rendered="#{not empty empleadoHome.histLabos}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="histLabosTable">
+
+            <rich:column sortBy="#{_histLabo.fechaIngreso}">
+                <f:facet name="header">Fecha Ingreso</f:facet>
+					<rich:calendar id="fechaIngreso" disabled="true" 
+                          value="#{_histLabo.fechaIngreso}" datePattern="dd/MM/yyyy"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_histLabo.fechaSalida}">
+                <f:facet name="header">Fecha salida</f:facet>
+					<rich:calendar id="fechaSalida" disabled="true" 
+                          value="#{_histLabo.fechaSalida}" datePattern="dd/MM/yyyy"/>                
+
+            </rich:column>
+            
+            <rich:column>
+            	<f:facet name="header">Estado</f:facet>
+         		<h:selectBooleanCheckbox value="#{_histLabo.estado}" disabled="true"/>
+            </rich:column>
+            
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selecthistLabo"
+                     value="Editar"
+                      view="/fulltime/HistLaboEdit.xhtml">
+                    <f:param name="histLaboHilaId"
+                            value="#{_histLabo.hilaId}"/>
+                    <f:param name="histLaboFrom" value="Empleado"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/HistLaboEdit.xhtml">
+            <f:param name="empleadoEmplId"
+                    value="#{empleadoHome.instance.emplId}"/>
+            <f:param name="histLaboFrom" value="Empleado"/>
+        </s:button>
+    </div>
+    </rich:tab>
+    
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Vacaciones</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoPeriodoVacacionsChildren">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.empleadoPeriodoVacacions}"/>
+
+        <rich:dataTable value="#{empleadoHome.empleadoPeriodoVacacions}"
+                       var="_empleadoPeriodoVacacion"
+                  rendered="#{not empty empleadoHome.empleadoPeriodoVacacions}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadoPeriodoVacacionsTable">
+
+            <rich:column sortBy="#{_empleadoPeriodoVacacion.descripcion}">
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_empleadoPeriodoVacacion.descripcion}"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_empleadoPeriodoVacacion.histLabo.fechaIngreso}">
+                <f:facet name="header">Historia Laboral Ingreso</f:facet>
+                <rich:calendar id="fechaIng" disabled="true" 
+                          value="#{_empleadoPeriodoVacacion.histLabo.fechaIngreso}" datePattern="dd/MM/yyyy"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_empleadoPeriodoVacacion.histLabo.fechaSalida}">
+                <f:facet name="header">Historia Laboral Salida</f:facet>
+                <rich:calendar id="fechaSal" disabled="true" 
+                          value="#{_empleadoPeriodoVacacion.histLabo.fechaSalida}" datePattern="dd/MM/yyyy"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_empleadoPeriodoVacacion.fechaDesde}">
+                <f:facet name="header">Fecha Vacaci&#243;n</f:facet>
+                <rich:calendar id="fecha" disabled="true" 
+                          value="#{_empleadoPeriodoVacacion.fechaDesde}" datePattern="dd/MM/yyyy"/>                
+            </rich:column>
+            
+            <rich:column sortBy="#{_empleadoPeriodoVacacion.horas}">
+                <f:facet name="header">Total D&#237;as</f:facet>
+                <h:outputText value="#{_empleadoPeriodoVacacion.horas}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_empleadoPeriodoVacacion.horas}">
+                <f:facet name="header">D&#237;as Bloqueados</f:facet>
+                <h:outputText value="#{_empleadoPeriodoVacacion.diasPerdidos}"/>
+            </rich:column>
+
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectempleadoPeriodoVacacion"
+                     value="Editar"
+                      view="/fulltime/EmpleadoPeriodoVacacionEdit.xhtml">
+                    <f:param name="empleadoPeriodoVacacionEpvaId"
+                            value="#{_empleadoPeriodoVacacion.epvaId}"/>
+                    <f:param name="empleadoPeriodoVacacionFrom" value="Empleado"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/EmpleadoPeriodoVacacionEdit.xhtml"
+                rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            <f:param name="empleadoEmplId"
+                    value="#{empleadoHome.instance.emplId}"/>
+            <f:param name="empleadoPeriodoVacacionFrom" value="Empleado"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Contactos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="contactosChildren">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.contactos}"/>
+
+        <rich:dataTable value="#{empleadoHome.contactos}"
+                       var="_contacto"
+                  rendered="#{not empty empleadoHome.contactos}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="contactosTable">
+                        
+            <rich:column sortBy="#{_contacto.detalleTipoParametro.descripcion}">
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_contacto.detalleTipoParametro.descripcion}"/>
+            </rich:column>
+
+            <rich:column sortBy="#{_contacto.descripcion}">
+                <f:facet name="header">Valor</f:facet>
+                <h:outputText value="#{_contacto.descripcion}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectcontacto"
+                     value="Editar"
+                      view="/fulltime/ContactoEdit.xhtml">
+                    <f:param name="contactoContId"
+                            value="#{_contacto.contId}"/>
+                    <f:param name="contactoFrom" value="Empleado"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/ContactoEdit.xhtml"
+                rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            <f:param name="empleadoEmplId"
+                    value="#{empleadoHome.instance.emplId}"/>
+            <f:param name="contactoFrom" value="Empleado"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>T&#237;tulos</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadoTitulosChildren">
+
+        <h:outputText value="No existe registros"
+                   rendered="#{empty empleadoHome.empleadoTitulos}"/>
+
+        <rich:dataTable value="#{empleadoHome.empleadoTitulos}"
+                       var="_empleadoTitulo"
+                  rendered="#{not empty empleadoHome.empleadoTitulos}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadoTitulosTable">
+                        
+            <rich:column sortBy="#{_empleadoTitulo.titulo.descripcion}">
+                <f:facet name="header">T&#237;tulo</f:facet>
+                <h:outputText value="#{_empleadoTitulo.titulo.descripcion}"/>
+            </rich:column>
+                        
+            <rich:column sortBy="#{_empleadoTitulo.detalleTipoParametro.descripcion}">
+                <f:facet name="header">Nivel</f:facet>
+                <h:outputText value="#{_empleadoTitulo.detalleTipoParametro.descripcion}"/>
+            </rich:column>
+                        
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectempleadoTitulo"
+                     value="Editar"
+                      view="/fulltime/EmpleadoTituloEdit.xhtml">
+                    <f:param name="empleadoTituloEmtiId"
+                            value="#{_empleadoTitulo.emtiId}"/>
+                    <f:param name="empleadoTituloFrom" value="Empleado"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/EmpleadoTituloEdit.xhtml"
+                rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            <f:param name="empleadoEmplId"
+                    value="#{empleadoHome.instance.emplId}"/>
+            <f:param name="empleadoTituloFrom" value="Empleado"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+</rich:tabPanel>
+
+</ui:define>
+
+</ui:composition>

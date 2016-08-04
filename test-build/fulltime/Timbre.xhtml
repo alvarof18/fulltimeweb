@@ -1,0 +1,73 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Timbre</f:facet>
+
+        <s:decorate id="empleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Empleado</ui:define>
+            <h:outputText value="#{timbreHome.instance.empleado.apellido}"/>
+            <rich:spacer width="10"/>
+            <h:outputText value="#{timbreHome.instance.empleado.nombre}"/>
+        </s:decorate>
+
+        <s:decorate id="codigoEmpleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo empleado</ui:define>
+            <h:outputText value="#{timbreHome.instance.codigoEmpleado}"/>
+        </s:decorate>
+
+        <s:decorate id="fechaHoraTimbre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Hora Timbre</ui:define>
+
+            <rich:calendar id="fechaHoraTimbre" disabled="true" 
+                          value="#{timbreHome.instance.fechaHoraTimbre}" datePattern="dd/MM/yyyy HH:mm"/>
+        </s:decorate>
+
+        <s:decorate id="codigoReloj" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo Reloj</ui:define>
+            <h:outputText value="#{timbreHome.instance.codigoReloj}"/>
+        </s:decorate>
+
+        <s:decorate id="accion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Acci&#243;n</ui:define>
+            <h:outputText value="#{timbreHome.instance.accion}"/>
+        </s:decorate>
+
+        <s:decorate id="teclaFuncion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Tecla Funci&#243;n</ui:define>
+            <h:outputText value="#{timbreHome.instance.teclaFuncion}"/>
+        </s:decorate>
+        
+        <s:decorate id="observacionField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Observaci&#243;n</ui:define>
+            <h:outputText value="#{timbreHome.instance.observacion}"/>
+        </s:decorate>        
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/TimbreEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty timbreFrom ? 'TimbreList' : timbreFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

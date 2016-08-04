@@ -1,0 +1,115 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+	<h1 id="segmotmanalce" align="center">Usuario</h1>
+
+    <rich:panel>
+        <f:facet name="header">Detalle Usuarios</f:facet>
+
+		<s:decorate id="rol" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Rol</ui:define>
+            <h:outputText value="#{usuariosHome.roles}"/>
+        </s:decorate>
+		
+		<s:decorate id="usuario" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Usuario</ui:define>
+            <h:outputText value="#{usuariosHome.instance.usuario}"/>
+        </s:decorate>
+        
+        <!-- <s:decorate id="contrasena" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Contrasena</ui:define>
+            <h:outputText value="#{usuariosHome.instance.contrasena}"/>
+        </s:decorate> -->
+
+        <s:decorate id="estado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Estado</ui:define>
+            <h:outputText value="#{usuariosHome.estados}"/>
+        </s:decorate>
+
+        <s:decorate id="fechaCreacion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Creaci&#243;n</ui:define>
+            <h:outputText value="#{usuariosHome.instance.fechaCreacion}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="fechaVencimiento" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Vencimiento</ui:define>
+            <h:outputText value="#{usuariosHome.instance.fechaVencimiento}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/seguridad/UsuariosEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/seguridad/#{empty usuariosFrom ? 'UsuariosList' : usuariosFrom}.xhtml"
+                    id="done"
+                 value="Salir"/>
+
+    </div>
+
+    <!--  <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Usuarios roleses</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="usuariosRolesesChildren">
+
+        <h:outputText value="There are no usuariosRoleses associated with this usuarios."
+                   rendered="#{empty usuariosHome.usuariosRoleses}"/>
+
+        <rich:dataTable value="#{usuariosHome.usuariosRoleses}"
+                       var="_usuariosRoles"
+                  rendered="#{not empty usuariosHome.usuariosRoleses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="usuariosRolesesTable">
+            <rich:column sortBy="#{_usuariosRoles.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_usuariosRoles.id}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectusuariosRoles"
+                     value="Select"
+                      view="/seguridad/UsuariosRoles.xhtml">
+                    <f:param name="usuariosRolesId"
+                            value="#{_usuariosRoles.id}"/>
+                    <f:param name="usuariosRolesFrom" value="Usuarios"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add usuariosRoles"
+                view="/seguridad/UsuariosRolesEdit.xhtml">
+            <f:param name="usuariosId"
+                    value="#{usuariosHome.instance.id}"/>
+            <f:param name="usuariosRolesFrom" value="Usuarios"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>-->
+</ui:define>
+
+</ui:composition>

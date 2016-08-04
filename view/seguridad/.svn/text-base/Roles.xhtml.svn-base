@@ -1,0 +1,161 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+	
+	<h1 id="segmotmanalce" align="center">Roles</h1>
+	
+    <rich:panel>
+        <f:facet name="header">Detalle Roles</f:facet>
+
+		<!-- <s:decorate id="usuarios" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Usuarios</ui:define>
+            <h:outputText value="#{rolesHome.instance.usuarios}"/>
+        </s:decorate> -->
+        
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{rolesHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+    <rich:spacer width="20" height="20"/>
+    
+    <rich:panel rendered="#{not empty rolesHome.permisosMenus}" >
+		<f:facet name="header">Permisos</f:facet>
+    
+    	<rich:dataTable id="idPermisosFieldTable" value="#{rolesHome.permisosMenus}" rows="1" var="permiso">
+    		<rich:column >
+    		<f:facet name="header">Crear</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.crear}" disabled="true"/>
+    	</rich:column>
+    	<rich:column>
+    		<f:facet name="header">Editar</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.modificar}" disabled="true"/>
+    	</rich:column>
+    	<rich:column >
+    		<f:facet name="header">Eliminar</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.eliminar}" disabled="true"/>
+    	</rich:column>
+    	<rich:column>
+    		<f:facet name="header">Ver</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.ver}" disabled="true"/>
+    	</rich:column>
+    	<rich:column >
+    		<f:facet name="header">Imprimir</f:facet>
+    			<h:selectBooleanCheckbox value="#{permiso.imprimir}" disabled="true"/>
+    	</rich:column>
+    	</rich:dataTable>
+    </rich:panel>
+	
+	
+	<rich:spacer width="20" height="20"/>
+	
+    <div class="actionButtons">
+
+        <s:button view="/seguridad/RolesEdit.xhtml" id="edit" value="Editar"/>
+
+        <s:button view="/seguridad/#{empty rolesFrom ? 'RolesList' : rolesFrom}.xhtml" id="done" value="Salir"/>
+
+    </div>
+
+    <!-- <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Items menu roleses</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="itemsMenuRolesesChildren">
+
+        <h:outputText value="There are no itemsMenuRoleses associated with this roles."
+                   rendered="#{empty rolesHome.itemsMenuRoleses}"/>
+
+        <rich:dataTable value="#{rolesHome.itemsMenuRoleses}"
+                       var="_itemsMenuRoles"
+                  rendered="#{not empty rolesHome.itemsMenuRoleses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="itemsMenuRolesesTable">
+            <rich:column sortBy="#{_itemsMenuRoles.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.id}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectitemsMenuRoles"
+                     value="Select"
+                      view="/seguridad/ItemsMenuRoles.xhtml">
+                    <f:param name="itemsMenuRolesId"
+                            value="#{_itemsMenuRoles.id}"/>
+                    <f:param name="itemsMenuRolesFrom" value="Roles"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add itemsMenuRoles"
+                view="/seguridad/ItemsMenuRolesEdit.xhtml">
+            <f:param name="rolesId"
+                    value="#{rolesHome.instance.id}"/>
+            <f:param name="itemsMenuRolesFrom" value="Roles"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Usuarios roleses</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="usuariosRolesesChildren">
+
+        <h:outputText value="There are no usuariosRoleses associated with this roles."
+                   rendered="#{empty rolesHome.usuariosRoleses}"/>
+
+        <rich:dataTable value="#{rolesHome.usuariosRoleses}"
+                       var="_usuariosRoles"
+                  rendered="#{not empty rolesHome.usuariosRoleses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="usuariosRolesesTable">
+            <rich:column sortBy="#{_usuariosRoles.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_usuariosRoles.id}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectusuariosRoles"
+                     value="Select"
+                      view="/seguridad/UsuariosRoles.xhtml">
+                    <f:param name="usuariosRolesId"
+                            value="#{_usuariosRoles.id}"/>
+                    <f:param name="usuariosRolesFrom" value="Roles"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add usuariosRoles"
+                view="/seguridad/UsuariosRolesEdit.xhtml">
+            <f:param name="rolesId"
+                    value="#{rolesHome.instance.id}"/>
+            <f:param name="usuariosRolesFrom" value="Roles"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel> -->
+</ui:define>
+
+</ui:composition>

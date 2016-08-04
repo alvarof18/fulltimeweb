@@ -1,0 +1,191 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/fulltime/!svn/ver/47/src/main/com/casapazmino/fulltime/model
+END
+AsistenciaHoraExtra.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/model/AsistenciaHoraExtra.java
+END
+Horario.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/Horario.java
+END
+SolicitudVacacion.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/SolicitudVacacion.java
+END
+DetalleGrupoContratado.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/DetalleGrupoContratado.java
+END
+Feriado.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/model/Feriado.java
+END
+TipoPermiso.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/TipoPermiso.java
+END
+GrupoContratado.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/GrupoContratado.java
+END
+Reloj.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/Reloj.java
+END
+EmpleadoPeriodoVacacion.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/model/EmpleadoPeriodoVacacion.java
+END
+DetalleTipoParametro.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/DetalleTipoParametro.java
+END
+TipoParametro.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/TipoParametro.java
+END
+Empleado.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/Empleado.java
+END
+TipoCargo.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/TipoCargo.java
+END
+Discapacidad.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/model/Discapacidad.java
+END
+HoraExtra.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/HoraExtra.java
+END
+Contacto.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/Contacto.java
+END
+DetalleHorarioHoraExtra.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/model/DetalleHorarioHoraExtra.java
+END
+ProgramaVacacion.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/ProgramaVacacion.java
+END
+Permiso.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/Permiso.java
+END
+Titulo.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/Titulo.java
+END
+DeclaraBienes.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/model/DeclaraBienes.java
+END
+Asistencia.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/Asistencia.java
+END
+CiudadFeriado.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/fulltime/!svn/ver/118/src/main/com/casapazmino/fulltime/model/CiudadFeriado.java
+END
+Departamento.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/fulltime/!svn/ver/109/src/main/com/casapazmino/fulltime/model/Departamento.java
+END
+Region.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/Region.java
+END
+EmpleadoTitulo.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/EmpleadoTitulo.java
+END
+Ciudad.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/Ciudad.java
+END
+Atraso.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/Atraso.java
+END
+Provincia.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/Provincia.java
+END
+Cargo.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/fulltime/!svn/ver/21/src/main/com/casapazmino/fulltime/model/Cargo.java
+END
+DetalleHorario.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/fulltime/!svn/ver/123/src/main/com/casapazmino/fulltime/model/DetalleHorario.java
+END

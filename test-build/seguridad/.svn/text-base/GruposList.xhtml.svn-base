@@ -1,0 +1,184 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="gruposSearch" styleClass="edit">
+		
+		<h1 id="segmotmanalce" align="center">Men&#250;</h1>
+		
+        <rich:simpleTogglePanel label="Criterio de Busqueda" switchType="ajax">
+			
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{gruposList.grupos.nombre}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Etiqueta</ui:define>
+                <h:inputText id="etiqueta" value="#{gruposList.grupos.etiqueta}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" value="#{gruposList.grupos.descripcion}"/>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <s:div styleClass="actionButtons" rendered="#{empty from}">
+        	<s:button view="/seguridad/GruposEdit.xhtml" id="create" propagation="none" value="Create grupos">
+            	<f:param name="gruposId"/>
+        	</s:button>
+    
+            <h:commandButton id="search" value="Buscar" action="/seguridad/GruposList.xhtml"/>
+            <s:button id="reset" value="Cancelar" includePageParams="false"/>
+        </s:div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados de Busqueda</f:facet>
+    <div class="results" id="gruposList">
+
+    <h:outputText value="No se encontro resultados."
+               rendered="#{empty gruposList.resultList}"/>
+
+    <rich:dataTable id="gruposList"
+                var="_grupos"
+              value="#{gruposList.resultList}"
+           rendered="#{not empty gruposList.resultList}">
+        <!-- <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{gruposList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="grupos.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_grupos.id}"/>
+        </h:column> -->
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{gruposList}"/>
+                    <ui:param name="propertyLabel" value="Nombre"/>
+                    <ui:param name="propertyPath" value="grupos.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_grupos.nombre}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{gruposList}"/>
+                    <ui:param name="propertyLabel" value="Etiqueta"/>
+                    <ui:param name="propertyPath" value="grupos.etiqueta"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_grupos.etiqueta}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{gruposList}"/>
+                    <ui:param name="propertyLabel" value="Descripci&#243;n"/>
+                    <ui:param name="propertyPath" value="grupos.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_grupos.descripcion}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{gruposList}"/>
+                    <ui:param name="propertyLabel" value="Orden"/>
+                    <ui:param name="propertyPath" value="grupos.orden"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_grupos.orden}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{gruposList}"/>
+                    <ui:param name="propertyLabel" value="Expandible"/>
+                    <ui:param name="propertyPath" value="grupos.expandible"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_grupos.expandible}"/>
+        </h:column>
+        
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/seguridad/#{empty from ? 'Grupos' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Selecionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="grupos">
+                <f:param name="gruposId"
+                        value="#{_grupos.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/seguridad/GruposEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="gruposEdit"
+                rendered="#{empty from}">
+                <f:param name="gruposId"
+                        value="#{_grupos.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/seguridad/GruposList.xhtml"
+            rendered="#{gruposList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/seguridad/GruposList.xhtml"
+            rendered="#{gruposList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{gruposList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/GruposList.xhtml"
+            rendered="#{gruposList.nextExists}"
+               value="Siguiente P&#225;gina #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{gruposList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/GruposList.xhtml"
+            rendered="#{gruposList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{gruposList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

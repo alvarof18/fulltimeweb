@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteAtrasosAntes" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     empleado.CEDULA AS empleado_CEDULA,
+     empleado.APELLIDO AS empleado_APELLIDO,
+     empleado.NOMBRE AS empleado_NOMBRE,
+     empleado.CODIGO_EMPLEADO AS empleado_CODIGO_EMPLEADO,
+     asistencia.FECHA_HORA_HORARIO AS asistencia_FECHA_HORA_HORARIO,
+     asistencia.FECHA_HORA_TIMBRE AS asistencia_FECHA_HORA_TIMBRE,
+     asistencia.ENTRADA_SALIDA AS asistencia_ENTRADA_SALIDA,
+     asistencia.ASIS_MAX_MINUTO AS asistencia_ASIS_MAX_MINUTO,
+     TIMEDIFF(asistencia.FECHA_HORA_TIMBRE,asistencia.FECHA_HORA_HORARIO)AS atraso
+FROM
+     empleado empleado INNER JOIN asistencia asistencia ON empleado.EMPL_ID = asistencia.EMPL_ID
+WHERE
+	asistencia.ENTRADA_SALIDA = 'E'AND
+	asistencia.FECHA_HORA_TIMBRE IS NOT NULL AND
+	TIMEDIFF(asistencia.FECHA_HORA_TIMBRE,asistencia.FECHA_HORA_HORARIO) > '00:00:00' AND
+	asistencia.FECHA_HORA_HORARIO BETWEEN $P{fechaInicial} AND $P{fechaFinal}]]>
+	</queryString>
+	<field name="empleado_CEDULA" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="empleado_APELLIDO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="empleado_NOMBRE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="empleado_CODIGO_EMPLEADO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="asistencia_FECHA_HORA_HORARIO" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="asistencia_FECHA_HORA_TIMBRE" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="asistencia_ENTRADA_SALIDA" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="asistencia_ASIS_MAX_MINUTO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="atraso" class="java.sql.Time">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="contRegi" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{contRegi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (1)]]></initialValueExpression>
+	</variable>
+	<variable name="numeroAtrasos" class="java.lang.Integer" resetType="Group" resetGroup="empleado" calculation="Count">
+		<variableExpression><![CDATA[$F{atraso}]]></variableExpression>
+	</variable>
+	<variable name="valorAtraso" class="java.lang.Integer" resetType="Group" resetGroup="empleado">
+		<variableExpression><![CDATA[$F{atraso}.getHours() * 60 + $F{atraso}.getMinutes()]]></variableExpression>
+	</variable>
+	<variable name="sumaAtraso" class="java.lang.Integer" resetType="Group" resetGroup="empleado" calculation="Sum">
+		<variableExpression><![CDATA[$V{valorAtraso}]]></variableExpression>
+	</variable>
+	<variable name="multaAtraso" class="java.math.BigDecimal"/>
+	<variable name="desde" class="java.lang.Integer"/>
+	<group name="empleado" keepTogether="true">
+		<groupExpression><![CDATA[$F{empleado_CEDULA}]]></groupExpression>
+		<groupHeader>
+			<band height="35">
+				<textField>
+					<reportElement x="0" y="8" width="65" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_CEDULA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="67" y="8" width="73" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_CODIGO_EMPLEADO}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="140" y="8" width="164" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_APELLIDO}+" "+$F{empleado_NOMBRE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<subreport runToBottom="false">
+					<reportElement mode="Transparent" x="31" y="3" width="273" height="12"/>
+					<subreportParameter name="numAtrasos">
+						<subreportParameterExpression><![CDATA[$V{numeroAtrasos}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="multa" toVariable="multaAtraso"/>
+					<returnValue subreportVariable="subDesde" toVariable="desde"/>
+					<subreportExpression><![CDATA["C:\\PROYECTO\\fulltime\\view\\reportes\\subAtraso.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="58">
+				<textField>
+					<reportElement x="304" y="1" width="100" height="19"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{numeroAtrasos}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="605" y="1" width="72" height="19"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumaAtraso}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="505" y="20" width="100" height="19"/>
+					<textElement/>
+					<text><![CDATA[Valor Atrasos:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="204" y="1" width="100" height="19"/>
+					<textElement/>
+					<text><![CDATA[Num. Atrasos:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="505" y="1" width="100" height="19"/>
+					<textElement/>
+					<text><![CDATA[Minutos Atraso:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="505" y="38" width="100" height="19"/>
+					<textElement/>
+					<text><![CDATA[Total Atrasos:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="605" y="20" width="72" height="18"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{multaAtraso}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="605" y="38" width="72" height="19"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{sumaAtraso} * $V{multaAtraso}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="57" forecolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE ATRASOS]]></text>
+			</staticText>
+			<image>
+				<reportElement x="2" y="0" width="112" height="57"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="10" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="21" forecolor="#FFFFFF" backcolor="#9999FF"/>
+			</rectangle>
+			<staticText>
+				<reportElement mode="Transparent" x="304" y="0" width="105" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[HORARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="0" width="65" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[CEDULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="67" y="0" width="73" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="409" y="0" width="105" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[TIMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="514" y="0" width="33" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[E/S]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="547" y="0" width="58" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[ATRASO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="140" y="0" width="164" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[APELLIDOS Y NOMBRES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="605" y="1" width="72" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{valorAtraso}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm">
+				<reportElement x="547" y="1" width="58" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{atraso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="514" y="1" width="33" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{asistencia_ENTRADA_SALIDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="409" y="1" width="105" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{asistencia_FECHA_HORA_TIMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="304" y="1" width="105" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{asistencia_FECHA_HORA_HORARIO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="26" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy hh.mm">
+				<reportElement x="671" y="4" width="131" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="4" width="78" height="20" forecolor="#000000"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Impreso por:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="4" width="240" height="20" forecolor="#000000"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="421" y="4" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="4" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="3" width="800" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="80" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{contRegi}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="0" width="79" height="20"/>
+				<textElement/>
+				<text><![CDATA[No. Registros:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

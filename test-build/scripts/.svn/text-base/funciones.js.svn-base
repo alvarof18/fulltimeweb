@@ -1,0 +1,9 @@
+function limitePartida(componente)
+{
+	alert("Nombre ID CAMPO: "+componente);
+	var campo=document.getElementById(componente).value;
+	var tam=document.getElementById(componente).value.length;
+	
+	alert(campo);
+	alert(tam);
+}

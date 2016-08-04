@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subTotalHoraExtra" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="emplId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="hora" class="java.sql.Timestamp"/>
+	<queryString>
+		<![CDATA[SELECT
+     hora_extra.HORA_EXTRA_ID AS hora_extra_HORA_EXTRA_ID,
+     hora_extra.DESCRIPCION AS hora_extra_DESCRIPCION,
+     hora_extra.DIA_LIBRE AS hora_extra_DIA_LIBRE,
+     time(hora_extra.DESDE) AS hora_extra_DESDE,
+     time(hora_extra.HASTA) AS hora_extra_HASTA,
+     hora_extra.PORCENTAJE AS hora_extra_PORCENTAJE,
+     hora_extra.MAXIMO_DIA AS hora_extra_MAXIMO_DIA,
+     hora_extra.MAXIMO_MES AS hora_extra_MAXIMO_MES,
+     empleado_hora_extra.EMPL_HORA_EXTR_ID AS empleado_hora_extra_EMPL_HORA_EXTR_ID,
+     empleado_hora_extra.HORA_EXTRA_ID AS empleado_hora_extra_HORA_EXTRA_ID,
+     empleado_hora_extra.EMPL_ID AS empleado_hora_extra_EMPL_ID
+FROM
+     hora_extra hora_extra INNER JOIN empleado_hora_extra empleado_hora_extra ON hora_extra.HORA_EXTRA_ID = empleado_hora_extra.HORA_EXTRA_ID
+WHERE
+	empleado_hora_extra.EMPL_ID = $P{emplId}
+ORDER BY
+	time(hora_extra.DESDE)]]>
+	</queryString>
+	<field name="hora_extra_HORA_EXTRA_ID" class="java.lang.Integer"/>
+	<field name="hora_extra_DESCRIPCION" class="java.lang.String"/>
+	<field name="hora_extra_DIA_LIBRE" class="java.lang.Boolean"/>
+	<field name="hora_extra_DESDE" class="java.sql.Time"/>
+	<field name="hora_extra_HASTA" class="java.sql.Time"/>
+	<field name="hora_extra_PORCENTAJE" class="java.math.BigDecimal"/>
+	<field name="hora_extra_MAXIMO_DIA" class="java.lang.Integer"/>
+	<field name="hora_extra_MAXIMO_MES" class="java.lang.Integer"/>
+	<field name="empleado_hora_extra_EMPL_HORA_EXTR_ID" class="java.lang.Integer"/>
+	<field name="empleado_hora_extra_HORA_EXTRA_ID" class="java.lang.Integer"/>
+	<field name="empleado_hora_extra_EMPL_ID" class="java.lang.Integer"/>
+	<variable name="difHoras" class="java.lang.Long">
+		<variableExpression><![CDATA[($P{hora}.getTime() > $F{hora_extra_DESDE}.getTime() && $P{hora}.getTime() < $F{hora_extra_HASTA}.getTime()
+ && $V{tieneExtra}.equals( 0 ) ?
+    $F{hora_extra_HASTA}.getTime() - $P{hora}.getTime() :
+        !($P{hora}.getTime() > $F{hora_extra_DESDE}.getTime() && $P{hora}.getTime() < $F{hora_extra_HASTA}.getTime())
+        && $V{tieneExtra}.equals( 0 ) ?
+            $F{hora_extra_HASTA}.getTime() - $F{hora_extra_DESDE}.getTime() :
+                !($P{hora}.getTime() > $F{hora_extra_DESDE}.getTime() && $P{hora}.getTime() < $F{hora_extra_HASTA}.getTime()
+                && $V{tieneExtra} > 0 ) ?
+                    0 :
+                    $P{hora}.getTime() > $F{hora_extra_DESDE}.getTime() && $V{tieneExtra} > 0 ?
+                        $F{hora_extra_HASTA}.getTime() - $P{hora}.getTime() :
+                        $F{hora_extra_HASTA}.getTime() - $F{hora_extra_DESDE}.getTime()
+)]]></variableExpression>
+	</variable>
+	<variable name="acumulado" class="java.lang.Long">
+		<variableExpression><![CDATA[$F{hora_extra_HASTA}.getTime() - $F{hora_extra_DESDE}.getTime() - $V{difHoras}]]></variableExpression>
+	</variable>
+	<variable name="tieneExtra" class="java.lang.Integer">
+		<variableExpression><![CDATA[($P{hora}.getTime() > $F{hora_extra_DESDE}.getTime() && $P{hora}.getTime() < $F{hora_extra_HASTA}.getTime() ?
+    $V{tieneExtra} + new Integer(1) :
+        $V{tieneExtra}
+)]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (0)]]></initialValueExpression>
+	</variable>
+	<group name="empleado">
+		<groupExpression><![CDATA[$F{empleado_hora_extra_EMPL_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<staticText>
+					<reportElement x="49" y="19" width="100" height="20"/>
+					<textElement/>
+					<text><![CDATA[aaa]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50">
+				<textField>
+					<reportElement x="119" y="16" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{acumulado}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="19" y="16" width="100" height="20"/>
+					<textElement/>
+					<text><![CDATA[bbb]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="119" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{hora_extra_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm">
+				<reportElement x="119" y="0" width="64" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($V{acumulado}/3600000).intValue() + ":" +
+(($V{acumulado}/3600000 - ($V{acumulado}/3600000).intValue()) * 60).intValue()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="203" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[ccc]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

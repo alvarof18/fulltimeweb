@@ -1,0 +1,95 @@
+package com.casapazmino.fulltime.seguridad.action;
+
+import java.util.Arrays;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.seguridad.model.Grupos;
+import com.casapazmino.fulltime.seguridad.model.ItemMenu;
+import com.casapazmino.fulltime.seguridad.model.ItemsMenuRoles;
+import com.casapazmino.fulltime.seguridad.model.Roles;
+import com.casapazmino.fulltime.seguridad.model.Subgrupos;
+
+@Name("itemsMenuRolesList")
+public class ItemsMenuRolesList extends EntityQuery<ItemsMenuRoles> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static final String EJBQL = "select itemsMenuRoles from ItemsMenuRoles itemsMenuRoles";
+	
+	private static final String ORDER="itemsMenuRoles.subgrupos.grupos.orden,"
+		+"itemsMenuRoles.subgrupos.grupos.id,"
+		+"itemsMenuRoles.subgrupos.orden,"
+		+"itemsMenuRoles.subgrupos.id,"
+		+"itemsMenuRoles.itemMenu.orden,"
+		+"itemsMenuRoles.itemMenu.id";
+
+	private static final String[] RESTRICTIONS = {
+		"lower(itemsMenuRoles.roles.id) like concat(lower(#{idRol}),'')",
+		"lower(itemsMenuRoles.grupos.id) like concat(lower(#{itemsMenuRolesList.itemsMenuRoles.grupos.id}))",
+		"lower(itemsMenuRoles.subgrupos.id) like concat(lower(#{itemsMenuRolesList.itemsMenuRoles.subgrupos.id}))",
+		"lower(itemsMenuRoles.itemMenu.id) like concat(lower(#{itemsMenuRolesList.itemsMenuRoles.itemMenu.id}))",
+		"lower(itemsMenuRoles.roles.id) like concat(lower(#{itemsMenuRolesList.itemsMenuRoles.roles.id}))",
+	};
+
+	private String extensionArchivo;
+	
+	private ItemsMenuRoles itemsMenuRoles = new ItemsMenuRoles();
+
+	public ItemsMenuRolesList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+		setExtensionArchivo(Constantes.PDF);
+	}
+
+	public ItemsMenuRoles getItemsMenuRoles() {
+		return itemsMenuRoles;
+	}
+	
+	public ItemsMenuRolesList(int maxResul)
+	{
+		this.instaciar(maxResul);
+	}
+	
+	private void instaciar(int maxResul)
+	{
+		//System.out.println("Constante del rol: "+Contexts.getApplicationContext().get("idRol"));
+		//System.out.println("max Reultados: "+maxResul);
+		itemsMenuRoles=new ItemsMenuRoles();
+		Roles rol=new Roles();
+		itemsMenuRoles.setRoles(rol);
+		itemsMenuRoles.setId(new ItemsMenuRoles().getId());
+		Subgrupos subGrupo=new Subgrupos();
+		subGrupo.setGrupos(new Grupos());
+		ItemMenu itemMenu=new ItemMenu();
+		itemMenu.setSubgrupos(subGrupo);
+		itemsMenuRoles.setItemMenu(itemMenu);
+		
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setOrder(ORDER);
+		if(maxResul>=0)
+		{
+			setMaxResults(maxResul);
+		}
+	}
+	
+	public ItemsMenuRoles getItemMenuRoles()
+	{
+		return itemsMenuRoles;
+	}
+
+	public String getExtensionArchivo() {
+		return extensionArchivo;
+	}
+
+	public void setExtensionArchivo(String extensionArchivo) {
+		this.extensionArchivo = extensionArchivo;
+	}
+}

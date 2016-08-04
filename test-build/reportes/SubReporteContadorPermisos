@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SubReporteKardexVacaciones" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="emplId" class="java.lang.Integer"/>
+	<parameter name="periodo" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+     permiso.`FECHA_DESDE` AS permiso_FECHA_DESDE,
+     permiso.`FECHA_HASTA` AS permiso_FECHA_HASTA,
+     permiso.`NUMERO_HORAS` AS permiso_NUMERO_HORAS,
+     permiso.`PERM_ID` AS permiso_PERM_ID,
+     permiso.`DIAS` AS permiso_DIAS
+FROM
+     `tipo_permiso` tipo_permiso INNER JOIN `permiso` permiso ON tipo_permiso.`TIPE_ID` = permiso.`TIPE_ID`
+WHERE
+     permiso.`EMPL_ID` = $P{emplId}
+ AND permiso.`DTPA_ID` = $P{periodo}
+ AND tipo_permiso.`DESCUENTO` = 'Vacaciones']]>
+	</queryString>
+	<field name="permiso_FECHA_DESDE" class="java.sql.Timestamp"/>
+	<field name="permiso_FECHA_HASTA" class="java.sql.Timestamp"/>
+	<field name="permiso_NUMERO_HORAS" class="java.lang.Integer"/>
+	<field name="permiso_PERM_ID" class="java.lang.Integer"/>
+	<field name="permiso_DIAS" class="java.lang.Integer"/>
+	<variable name="subSumPermisoDias" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{permiso_DIAS}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (0)]]></initialValueExpression>
+	</variable>
+	<variable name="subSumPermisoHoras" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{permiso_NUMERO_HORAS}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (0)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{permiso_FECHA_DESDE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{permiso_FECHA_HASTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="231" y="0" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{permiso_DIAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="0" width="62" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{permiso_NUMERO_HORAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="382" y="0" width="16" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{permiso_PERM_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

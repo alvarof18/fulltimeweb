@@ -1,0 +1,164 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"    
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+<ui:define name="body">
+
+    <h:form id="procesarTiempoNoLaborado" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Procesar tiempo no laborado" switchType="ajax">
+							
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Ciudad</ui:define>
+					<h:selectManyListbox id="listaCiudades" value="#{procesarTiempoNoLaborado.ciudades}" size="10">
+						<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad..." 
+							value="#{usuarioCiudadList.listaCiudadesUsuarios}" var="usuarioCiudad"
+							label="#{usuarioCiudad.ciudad.provincia.descripcion} -  #{usuarioCiudad.ciudad.descripcion}"
+							itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+			
+            <s:decorate id="fechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde"
+                       required="true" showApplyButton="false"  
+                          value="#{procesarTiempoNoLaborado.fechaDesde}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            </s:decorate>			
+
+            <s:decorate id="fechaHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Hasta</ui:define>
+                <rich:calendar id="fechaHasta"
+                       required="true" showApplyButton="false"  
+                          value="#{procesarTiempoNoLaborado.fechaHasta}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            </s:decorate>			
+
+        </rich:simpleTogglePanel>
+  
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+
+        <h:commandButton id="procesar" value="Crear" rendered="#{contexts.applicationContext.get('permisoCrear')}"
+				action="#{procesarTiempoNoLaborado.procesar}"/>
+		<rich:spacer width="7"/>		
+
+    </s:div>
+	<rich:spacer height="20px"/>
+    </h:form>
+    
+    <rich:panel>
+        <f:facet name="header">Empleados sin vacaciones</f:facet>
+    <div class="results" id="empleadoList">
+
+    <h:outputText value="No existe resultados"
+               rendered="#{empty procesarTiempoNoLaborado.empleadosSinPeriodoVacacion}"/>
+
+    <rich:dataTable id="empleadoList"
+                var="_empleado"
+              value="#{procesarTiempoNoLaborado.empleadosSinPeriodoVacacion}"
+           rendered="#{not empty procesarTiempoNoLaborado.empleadosSinPeriodoVacacion}">
+           
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoList}"/>
+                    <ui:param name="propertyLabel" value="C&#243;digo"/>
+                    <ui:param name="propertyPath" value="empleado.codigoEmpleado"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.codigoEmpleado}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoList}"/>
+                    <ui:param name="propertyLabel" value="Apellido"/>
+                    <ui:param name="propertyPath" value="empleado.apellido"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.apellido}"/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoList}"/>
+                    <ui:param name="propertyLabel" value="Nombre"/>
+                    <ui:param name="propertyPath" value="empleado.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.nombre}"/>
+        </h:column>
+                
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoList}"/>
+                    <ui:param name="propertyLabel" value="Cargo"/>
+                    <ui:param name="propertyPath" value="empleado.cargo.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.cargo.descripcion}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoList}"/>
+                    <ui:param name="propertyLabel" value="Departamento"/>
+                    <ui:param name="propertyPath" value="empleado.departamento.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.departamento.descripcion}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoList}"/>
+                    <ui:param name="propertyLabel" value="Grupo Contratado"/>
+                    <ui:param name="propertyPath" value="empleado.detalleGrupoContratado.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.detalleGrupoContratado.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoList}"/>
+                    <ui:param name="propertyLabel" value="Ciudad"/>
+                    <ui:param name="propertyPath" value="empleado.ciudad.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.ciudad.descripcion}"/>
+        </h:column>
+        	
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{empleadoList}"/>
+                    <ui:param name="propertyLabel" value="Estado"/>
+                    <ui:param name="propertyPath" value="empleado.detalleTipoParametroByEstado.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.detalleTipoParametroByEstado.descripcion}"/>
+        </h:column>
+       
+    </rich:dataTable>
+
+    </div>
+    
+    </rich:panel>
+    
+    
+</ui:define>
+
+</ui:composition>

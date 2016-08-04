@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subHorasExtras" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="horaSalida" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     hora_extra.DESCRIPCION AS hora_extra_DESCRIPCION,
+     hora_extra.DIA_LIBRE AS hora_extra_DIA_LIBRE,
+     hora_extra.DESDE AS hora_extra_DESDE,
+     hora_extra.HASTA AS hora_extra_HASTA,
+     hora_extra.PORCENTAJE AS hora_extra_PORCENTAJE
+FROM
+     hora_extra hora_extra
+WHERE
+     time($P{horaSalida}) between time(hora_extra.DESDE) and time(hora_extra.HASTA)]]>
+	</queryString>
+	<field name="hora_extra_DESCRIPCION" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_extra_DIA_LIBRE" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_extra_DESDE" class="java.util.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_extra_HASTA" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_extra_PORCENTAJE" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="57" splitType="Stretch">
+			<textField>
+				<reportElement x="16" y="18" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{hora_extra_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="116" y="18" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Boolean"><![CDATA[$F{hora_extra_DIA_LIBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="216" y="18" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{hora_extra_DESDE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="316" y="18" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{hora_extra_HASTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="416" y="18" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{hora_extra_PORCENTAJE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

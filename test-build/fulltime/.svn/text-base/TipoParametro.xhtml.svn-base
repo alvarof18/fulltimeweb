@@ -1,0 +1,115 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Tipo Parametro</f:facet>
+
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{tipoParametroHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/TipoParametroEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty tipoParametroFrom ? 'TipoParametroList' : tipoParametroFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Detalle Par&#225;metros</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="detalleTipoParametrosChildren">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{empty tipoParametroHome.detalleTipoParametros}"/>
+
+        <rich:dataTable value="#{tipoParametroHome.detalleTipoParametros}"
+                       var="_detalleTipoParametro"
+                  rendered="#{not empty tipoParametroHome.detalleTipoParametros}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="detalleTipoParametrosTable">
+<!--                        
+            <rich:column sortBy="#{_detalleTipoParametro.dtpaId}">
+                <f:facet name="header">Dtpa id</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.dtpaId}"/>
+            </rich:column>
+-->            
+            <rich:column sortBy="#{_detalleTipoParametro.descripcion}">
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.descripcion}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleTipoParametro.valor1}">
+                <f:facet name="header">Valor1</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.valor1}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_detalleTipoParametro.valor2}">
+                <f:facet name="header">Valor2</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.valor2}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_detalleTipoParametro.valor3}">
+                <f:facet name="header">Valor3</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.valor3}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_detalleTipoParametro.valor4}">
+                <f:facet name="header">Valor4</f:facet>
+                <h:outputText value="#{_detalleTipoParametro.valor4}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectdetalleTipoParametro"
+                     value="Select"
+                      view="/fulltime/DetalleTipoParametro.xhtml">
+                    <f:param name="detalleTipoParametroDtpaId"
+                            value="#{_detalleTipoParametro.dtpaId}"/>
+                    <f:param name="detalleTipoParametroFrom" value="TipoParametro"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/DetalleTipoParametroEdit.xhtml">
+            <f:param name="tipoParametroTipaId"
+                    value="#{tipoParametroHome.instance.tipaId}"/>
+            <f:param name="detalleTipoParametroFrom" value="TipoParametro"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

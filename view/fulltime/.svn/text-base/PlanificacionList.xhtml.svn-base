@@ -1,0 +1,316 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"    
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="planificacionHorarios" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Par&#225;metros de B&#250;squeda" switchType="ajax">
+<!-- 
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#233;dula</ui:define>
+                <h:inputText id="cedula" value="#{planificacion.empleado.cedula}"/>
+            </s:decorate>
+			
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{planificacion.empleado.nombre}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Apellido</ui:define>
+                <h:inputText id="apellido" value="#{planificacion.empleado.apellido}"/>
+            </s:decorate>
+
+			<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Cargo</ui:define>
+					<h:selectOneMenu id="listaCargo" required="false" value="#{planificacion.empleado.cargo}">
+							<s:selectItems id="itemsCargo" value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.descripcion}" noSelectionLabel="Seleccione Cargo..." />
+							<s:convertEntity />
+					</h:selectOneMenu>
+			</s:decorate>
+-->
+
+	<h:panelGrid columns="2">
+						
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Ciudad</ui:define>
+					<h:selectManyListbox id="listaCiudades" value="#{planificacion.ciudades}" size="10">
+						<s:selectItems id="itemsCiudad" 
+							value="#{ciudadList.listaCiudades}" var="ciudad"
+							label="#{ciudad.provincia.descripcion} - #{ciudad.descripcion}"
+							itemValue = "#{ciudad.ciudId}" />
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+
+            <a:outputPanel id="calendar" layout="block">
+                    <rich:calendar value="#{planificacion.fechaSeleccionada}"
+                        popup="false" 
+                        datePattern="MM/dd/yyyy hh:mm a"
+                        showApplyButton="true" cellWidth="24px" cellHeight="22px" style="width:200px">
+                    	<a:support event="onchanged" action="#{planificacion.agregarFecha}"/>    
+                    </rich:calendar>
+            </a:outputPanel>
+			
+	</h:panelGrid>			
+
+			<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Seleccione Par&#225;metros</ui:define>
+					<h:selectOneRadio id="listaParametros" value="#{planificacion.tipoReporte}" >
+
+						<s:selectItems value="#{enumeraciones.tipoReporte}" var="tipoReporte"
+							label="#{tipoReporte}" />
+						<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,
+															departamentoField,listaDepartamento,itemsDepartamento,
+															detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+															empleadoField,listaEmpleado,itemsEmpleado"
+						 ajaxSingle="true" />
+					</h:selectOneRadio>
+			</s:decorate>
+
+			<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+					<h:selectManyListbox id="listaCargo" value="#{planificacion.cargos}"
+						size="10" rendered="#{planificacion.tipoReporte != 'Departamento' and planificacion.tipoReporte != 'Grupo' and planificacion.tipoReporte != 'Empleado'}" >
+							<s:selectItems id="itemsCargo"  
+								value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+								itemValue="#{cargo.cargId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+					<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{planificacion.detalleGrupoContratados}"
+						size="10" rendered="#{planificacion.tipoReporte != 'Cargo' and planificacion.tipoReporte != 'Departamento' and planificacion.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDetalleGrupoContratado"  
+								value="#{detalleGrupoContratadoList.resultList}" 
+								var="detalleGrupoContratado" 
+								label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+								itemValue="#{detalleGrupoContratado.dgcoId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/display.xhtml"  >
+					<h:selectManyListbox id="listaDepartamento" value="#{planificacion.departamentos}"
+						size="10" rendered="#{planificacion.tipoReporte != 'Cargo' and planificacion.tipoReporte != 'Grupo' and planificacion.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDepartamento"  
+								value="#{departamentoList.listaDepartamentos}" 
+								var="departamento" 
+								label="#{departamento.descripcion}"
+								itemValue="#{departamento.depaId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+			<!--
+			<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Departamento</ui:define>
+				<h:selectOneMenu id="listaDepartamento" required="false" value="#{planificacion.empleado.departamento}">
+					<s:selectItems id="itemsDepartamento" value="#{departamentoList.resultList}" var="departamento"
+						label="#{departamento.descripcion}" noSelectionLabel="Seleccione Departamento..." />
+						<s:convertEntity />	
+				</h:selectOneMenu>
+			</s:decorate>
+			-->
+			<s:decorate id="empleadoField"
+				template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<h:selectOneMenu id="listaEmpleado" required="true" value="#{planificacion.empleado}" 
+					rendered="#{planificacion.tipoReporte != 'Cargo' and planificacion.tipoReporte != 'Grupo' and planificacion.tipoReporte != 'Departamento'}">
+						<s:selectItems id="itemsEmpleado"
+							value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}" />
+						<s:convertEntity />
+						<a:support id="empleados" event="onchange"
+							reRender="empleadoField,listaEmpleado,itemsEmpleado"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+			</s:decorate>
+
+			<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Horario</ui:define>					
+					<h:selectOneMenu id="horario" required="false" value="#{planificacion.horario}">
+						<s:selectItems id="itemsHorario" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" />
+						<s:convertEntity />
+					</h:selectOneMenu>					
+			</s:decorate>
+						
+        </rich:simpleTogglePanel>
+  
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <h:commandLink id="verificar" value="Verificar"
+				action="#{planificacion.verificar}"/>
+		<rich:spacer width="7" height="20"/>		
+
+        <h:commandLink id="procesar" value="Procesar"
+				action="#{planificacion.procesarPlanificacion}"/>
+		<rich:spacer width="7"/>		
+
+        <h:commandLink id="eliminar" value="Eliminar"
+				action="#{planificacion.eliminar}"/>				
+		<rich:spacer width="7"/>
+		
+		<h:commandLink id="cancelar" value="Cancelar"
+				action="#{planificacion.cancelar}"/>
+		
+    </s:div>
+	<rich:spacer height="20px"/>
+    </h:form>
+    
+    <rich:panel>
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+    <div class="results" id="planificacion">
+
+    <h:outputText value="No existe resultados"
+               rendered="#{empty planificacion.empleados}"/>
+
+    <rich:dataTable id="planificacion"
+                var="_empleado"
+              value="#{planificacion.empleados}"
+           rendered="#{not empty planificacion.empleados}">
+           
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="propertyLabel" value="Apellido"/>
+                    <ui:param name="propertyPath" value="empleado.apellido"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.apellido}"/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="propertyLabel" value="Nombre"/>
+                    <ui:param name="propertyPath" value="empleado.nombre"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.nombre}"/>
+        </h:column>
+
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="propertyLabel" value="Cargo"/>
+                    <ui:param name="propertyPath" value="empleado.cargo.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.cargo.descripcion}"/>
+        </h:column>
+        
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="propertyLabel" value="Departamento"/>
+                    <ui:param name="propertyPath" value="empleado.departamento.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.departamento.descripcion}"/>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="propertyLabel" value="GrupoContratado"/>
+                    <ui:param name="propertyPath" value="empleado.detalleGrupoContratado.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.detalleGrupoContratado.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="propertyLabel" value="ciudad"/>
+                    <ui:param name="propertyPath" value="empleado.ciudad.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_empleado.ciudad.descripcion}"/>
+        </h:column>
+        	
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+    
+    <rich:panel>
+		<f:facet name="header">Detalle Horario</f:facet>
+		
+		<rich:dataTable id="idDetalleHorarios" value="#{planificacion.detalleHorarios}" 
+			var="detaHora"
+			rendered="#{not empty planificacion.detalleHorarios}">
+
+        	<h:column>
+	            <f:facet name="header">
+    	            <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                		<ui:param name="propertyLabel" value="Hora"/>
+                	</ui:include>
+            	</f:facet>
+            	<h:outputText value="#{detaHora.hora}" />
+        	</h:column>
+        						
+        	<h:column>
+	            <f:facet name="header">
+                	<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+	                	<ui:param name="propertyLabel" value="Descripcion"/>
+                	</ui:include>
+            	</f:facet>
+					<h:outputText value="#{detaHora.entradaSalida}" />
+        	</h:column>
+        													
+		</rich:dataTable>    	
+    </rich:panel>
+
+	<h:form>
+    <rich:panel>
+		<f:facet name="header">Fechas Seleccionadas</f:facet>
+		
+		<rich:dataTable id="idFechasSeleccionadas" 
+			value="#{planificacion.dataListFechas}" 
+			var="fechas" rowKeyVar="fila"
+			rendered="#{not empty planificacion.dataListFechas}">
+
+        	<rich:column>
+	            <f:facet name="header">
+    	            <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                	</ui:include>
+            	</f:facet>
+            	<h:outputText value="#{fechas}">
+            		<s:convertDateTime type="both" dateStyle="short"/>
+            	</h:outputText>
+            		
+        	</rich:column>
+
+        <rich:column styleClass="action">
+            <f:facet name="header">Eliminar</f:facet>
+
+            <h:commandLink value="Eliminar" id="eliminarFilaId"
+                      action="#{planificacion.eliminarFecha}">
+                      
+                      <f:setPropertyActionListener value="#{fila}" 
+  	    			target="#{planificacion.fila}" />
+  	    			
+             </h:commandLink>
+        </rich:column>													
+		</rich:dataTable>
+		
+    </rich:panel>
+</h:form>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,58 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+
+import com.casapazmino.fulltime.model.AsistenciaHoraExtra;
+import com.casapazmino.fulltime.model.HoraExtra;
+
+@Name("horaExtraHome")
+public class HoraExtraHome extends EntityHome<HoraExtra> {
+
+	private static final long serialVersionUID = 2984084997468165467L;
+	public void setHoraExtraHoraExtraId(Integer id) {
+		setId(id);
+	}
+
+	public Integer getHoraExtraHoraExtraId() {
+		return (Integer) getId();
+	}
+
+	@Override
+	protected HoraExtra createInstance() {
+		HoraExtra horaExtra = new HoraExtra();
+		return horaExtra;
+	}
+
+	public void wire() {
+		getInstance();
+	}
+
+	public boolean isWired() {
+		return true;
+	}
+
+	public HoraExtra getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}
+	public List<AsistenciaHoraExtra> getAsistenciaHoraExtras() {
+		return getInstance() == null
+				? null
+				: new ArrayList<AsistenciaHoraExtra>(getInstance()
+						.getAsistenciaHoraExtras());
+	}
+}

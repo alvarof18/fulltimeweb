@@ -1,0 +1,100 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Regi&#243;n</f:facet>
+
+
+        <s:decorate id="codigo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo</ui:define>
+            <h:outputText value="#{regionHome.instance.codigo}"/>
+        </s:decorate>
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{regionHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/RegionEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty regionFrom ? 'RegionList' : regionFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <!--<rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Provincias</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="provinciasChildren">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{empty regionHome.provincias}"/>
+
+        <rich:dataTable value="#{regionHome.provincias}"
+                       var="_provincia"
+                  rendered="#{not empty regionHome.provincias}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="provinciasTable">
+
+            <rich:column sortBy="#{_provincia.provId}">
+                <f:facet name="header">Prov id</f:facet>
+                <h:outputText value="#{_provincia.provId}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_provincia.codigo}">
+                <f:facet name="header">C&#243;digo</f:facet>
+                <h:outputText value="#{_provincia.codigo}"/>
+            </rich:column>
+            <rich:column sortBy="#{_provincia.descripcion}">
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_provincia.descripcion}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectprovincia"
+                     value="Select"
+                      view="/fulltime/Provincia.xhtml">
+                    <f:param name="provinciaProvId"
+                            value="#{_provincia.provId}"/>
+                    <f:param name="provinciaFrom" value="Region"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/ProvinciaEdit.xhtml">
+            <f:param name="regionRegiId"
+                    value="#{regionHome.instance.regiId}"/>
+            <f:param name="provinciaFrom" value="Region"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+--></ui:define>
+
+</ui:composition>

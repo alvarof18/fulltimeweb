@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/fulltime/!svn/ver/21/resources
+END
+seam.properties
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fulltime/!svn/ver/21/resources/seam.properties
+END
+seam-gen.reveng.xml
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fulltime/!svn/ver/21/resources/seam-gen.reveng.xml
+END
+components-prod.properties
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fulltime/!svn/ver/21/resources/components-prod.properties
+END
+import-dev.sql
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/fulltime/!svn/ver/21/resources/import-dev.sql
+END
+messages_en.properties
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fulltime/!svn/ver/21/resources/messages_en.properties
+END
+import-test.sql
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fulltime/!svn/ver/21/resources/import-test.sql
+END
+fulltime-prod-ds.xml
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/fulltime/!svn/ver/21/resources/fulltime-prod-ds.xml
+END
+security.drl
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/fulltime/!svn/ver/21/resources/security.drl
+END
+messages_fr.properties
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fulltime/!svn/ver/21/resources/messages_fr.properties
+END
+messages_es.properties
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/fulltime/!svn/ver/121/resources/messages_es.properties
+END
+components-dev.properties
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/fulltime/!svn/ver/21/resources/components-dev.properties
+END
+components-test.properties
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/fulltime/!svn/ver/21/resources/components-test.properties
+END
+messages_it.properties
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fulltime/!svn/ver/21/resources/messages_it.properties
+END
+fulltime-dev-ds.xml
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/fulltime/!svn/ver/21/resources/fulltime-dev-ds.xml
+END
+messages_tr.properties
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fulltime/!svn/ver/21/resources/messages_tr.properties
+END
+i18n_es_EC.properties
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/fulltime/!svn/ver/94/resources/i18n_es_EC.properties
+END
+messages_bg.properties
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fulltime/!svn/ver/21/resources/messages_bg.properties
+END
+messages_de.properties
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/fulltime/!svn/ver/21/resources/messages_de.properties
+END
+import-prod.sql
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fulltime/!svn/ver/21/resources/import-prod.sql
+END
+i18n.properties
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/fulltime/!svn/ver/94/resources/i18n.properties
+END

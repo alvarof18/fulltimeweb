@@ -1,0 +1,141 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="#{requestScope.contextPath}/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="departamentoSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Par&#225;metros de B&#250;squeda"
+				switchType="ajax">
+
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Descripci&#243;n</ui:define>
+					<h:inputText id="descripcion"
+						value="#{departamentoList.departamento.descripcion}" />
+				</s:decorate>
+
+
+			</rich:simpleTogglePanel>
+
+
+			<table width="100%">
+				<tr>
+					<td width="70%"><s:div styleClass="actionButtons"
+						rendered="#{empty from}">
+						<s:button view="/fulltime/DepartamentoEdit.xhtml" id="create"
+							propagation="none" value="Crear"
+							rendered="#{contexts.applicationContext.get('permisoCrear')}">
+							<f:param name="departamentoDepaId" />
+						</s:button>
+						<h:commandButton id="search" value="Buscar"
+							action="/fulltime/DepartamentoList.xhtml" />
+						<s:button id="reset" value="Cancelar" includePageParams="false" />
+					</s:div></td>
+
+					<td align="right"><h:selectOneRadio
+						value="#{departamentoList.extensionArchivo}">
+						<s:selectItems label="#{tipoArchivo}"
+							value="#{enumeraciones.tipoArchivo}" var="tipoArchivo">
+						</s:selectItems>
+					</h:selectOneRadio></td>
+					<td align="right"><h:commandLink id="imprimir"
+						value="Imprimir" action="#{reportesFulltime.listadoDepartamentos}" /></td>
+				</tr>
+			</table>
+
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">Resultados B&#250;squeda</f:facet>
+			<div class="results" id="departamentoList"><h:outputText
+				value="No existe resultados"
+				rendered="#{empty departamentoList.resultList}" /> <rich:dataTable
+				id="departamentoList" var="_departamento"
+				value="#{departamentoList.resultList}"
+				rendered="#{not empty departamentoList.resultList}">
+				<!--           
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{departamentoList}"/>
+                    <ui:param name="propertyLabel" value="Depa id"/>
+                    <ui:param name="propertyPath" value="departamento.depaId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_departamento.depaId}"/>
+        </h:column>
+-->
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{departamentoList}" />
+							<ui:param name="propertyLabel" value="Nivel Superior" />
+							<ui:param name="propertyPath"
+								value="departamento.departamento.depaId" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_departamento.departamento.descripcion}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{departamentoList}" />
+							<ui:param name="propertyLabel" value="Descripci&#243;n" />
+							<ui:param name="propertyPath" value="departamento.descripcion" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_departamento.descripcion}" />
+				</h:column>
+				<rich:column styleClass="action">
+					<f:facet name="header">Acci&#243;n</f:facet>
+					<s:link
+						view="/fulltime/#{empty from ? 'Departamento' : from}.xhtml"
+						value="#{empty from ? 'Ver' : 'Seleccionar'}"
+						propagation="#{empty from ? 'none' : 'default'}" id="departamento"
+						rendered="#{contexts.applicationContext.get('permisoVer')}">
+						<f:param name="departamentoDepaId" value="#{_departamento.depaId}" />
+					</s:link>
+            #{' '}
+            <s:link view="/fulltime/DepartamentoEdit.xhtml"
+						value="Editar" propagation="none" id="departamentoEdit"
+						rendered="#{empty from}">
+						<f:param name="departamentoDepaId" value="#{_departamento.depaId}" />
+					</s:link>
+				</rich:column>
+			</rich:dataTable></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link
+			view="/fulltime/DepartamentoList.xhtml"
+			rendered="#{departamentoList.previousExists}"
+			value="#{messages.left}#{messages.left} Primera P&#225;gina" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/fulltime/DepartamentoList.xhtml"
+			rendered="#{departamentoList.previousExists}"
+			value="#{messages.left} P&#225;gina Anterior" id="previousPage">
+			<f:param name="firstResult"
+				value="#{departamentoList.previousFirstResult}" />
+		</s:link> <s:link view="/fulltime/DepartamentoList.xhtml"
+			rendered="#{departamentoList.nextExists}"
+			value="P&#225;gina Siguiente #{messages.right}" id="nextPage">
+			<f:param name="firstResult"
+				value="#{departamentoList.nextFirstResult}" />
+		</s:link> <s:link view="/fulltime/DepartamentoList.xhtml"
+			rendered="#{departamentoList.nextExists}"
+			value="Ultima P&#225;gina #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult"
+				value="#{departamentoList.lastFirstResult}" />
+		</s:link></div>
+
+	</ui:define>
+
+</ui:composition>

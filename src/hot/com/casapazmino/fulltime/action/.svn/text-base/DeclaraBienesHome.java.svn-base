@@ -1,0 +1,57 @@
+package com.casapazmino.fulltime.action;
+
+import com.casapazmino.fulltime.model.*;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.framework.EntityHome;
+
+@Name("declaraBienesHome")
+public class DeclaraBienesHome extends EntityHome<DeclaraBienes> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@In(create = true)
+	EmpleadoHome empleadoHome;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setDeclaraBienesDebiId(Long id) {
+		setId(id);
+	}
+
+	public Long getDeclaraBienesDebiId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected DeclaraBienes createInstance() {
+		DeclaraBienes declaraBienes = new DeclaraBienes();
+		return declaraBienes;
+	}
+
+	public void wire() {
+		getInstance();
+		Empleado empleado = empleadoHome.getDefinedInstance();
+		if (empleado != null) {
+			getInstance().setEmpleado(empleado);
+		}
+	}
+
+	public boolean isWired() {
+		return true;
+	}
+
+	public DeclaraBienes getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+}

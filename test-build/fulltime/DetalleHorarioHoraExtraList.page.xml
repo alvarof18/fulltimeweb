@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+      
+   <param name="firstResult" value="#{detalleHorarioHoraExtraList.firstResult}"/>
+   <param name="sort" value="#{detalleHorarioHoraExtraList.orderColumn}"/>
+   <param name="dir" value="#{detalleHorarioHoraExtraList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="detalleHorario" value="#{detalleHorarioHoraExtraList.detalleHorarioHoraExtra.detalleHorario.dehoId}"/>
+   <param name="horaExtra" value="#{detalleHorarioHoraExtraList.detalleHorarioHoraExtra.horaExtra.horaExtraId}"/>
+   <param name="detalleGrupoContratado" value="#{detalleHorarioHoraExtraList.detalleHorarioHoraExtra.detalleGrupoContratado.dgcoId}"/>
+
+</page>

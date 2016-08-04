@@ -1,0 +1,160 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="detalleHorario" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{detalleHorarioHome.managed ? 'Editar' : 'A&#241;adir'} Detalle horario</f:facet>
+
+				<s:decorate id="horarioField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Horario</ui:define>
+					<h:selectOneMenu id="listaHorario" required="true"
+						value="#{detalleHorarioHome.instance.horario}">
+						<s:selectItems id="itemsHorario"
+							value="#{horarioList.listaHorario}" var="horario"
+							label="#{horario.descripcion}"
+							noSelectionLabel="Seleccione Horario..." />
+						<s:convertEntity />
+						<a:support id="horarios" event="onchange"
+							reRender="horarioField,listaHorario,horarios"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+            <s:decorate id="entradaSalidaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Entrada salida</ui:define>
+                <h:selectOneMenu value="#{detalleHorarioHome.instance.entradaSalida}">
+                	<s:selectItems label="#{entradaSalida}"
+						value="#{enumeraciones.entradaSalida}" 
+						var="entradaSalida">
+					</s:selectItems>
+                </h:selectOneMenu>
+            </s:decorate>
+
+            <s:decorate id="horaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hora</ui:define>
+                <h:inputText id="hora"
+                           size="5"
+                       required="true"
+                          value="#{detalleHorarioHome.instance.hora}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                    <a:support event="onblur" reRender="horaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <!--<s:decorate id="horaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Hora</ui:define>
+                <rich:calendar id="hora" required="true" 
+                          value="#{detalleHorarioHome.instance.hora}" datePattern="MM/dd/yyyy HH:mm"/>
+            </s:decorate>
+            -->
+            <s:decorate id="maxMinutoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Max.Minuto</ui:define>
+                <h:inputText id="maxMinuto" required="true"
+                          value="#{detalleHorarioHome.instance.maxMinuto}">
+                    <a:support event="onblur" reRender="maxMinutoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="ordenField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Registro</ui:define>
+                <h:inputText id="orden" required="true"
+                          value="#{detalleHorarioHome.instance.orden}">
+                    <a:support event="onblur" reRender="ordenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+			<!--<h:selectBooleanCheckbox id="idCheckNocturno" value="#{detalleHorarioHome.instance.nocturno}" required="true"/>-->
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{detalleHorarioHome.persist}"
+                       disabled="#{!detalleHorarioHome.wired}"
+                       rendered="#{!detalleHorarioHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{detalleHorarioHome.update}"
+                       rendered="#{detalleHorarioHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{detalleHorarioHome.remove}"
+                      immediate="true"
+                       rendered="#{detalleHorarioHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/DetalleHorario.xhtml"
+                rendered="#{detalleHorarioHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty detalleHorarioFrom ? 'DetalleHorarioList' : detalleHorarioFrom}.xhtml"
+                rendered="#{!detalleHorarioHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Horario">
+    <div class="association" id="horarioParent">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{detalleHorarioHome.instance.horario == null}"/>
+
+        <rich:dataTable var="_horario"
+                   value="#{detalleHorarioHome.instance.horario}"
+                rendered="#{detalleHorarioHome.instance.horario != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="horarioTable">
+            <h:column>
+                <f:facet name="header">Hora id</f:facet>
+                <h:outputText value="#{_horario.horaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_horario.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{detalleHorarioHome.instance.horario != null ? 'Change' : 'Select'} horario"
+                       view="/fulltime/HorarioList.xhtml">
+                <f:param name="from" value="DetalleHorarioEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+
+-->
+
+</ui:define>
+
+</ui:composition>

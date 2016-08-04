@@ -1,0 +1,40 @@
+package com.casapazmino.fulltime.action;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.*;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+import java.util.Arrays;
+
+@Name("ciudadFeriadoList")
+public class CiudadFeriadoList extends EntityQuery<CiudadFeriado> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String EJBQL = "select ciudadFeriado from CiudadFeriado ciudadFeriado";
+
+	private static final String[] RESTRICTIONS = {};
+
+	private String extensionArchivo;
+	
+	private CiudadFeriado ciudadFeriado = new CiudadFeriado();
+
+	public CiudadFeriadoList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+		setExtensionArchivo(Constantes.PDF);
+	}
+
+	public CiudadFeriado getCiudadFeriado() {
+		return ciudadFeriado;
+	}
+
+	public String getExtensionArchivo() {
+		return extensionArchivo;
+	}
+
+	public void setExtensionArchivo(String extensionArchivo) {
+		this.extensionArchivo = extensionArchivo;
+	}
+}

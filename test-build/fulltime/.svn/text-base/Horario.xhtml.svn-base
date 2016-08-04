@@ -1,0 +1,214 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Horario</f:facet>
+
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{horarioHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/HorarioEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty horarioFrom ? 'HorarioList' : horarioFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Empleados</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="empleadosChildren">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{empty horarioHome.empleados}"/>
+
+        <rich:dataTable value="#{horarioHome.empleados}"
+                       var="_empleado"
+                  rendered="#{not empty horarioHome.empleados}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="empleadosTable">
+<!--                        
+            <rich:column sortBy="#{_empleado.emplId}">
+                <f:facet name="header">Empl id</f:facet>
+                <h:outputText value="#{_empleado.emplId}"/>
+            </rich:column>
+-->            
+            <rich:column sortBy="#{_empleado.cedula}">
+                <f:facet name="header">Cedula</f:facet>
+                <h:outputText value="#{_empleado.cedula}"/>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.apellido}">
+                <f:facet name="header">Apellido</f:facet>
+                <h:outputText value="#{_empleado.apellido}"/>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.nombre}">
+                <f:facet name="header">Nombre</f:facet>
+                <h:outputText value="#{_empleado.nombre}"/>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                <f:facet name="header">Fecha nacimiento</f:facet>
+                <h:outputText value="#{_empleado.fechaNacimiento}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.fechaIngreso}">
+                <f:facet name="header">Fecha ingreso</f:facet>
+                <h:outputText value="#{_empleado.fechaIngreso}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.fechaSalida}">
+                <f:facet name="header">Fecha salida</f:facet>
+                <h:outputText value="#{_empleado.fechaSalida}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.fechaContrato}">
+                <f:facet name="header">Fecha contrato</f:facet>
+                <h:outputText value="#{_empleado.fechaContrato}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                <f:facet name="header">Fecha ult vacacion</f:facet>
+                <h:outputText value="#{_empleado.fechaUltVacacion}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.horasTrabaja}">
+                <f:facet name="header">Horas trabaja</f:facet>
+                <h:outputText value="#{_empleado.horasTrabaja}"/>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.sueldo}">
+                <f:facet name="header">Sueldo</f:facet>
+                <h:outputText value="#{_empleado.sueldo}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.partida}">
+                <f:facet name="header">Partida</f:facet>
+                <h:outputText value="#{_empleado.partida}"/>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.partidaIndividual}">
+                <f:facet name="header">Partida individual</f:facet>
+                <h:outputText value="#{_empleado.partidaIndividual}"/>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.entradaSalida}">
+                <f:facet name="header">Entrada salida</f:facet>
+                <h:outputText value="#{_empleado.entradaSalida}"/>
+            </rich:column>
+            <rich:column sortBy="#{_empleado.numeroTimbre}">
+                <f:facet name="header">Numero timbre</f:facet>
+                <h:outputText value="#{_empleado.numeroTimbre}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectempleado"
+                     value="Select"
+                      view="/fulltime/Empleado.xhtml">
+                    <f:param name="empleadoEmplId"
+                            value="#{_empleado.emplId}"/>
+                    <f:param name="empleadoFrom" value="Horario"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/EmpleadoEdit.xhtml">
+            <f:param name="horarioHoraId"
+                    value="#{horarioHome.instance.horaId}"/>
+            <f:param name="empleadoFrom" value="Horario"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Detalle Horarios</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="detalleHorariosChildren">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{empty horarioHome.detalleHorarios}"/>
+
+        <rich:dataTable value="#{horarioHome.detalleHorarios}"
+                       var="_detalleHorario"
+                  rendered="#{not empty horarioHome.detalleHorarios}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="detalleHorariosTable">
+<!--                        
+            <rich:column sortBy="#{_detalleHorario.dehoId}">
+                <f:facet name="header">Deho id</f:facet>
+                <h:outputText value="#{_detalleHorario.dehoId}"/>
+            </rich:column>
+-->            
+            <rich:column sortBy="#{_detalleHorario.descripcion}">
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_detalleHorario.descripcion}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleHorario.hora}">
+                <f:facet name="header">Hora</f:facet>
+                <h:outputText value="#{_detalleHorario.hora}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_detalleHorario.maxMinuto}">
+                <f:facet name="header">Max Minuto</f:facet>
+                <h:outputText value="#{_detalleHorario.maxMinuto}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectdetalleHorario"
+                     value="Select"
+                      view="/fulltime/DetalleHorario.xhtml">
+                    <f:param name="detalleHorarioDehoId"
+                            value="#{_detalleHorario.dehoId}"/>
+                    <f:param name="detalleHorarioFrom" value="Horario"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/DetalleHorarioEdit.xhtml">
+            <f:param name="horarioHoraId"
+                    value="#{horarioHome.instance.horaId}"/>
+            <f:param name="detalleHorarioFrom" value="Horario"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

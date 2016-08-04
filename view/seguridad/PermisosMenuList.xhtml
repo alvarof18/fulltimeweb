@@ -1,0 +1,188 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="permisosMenuSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="PermisosMenu Search Filter" switchType="ajax">
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="/seguridad/PermisosMenuList.xhtml"/>
+            <s:button id="reset" value="Reset" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">PermisosMenu Search Results</f:facet>
+    <div class="results" id="permisosMenuList">
+
+    <h:outputText value="The permisosMenu search returned no results."
+               rendered="#{empty permisosMenuList.resultList}"/>
+
+    <rich:dataTable id="permisosMenuList"
+                var="_permisosMenu"
+              value="#{permisosMenuList.resultList}"
+           rendered="#{not empty permisosMenuList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisosMenuList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="permisosMenu.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permisosMenu.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisosMenuList}"/>
+                    <ui:param name="propertyLabel" value="Crear"/>
+                    <ui:param name="propertyPath" value="permisosMenu.crear"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permisosMenu.crear}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisosMenuList}"/>
+                    <ui:param name="propertyLabel" value="Eliminar"/>
+                    <ui:param name="propertyPath" value="permisosMenu.eliminar"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permisosMenu.eliminar}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisosMenuList}"/>
+                    <ui:param name="propertyLabel" value="Imprimir"/>
+                    <ui:param name="propertyPath" value="permisosMenu.imprimir"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permisosMenu.imprimir}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisosMenuList}"/>
+                    <ui:param name="propertyLabel" value="Items menu roles id"/>
+                    <ui:param name="propertyPath" value="permisosMenu.itemsMenuRoles.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permisosMenu.itemsMenuRoles.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisosMenuList}"/>
+                    <ui:param name="propertyLabel" value="Modificar"/>
+                    <ui:param name="propertyPath" value="permisosMenu.modificar"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permisosMenu.modificar}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisosMenuList}"/>
+                    <ui:param name="propertyLabel" value="Roles id"/>
+                    <ui:param name="propertyPath" value="permisosMenu.roles.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permisosMenu.roles.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{permisosMenuList}"/>
+                    <ui:param name="propertyLabel" value="Ver"/>
+                    <ui:param name="propertyPath" value="permisosMenu.ver"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_permisosMenu.ver}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Action</f:facet>
+            <s:link view="/seguridad/#{empty from ? 'PermisosMenu' : from}.xhtml"
+                   value="#{empty from ? 'View' : 'Select'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="permisosMenu" rendered="#{contexts.applicationContext.get('permisoVer')}">
+                <f:param name="permisosMenuId"
+                        value="#{_permisosMenu.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/seguridad/PermisosMenuEdit.xhtml"
+                   value="Edit"
+             propagation="none"
+                      id="permisosMenuEdit"
+                rendered="#{empty from}">
+                <f:param name="permisosMenuId"
+                        value="#{_permisosMenu.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/seguridad/PermisosMenuList.xhtml"
+            rendered="#{permisosMenuList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/seguridad/PermisosMenuList.xhtml"
+            rendered="#{permisosMenuList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{permisosMenuList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/PermisosMenuList.xhtml"
+            rendered="#{permisosMenuList.nextExists}"
+               value="P&#225;gina Siguiente #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{permisosMenuList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/seguridad/PermisosMenuList.xhtml"
+            rendered="#{permisosMenuList.nextExists}"
+               value="Ultima P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{permisosMenuList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/seguridad/PermisosMenuEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Create permisosMenu">
+            <f:param name="permisosMenuId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action
+END
+UsuariosRolesList.class
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/UsuariosRolesList.class
+END
+GruposList.class
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/GruposList.class
+END
+ItemMenuList.class
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/ItemMenuList.class
+END
+RolesList.class
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/RolesList.class
+END
+PermisosMenuList.class
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/PermisosMenuList.class
+END
+UsuariosHome.class
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/UsuariosHome.class
+END
+ItemsMenuRolesHome.class
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/ItemsMenuRolesHome.class
+END
+SubgruposList.class
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/SubgruposList.class
+END
+UsuariosRolesHome.class
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/UsuariosRolesHome.class
+END
+GruposHome.class
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/GruposHome.class
+END
+ItemMenuHome.class
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/ItemMenuHome.class
+END
+RolesHome.class
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/RolesHome.class
+END
+PermisosMenuHome.class
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/PermisosMenuHome.class
+END
+SubgruposHome.class
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/SubgruposHome.class
+END
+UsuariosList.class
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/UsuariosList.class
+END
+ItemsMenuRolesList.class
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/seguridad/action/ItemsMenuRolesList.class
+END

@@ -1,0 +1,14 @@
+<h:selectOneRadio 
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:f="http://java.sun.com/jsf/core"
+
+	value="#{extensionArchivo}">
+	
+	<s:selectItems label="#{tipoArchivo}"
+		value="#{Enumeraciones.tipoArchivo}" 
+		var="tipoArchivo">
+	</s:selectItems>
+	
+</h:selectOneRadio>

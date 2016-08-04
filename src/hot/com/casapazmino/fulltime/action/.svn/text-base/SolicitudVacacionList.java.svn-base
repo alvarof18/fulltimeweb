@@ -1,0 +1,50 @@
+package com.casapazmino.fulltime.action;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.*;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+import java.util.Arrays;
+
+@Name("solicitudVacacionList")
+public class SolicitudVacacionList extends EntityQuery<SolicitudVacacion> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String EJBQL = "select solicitudVacacion from SolicitudVacacion solicitudVacacion";
+
+	private static final String[] RESTRICTIONS = {
+			"lower(solicitudVacacion.empleado.codigoEmpleado) like concat(lower(#{solicitudVacacionList.solicitudVacacion.empleado.codigoEmpleado}),'%')",
+			"lower(solicitudVacacion.empleado.cedula) like concat(lower(#{solicitudVacacionList.solicitudVacacion.empleado.cedula}),'%')",
+			"lower(solicitudVacacion.empleado.apellido) like concat(lower(#{solicitudVacacionList.solicitudVacacion.empleado.apellido}),'%')",
+			"lower(solicitudVacacion.empleado.nombre) like concat(lower(#{solicitudVacacionList.solicitudVacacion.empleado.nombre}),'%')",
+			"date(solicitudVacacion.fechaDesde) >= #{solicitudVacacionList.solicitudVacacion.fechaDesde}",		
+	};
+
+	private String extensionArchivo;
+	
+	private SolicitudVacacion solicitudVacacion = new SolicitudVacacion();
+
+	public SolicitudVacacionList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+		setExtensionArchivo(Constantes.PDF);
+	}
+
+	public SolicitudVacacion getSolicitudVacacion() {
+		return solicitudVacacion;
+	}
+
+	public void setSolicitudVacacion(SolicitudVacacion solicitudVacacion) {
+		this.solicitudVacacion = solicitudVacacion;
+	}
+
+	public String getExtensionArchivo() {
+		return extensionArchivo;
+	}
+
+	public void setExtensionArchivo(String extensionArchivo) {
+		this.extensionArchivo = extensionArchivo;
+	}
+}

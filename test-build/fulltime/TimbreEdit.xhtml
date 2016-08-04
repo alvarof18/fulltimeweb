@@ -1,0 +1,146 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="timbre" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{timbreHome.managed ? 'Editar' : 'A&#241;adir'} Timbre</f:facet>
+
+				<s:decorate id="empleadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Empleado</ui:define>
+					<h:selectOneMenu id="listaEmpleados" required="true" disabled="#{timbreHome.managed}"
+						value="#{timbreHome.instance.empleado}">
+						<s:selectItems id="itemsEmpleado"
+							value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} #{' '}  #{empleado.nombre}"
+							noSelectionLabel="Seleccione Empleado..." />
+						<s:convertEntity />
+						<a:support id="empleados" event="onchange"
+							reRender="empleadoField,listaEmpleados,empleados"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+<!-- 
+            <s:decorate id="codigoEmpleadoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">C&#243;digo Empleado</ui:define>
+                <h:inputText id="codigoEmpleado" disabled="#{timbreHome.managed}"
+                       required="true"
+                           size="20"
+                      maxlength="20"
+                          value="#{timbreHome.instance.codigoEmpleado}">
+                    <a:support event="onblur" reRender="codigoEmpleadoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+ -->
+            <s:decorate id="fechaHoraTimbreField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Hora Timbre</ui:define>
+                <rich:calendar id="fechaHoraTimbre" disabled="#{timbreHome.managed}"
+                       required="true" showApplyButton="true"
+                          value="#{timbreHome.instance.fechaHoraTimbre}" datePattern="dd/MM/yyyy HH:mm"/>
+            </s:decorate>
+            
+
+            <s:decorate id="codigoRelojField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">C&#243;digo Reloj</ui:define>
+                <h:inputText id="codigoReloj" disabled="#{timbreHome.managed}"
+                           size="10"
+                      maxlength="10"
+                          value="#{timbreHome.instance.codigoReloj}">
+                    <a:support event="onblur" reRender="codigoRelojField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="accionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Acci&#243;n</ui:define>
+                <h:inputText id="accion" disabled="true"
+                           size="3"
+                      maxlength="3"
+                          value="#{timbreHome.instance.accion}">
+                    <a:support event="onblur" reRender="accionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="teclaFuncionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Tecla Funci&#243;n</ui:define>
+                <h:inputText id="teclaFuncion" required="true"
+                           size="3"
+                      maxlength="3"
+                          value="#{timbreHome.instance.teclaFuncion}">
+                    <a:support event="onblur" reRender="teclaFuncionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+                
+                <rich:spacer width="5"/>
+                
+                <h:graphicImage id="idImageEdit" value="/img/help.jpg" alt="Seam logo" 
+				           		height="20" width="20" style="vertical-align: text-top;">
+					<rich:componentControl for="popUpEdit" attachTo="idImageEdit" operation="show" event="onclick" />
+				</h:graphicImage> 
+            </s:decorate>            
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{timbreHome.persist}"
+                       disabled="#{!timbreHome.wired}"
+                       rendered="#{!timbreHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{timbreHome.update}"
+                       rendered="#{timbreHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{timbreHome.remove}"
+                      immediate="true"
+                       rendered="false"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Timbre.xhtml"
+                rendered="#{timbreHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty timbreFrom ? 'TimbreList' : timbreFrom}.xhtml"
+                rendered="#{!timbreHome.managed}"/>
+
+        </div>
+    </h:form>
+    
+     <rich:modalPanel id="popUpEdit" autosized="true" resizeable="false"> 
+			<h:form>
+				<h:graphicImage id="teclaFuncion" value="#{timbreHome.picture}" align="center" alt="Seam logo" 
+				           		height="300" width="300">
+				</h:graphicImage>
+				<center>
+					<a:commandButton value="Cancelar"  
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpEdit');"/>
+			    </center>
+			</h:form>	        
+	</rich:modalPanel> 
+
+</ui:define>
+
+</ui:composition>

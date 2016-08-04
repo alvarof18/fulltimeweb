@@ -1,0 +1,276 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="ciudad" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{ciudadHome.managed ? 'Editar' : 'A&#241;adir'} Ciudad</f:facet>
+
+				<s:decorate id="ciudadField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Ciudad</ui:define>
+					<h:selectOneMenu id="listaCiudades"
+						value="#{ciudadHome.instance.provincia}">
+						<s:selectItems id="itemsProvincia"
+							value="#{provinciaList.listaProvincias}" var="ciudad"
+							label="#{ciudad.descripcion}"
+							noSelectionLabel="Seleccione provincia..." />
+						<s:convertEntity />
+						<a:support id="provincias" event="onchange"
+							reRender="ciudadField,listaCiudades,ciudades"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+
+
+            <s:decorate id="codigoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="codigo"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{ciudadHome.instance.codigo}">
+                    <a:support event="onblur" reRender="codigoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{ciudadHome.instance.descripcion}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{ciudadHome.persist}"
+                       disabled="#{!ciudadHome.wired}"
+                       rendered="#{!ciudadHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{ciudadHome.update}"
+                       rendered="#{ciudadHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{ciudadHome.remove}"
+                      immediate="true"
+                       rendered="#{ciudadHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/Ciudad.xhtml"
+                rendered="#{ciudadHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty ciudadFrom ? 'CiudadList' : ciudadFrom}.xhtml"
+                rendered="#{!ciudadHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Provincia *" labelClass="required">
+    <div class="association" id="provinciaParent">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{ciudadHome.instance.provincia == null}"/>
+
+        <rich:dataTable var="_provincia"
+                   value="#{ciudadHome.instance.provincia}"
+                rendered="#{ciudadHome.instance.provincia != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="provinciaTable">
+            <h:column>
+                <f:facet name="header">Prov id</f:facet>
+                <h:outputText value="#{_provincia.provId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Region regi id</f:facet>
+                <h:outputText value="#{_provincia.region.regiId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">C&#243;digo</f:facet>
+                <h:outputText value="#{_provincia.codigo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_provincia.descripcion}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{ciudadHome.instance.provincia != null ? 'Change' : 'Select'} provincia"
+                       view="/fulltime/ProvinciaList.xhtml">
+                <f:param name="from" value="CiudadEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Ciudad feriados">
+        <h:form styleClass="association" id="ciudadFeriadosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty ciudadHome.ciudadFeriados}"/>
+
+            <rich:dataTable value="#{ciudadHome.ciudadFeriados}"
+                           var="_ciudadFeriado"
+                      rendered="#{not empty ciudadHome.ciudadFeriados}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="ciudadFeriadosTable">
+                <rich:column sortBy="#{_ciudadFeriado.cifeId}">
+                    <f:facet name="header">Cife id</f:facet>
+                    <h:outputText value="#{_ciudadFeriado.cifeId}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{ciudadHome.managed}" id="ciudadFeriados">
+        <div class="actionButtons">
+            <s:button id="addciudadFeriado"
+                   value="Crear"
+                    view="/fulltime/CiudadFeriadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="ciudadCiudId"
+                         value="#{ciudadHome.instance.ciudId}"/>
+                 <f:param name="ciudadFeriadoFrom" value="Ciudad"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Empleados">
+        <h:form styleClass="association" id="empleadosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty ciudadHome.empleados}"/>
+
+            <rich:dataTable value="#{ciudadHome.empleados}"
+                           var="_empleado"
+                      rendered="#{not empty ciudadHome.empleados}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="empleadosTable">
+                <rich:column sortBy="#{_empleado.emplId}">
+                    <f:facet name="header">Empl id</f:facet>
+                    <h:outputText value="#{_empleado.emplId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.cedula}">
+                    <f:facet name="header">Cedula</f:facet>
+                    <h:outputText value="#{_empleado.cedula}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.apellido}">
+                    <f:facet name="header">Apellido</f:facet>
+                    <h:outputText value="#{_empleado.apellido}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_empleado.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaNacimiento}">
+                    <f:facet name="header">Fecha nacimiento</f:facet>
+                    <h:outputText value="#{_empleado.fechaNacimiento}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaIngreso}">
+                    <f:facet name="header">Fecha ingreso</f:facet>
+                    <h:outputText value="#{_empleado.fechaIngreso}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaSalida}">
+                    <f:facet name="header">Fecha salida</f:facet>
+                    <h:outputText value="#{_empleado.fechaSalida}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaContrato}">
+                    <f:facet name="header">Fecha contrato</f:facet>
+                    <h:outputText value="#{_empleado.fechaContrato}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.fechaUltVacacion}">
+                    <f:facet name="header">Fecha ult vacacion</f:facet>
+                    <h:outputText value="#{_empleado.fechaUltVacacion}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.horasTrabaja}">
+                    <f:facet name="header">Horas trabaja</f:facet>
+                    <h:outputText value="#{_empleado.horasTrabaja}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_empleado.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partida}">
+                    <f:facet name="header">Partida</f:facet>
+                    <h:outputText value="#{_empleado.partida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.partidaIndividual}">
+                    <f:facet name="header">Partida individual</f:facet>
+                    <h:outputText value="#{_empleado.partidaIndividual}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.entradaSalida}">
+                    <f:facet name="header">Entrada salida</f:facet>
+                    <h:outputText value="#{_empleado.entradaSalida}"/>
+                </rich:column>
+                <rich:column sortBy="#{_empleado.numeroTimbre}">
+                    <f:facet name="header">Numero timbre</f:facet>
+                    <h:outputText value="#{_empleado.numeroTimbre}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{ciudadHome.managed}" id="empleados">
+        <div class="actionButtons">
+            <s:button id="addempleado"
+                   value="Crear"
+                    view="/fulltime/EmpleadoEdit.xhtml"
+             propagation="none">
+                 <f:param name="ciudadCiudId"
+                         value="#{ciudadHome.instance.ciudId}"/>
+                 <f:param name="empleadoFrom" value="Ciudad"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+-->
+</ui:define>
+
+</ui:composition>

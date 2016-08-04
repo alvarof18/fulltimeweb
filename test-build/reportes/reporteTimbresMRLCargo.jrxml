@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteTimbresMRLCargo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA[$P{rutaPlantilla}]]></template><parameter name="rutaPlantilla" class="java.lang.String"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<parameter name="cargos" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{rutaPlantilla}.substring( 0,($P{rutaPlantilla}.length() - 25) )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="empresa" class="java.lang.String"/>
+	<parameter name="ciudades" class="java.lang.String"/>
+	<parameter name="jefeId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     empleado.CEDULA AS empleado_CEDULA,
+     empleado.APELLIDO AS empleado_APELLIDO,
+     empleado.NOMBRE AS empleado_NOMBRE,
+     cargo.DESCRIPCION AS cargo_DESCRIPCION,
+     tipo_cargo.DESCRIPCION AS tipo_cargo_DESCRIPCION,
+     empleado.EMPL_ID AS empleado_EMPL_ID,
+     empleado.HORAS_TRABAJA AS empleado_HORAS_TRABAJA,
+     ciudad.DESCRIPCION AS ciudad_DESCRIPCION,
+     empleado.CODIGO_EMPLEADO AS empleado_CODIGO_EMPLEADO,
+     timbre.FECHA_HORA_TIMBRE AS timbre_FECHA_HORA_TIMBRE,
+     timbre.ACCION AS timbre_ACCION
+FROM
+     empleado empleado INNER JOIN cargo cargo ON empleado.CARG_ID = cargo.CARG_ID
+     INNER JOIN ciudad ciudad ON empleado.CIUD_ID = ciudad.CIUD_ID
+     INNER JOIN timbre timbre ON empleado.CODIGO_EMPLEADO = timbre.CODIGO_EMPLEADO
+     INNER JOIN tipo_cargo tipo_cargo ON cargo.TICA_ID = tipo_cargo.TICA_ID
+WHERE
+     date(timbre.FECHA_HORA_TIMBRE) BETWEEN $P{fechaInicial} AND $P{fechaFinal}
+ AND empleado.CARG_ID IN ($P!{cargos})
+ AND empleado.CIUD_ID IN ($P!{ciudades})
+ AND (empleado.EMP_EMPL_ID like $P{jefeId} OR empleado.EMPL_ID like $P{jefeId})
+ORDER BY
+     empleado.APELLIDO ASC,
+     timbre.FECHA_HORA_TIMBRE ASC]]>
+	</queryString>
+	<field name="empleado_CEDULA" class="java.lang.String"/>
+	<field name="empleado_APELLIDO" class="java.lang.String"/>
+	<field name="empleado_NOMBRE" class="java.lang.String"/>
+	<field name="timbre_FECHA_HORA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="cargo_DESCRIPCION" class="java.lang.String"/>
+	<field name="tipo_cargo_DESCRIPCION" class="java.lang.String"/>
+	<field name="empleado_EMPL_ID" class="java.lang.Integer"/>
+	<field name="ciudad_DESCRIPCION" class="java.lang.String"/>
+	<field name="empleado_CODIGO_EMPLEADO" class="java.lang.String"/>
+	<field name="timbre_ACCION" class="java.lang.String"/>
+	<variable name="contRegi" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{contRegi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (1)]]></initialValueExpression>
+	</variable>
+	<group name="CIUDAD">
+		<groupExpression><![CDATA[$F{ciudad_DESCRIPCION}]]></groupExpression>
+	</group>
+	<group name="tipoCargo">
+		<groupExpression><![CDATA[$F{tipo_cargo_DESCRIPCION}]]></groupExpression>
+	</group>
+	<group name="cargo">
+		<groupExpression><![CDATA[$F{cargo_DESCRIPCION}]]></groupExpression>
+	</group>
+	<group name="empleado">
+		<groupExpression><![CDATA[$F{empleado_EMPL_ID}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="11">
+			<textField>
+				<reportElement x="0" y="0" width="63" height="10"/>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empleado_CEDULA}+";"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="63" y="0" width="11" height="10"/>
+				<textElement textAlignment="Center">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{timbre_ACCION}.equals("0") ? "1"+";":
+    $F{timbre_ACCION}.equals("1") ? "1"+";":
+        $F{timbre_ACCION}.equals("2") ? "2"+";":
+            $F{timbre_ACCION}.equals("3") ? "2"+";":
+                $F{timbre_ACCION}.equals("4") ? "3"+";":
+                    $F{timbre_ACCION}.equals("5") ? "3"+";":"9"
+)]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd HH:mm">
+				<reportElement x="74" y="0" width="107" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{timbre_FECHA_HORA_TIMBRE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

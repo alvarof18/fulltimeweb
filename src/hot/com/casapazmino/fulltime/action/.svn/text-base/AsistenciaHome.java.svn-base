@@ -1,0 +1,176 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.*;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.log.Log;
+
+@Name("asistenciaHome")
+public class AsistenciaHome extends EntityHome<Asistencia> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@In
+	EntityManager entityManager;
+	
+	@In(create = true)
+	EmpleadoHome empleadoHome;
+	
+	@In(create = true)
+	AsistenciaList asistenciaList;
+	
+	@Logger
+	Log log;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+	
+	public void insertarAsistencia(Asistencia asistencia){
+		entityManager.persist(asistencia);
+	}
+
+	public void eliminarAsistencia(Asistencia asistencia) {
+		entityManager.remove(asistencia);
+	}
+	
+	public void eliminarAsistencias(List<Asistencia> listaAsistencia) {
+		for (Asistencia asistencia : listaAsistencia) {
+			this.setInstance(asistencia);
+			this.remove();
+		}
+	}
+	
+	public void setAsistenciaAsisId(Long id) {
+		setId(id);
+	}
+
+	public Long getAsistenciaAsisId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Asistencia createInstance() {
+		Asistencia asistencia = new Asistencia();
+		return asistencia;
+	}
+
+	public void wire() {
+		getInstance();
+		Empleado empleado = empleadoHome.getDefinedInstance();
+		if (empleado != null) {
+			getInstance().setEmpleado(empleado);
+		}
+	}
+
+	public boolean isWired() {
+		return true;
+	}
+
+	public Asistencia getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	public String insertarAsistencia(List<Empleado> empleados, List<Calendar> fechas, List<DetalleHorario> detalleHorarios, String estado) {
+		Calendar fechaCalendar = Calendar.getInstance();
+
+		// Recorrer lista de empleados
+		for (Empleado e : empleados) {
+			// Recorrer lista de Fechas Seleccionadas
+			Iterator it = fechas.iterator();
+			while (it.hasNext()) {
+				fechaCalendar = (Calendar) it.next();
+				// Recorrer lista de horario seleccionado
+				
+				//asistenciaList.getAsistencia().getEmpleado().setEmplId(e.getEmplId());
+				asistenciaList.getAsistencia().getEmpleado().setCodigoEmpleado(e.getCodigoEmpleado());
+				asistenciaList.setFechaAsistencia(fechaCalendar.getTime());
+				asistenciaList.getAsistencia().setEstado(Constantes.ASISTENCIA_FALTA);
+				
+				List<Asistencia> listaAsistencias = new ArrayList<Asistencia>();
+				listaAsistencias = asistenciaList.getListaAsistencias();
+				log.info("tamano de la lista de asitencias con estado diferente a falta " + listaAsistencias.size() + "  "+ fechaCalendar.getTime() + " " + e.getCodigoEmpleado() );
+				if (listaAsistencias.size() == 0 ){ 
+				
+				for (DetalleHorario dh : detalleHorarios) {
+					
+					Asistencia asistencia = new Asistencia();
+
+					Empleado empleado = new Empleado();
+					empleado.setEmplId((long) e.getEmplId());
+					asistencia.setEmpleado(empleado);
+					asistencia.setCodigoEmpleado(e.getCodigoEmpleado());
+					asistencia.setEntradaSalida(dh.getEntradaSalida());
+					asistencia.setFechaHoraHorario(this.crearFechasAsistencia(
+							fechaCalendar, dh.getHora().getHours(), dh
+									.getHora().getMinutes()));
+					asistencia.setFechaHoraTimbre(null);
+					asistencia.setAsisOrden(dh.getOrden());
+					asistencia.setAsisMaxMinuto(dh.getMaxMinuto());
+					asistencia.setEstado(estado);
+					
+					this.setInstance(asistencia);
+					this.persist();
+				}
+				}
+			}
+		}
+		return "ok";
+	}
+
+	public Date crearFechasAsistencia(Calendar fechaHorario, int hora,
+			int minuto) {
+		Calendar fecha = Calendar.getInstance();
+		fecha.set(fechaHorario.get(Calendar.YEAR), fechaHorario
+				.get(Calendar.MONTH), fechaHorario.get(Calendar.DAY_OF_MONTH),
+				hora, minuto);
+		Date fechaAsistencia = fecha.getTime();
+		return fechaAsistencia;
+	}
+	
+	public void grabarAsistencia(){
+		this.getInstance().setCodigoEmpleado(this.getInstance().getEmpleado().getCodigoEmpleado());
+		this.getInstance().setEstado(Constantes.ASISTENCIA_MANUAL);
+		this.persist();
+	}
+	
+	@Override
+	public String remove(){
+		try {
+			FacesMessages.instance().clear();
+			super.remove();
+		} catch (Exception e) {
+			FacesMessages.instance().add("Error al borrar registro");
+		}
+		return "removed";
+	}	
+	
+	@Override
+	public String persist(){
+		FacesMessages.instance().clear();	
+		return super.persist();
+	}
+	
+	
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="asistenciaSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Reporte Asistencia - Consolidado" switchType="ajax">
+        <!--
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="cedula" value="#{asistenciaList.asistencia.empleado.codigoEmpleado}"/>
+            </s:decorate>
+
+			<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Departamento</ui:define>
+				<h:selectOneMenu id="listaDepartamento" required="false" value="#{asistenciaList.asistencia.empleado.departamento}">
+					<s:selectItems id="itemsDepartamento" value="#{departamentoList.resultList}" var="departamento"
+						label="#{departamento.descripcion}" noSelectionLabel="Seleccione Departamento..." />
+						<s:convertEntity />	
+					</h:selectOneMenu>
+			</s:decorate>
+			-->
+			
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Ciudad</ui:define>
+					<h:selectManyListbox id="listaCiudades" value="#{asistenciaList.ciudades}" size="10">
+						<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad..." 
+							value="#{ciudadList.listaCiudades}" var="ciudad"
+							label="#{ciudad.provincia.descripcion} - #{ciudad.descripcion}"
+							itemValue = "#{ciudad.ciudId}" />
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Seleccione Par&#225;metros</ui:define>
+					<h:selectOneRadio id="listaParametros" value="#{asistenciaList.tipoReporte}" >
+						<s:selectItems value="#{enumeraciones.tipoReporte}" var="tipoReporte"
+							label="#{tipoReporte}" />
+						<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,
+															departamentoField,listaDepartamento,itemsDepartamento,
+															detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+															empleadoField,listaEmpleado,itemsEmpleado"
+						 ajaxSingle="true" />
+					</h:selectOneRadio>
+			</s:decorate>
+
+			<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+					<h:selectManyListbox id="listaCargo" value="#{asistenciaList.cargos}"
+						size="10" rendered="#{asistenciaList.tipoReporte != 'Departamento' and asistenciaList.tipoReporte != 'Grupo' and asistenciaList.tipoReporte != 'Empleado'}" >
+							<s:selectItems id="itemsCargo" noSelectionLabel="Seleccione Cargo..." 
+								value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+								itemValue="#{cargo.cargId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+			
+			<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+					<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{asistenciaList.detalleGrupoContratados}"
+						size="10" rendered="#{asistenciaList.tipoReporte != 'Cargo' and asistenciaList.tipoReporte != 'Departamento' and asistenciaList.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDetalleGrupoContratado" noSelectionLabel="Seleccione Detalle Grupo Contratado..." 
+								value="#{detalleGrupoContratadoList.resultList}" 
+								var="detalleGrupoContratado" 
+								label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+								itemValue="#{detalleGrupoContratado.descripcion}" >
+							</s:selectItems>
+						</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/display.xhtml"  >
+					<h:selectManyListbox id="listaDepartamento" value="#{asistenciaList.departamentos}"
+						size="10" rendered="#{asistenciaList.tipoReporte != 'Cargo' and asistenciaList.tipoReporte != 'Grupo' and asistenciaList.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDepartamento" noSelectionLabel="Seleccione Departamento..." 
+								value="#{departamentoList.listaDepartamentos}" 
+								var="departamento" 
+								label="#{departamento.descripcion}"
+								itemValue="#{departamento.descripcion}" >
+							</s:selectItems>
+						</h:selectManyListbox>
+			</s:decorate>
+			
+			<s:decorate id="empleadoField" template="#{requestScope.contextPath}/layout/display.xhtml">
+					<h:selectOneMenu id="listaEmpleado" required="false" value="#{asistenciaList.asistencia.empleado}"
+						rendered="#{asistenciaList.tipoReporte != 'Cargo' and asistenciaList.tipoReporte != 'Grupo' and asistenciaList.tipoReporte != 'Departamento'}">
+						<s:selectItems id="itemsEmpleado"
+							value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}"
+							noSelectionLabel="Seleccione Empleado..." />
+						<s:convertEntity />
+					</h:selectOneMenu>
+			</s:decorate>
+
+			<!--
+			
+			<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">C&#233;dula</ui:define>
+                <h:inputText id="cedula" value="#{asistenciaList.asistencia.empleado.cedula}"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Apellido</ui:define>
+                <h:inputText id="apellido" value="#{asistenciaList.asistencia.empleado.apellido}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{asistenciaList.asistencia.empleado.nombre}"/>
+            </s:decorate>
+            -->
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde" value="#{asistenciaList.asistencia.fechaDesde}" datePattern="yyyy/MM/dd"/>
+            </s:decorate>
+            
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Fecha Hasta</ui:define>
+                <rich:calendar id="fechaHasta" value="#{asistenciaList.asistencia.fechaHasta}" datePattern="yyyy/MM/dd"/>
+            </s:decorate>
+
+            <!--
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Entrada salida</ui:define>
+                <h:inputText id="entradaSalida" value="#{asistenciaList.asistencia.entradaSalida}"/>
+            </s:decorate>
+        	-->
+        </rich:simpleTogglePanel>
+
+	<table width="100%">
+		<tr>
+			<td width="70%">
+		        <s:div styleClass="actionButtons" >
+            		<h:commandButton id="descargar" value="Descargar" action="#{reportesFulltime.reporteAsistenciaDetalle}"/>
+            		<s:button id="reset" value="Cancelar" includePageParams="false"/>
+            		<rich:spacer width="10"/>
+        		</s:div>
+			</td>
+
+			<td align="right" >
+				<!--
+				// Poner este parametro en RegionList.page.xml
+				<param name="extensionArchivo" value="#{regionList.extensionArchivo}"/>
+				// =======
+				
+				<ui:include src="#{requestScope.contextPath}/layout/botonesImpresion.xhtml">
+       				<ui:param name="extensionArchivo" value="#{regionList.extensionArchivo}"/>
+   				</ui:include>
+   				-->
+   				<h:selectOneRadio value="#{asistenciaList.extensionArchivo}" >
+					<s:selectItems label="#{tipoArchivo}"
+						value="#{enumeraciones.tipoArchivo}" 
+						var="tipoArchivo">
+					</s:selectItems>
+				</h:selectOneRadio>
+			</td>
+		</tr>
+	</table>
+
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

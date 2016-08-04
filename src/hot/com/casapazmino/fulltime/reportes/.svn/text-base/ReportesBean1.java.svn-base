@@ -1,0 +1,657 @@
+package com.casapazmino.fulltime.reportes;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.ejb.Stateless;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.international.StatusMessages;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.security.Identity;
+import org.jboss.seam.web.ServletContexts;
+
+import com.casapazmino.fulltime.action.AsistenciaList;
+import com.casapazmino.fulltime.action.EmpleadoList;
+import com.casapazmino.fulltime.action.RegionList;
+import com.casapazmino.fulltime.comun.Constantes;
+
+@Stateless
+@Name("reportes")
+public class ReportesBean implements Reporte {
+
+	@In
+	StatusMessages statusMessages;
+
+	@Logger
+	Log log;
+
+	@Resource(mappedName = Constantes.DATA_SOURCE)
+	DataSource ds;
+
+	@In
+	Identity identity;
+	/*
+	 * @In(create=true) EmpleadoList empleadoLista;
+	 */
+
+	Map<String, Object> parametros;
+	
+	private HttpServletRequest requestLogo = ServletContexts.instance()
+			.getRequest();
+
+	public void imprimirPdfPopup(String nombreReporte,
+			Map<String, Object> parametros, String ruta, String nombre) {
+
+		Connection conn = null;
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		try {
+			HttpServletResponse response = (HttpServletResponse) context
+					.getExternalContext().getResponse();
+
+			conn = ds.getConnection();
+
+			HttpServletRequest request = ServletContexts.instance()
+					.getRequest();
+			/*
+			 * File reportFile = new
+			 * File(request.getSession().getServletContext()
+			 * .getRealPath("/reportes/" + ruta + "/" + nombreReporte));
+			 */
+
+			// ESTO HAY QUE ENVIAR COMO PARAMETRO DESDE CADA UNO DE LOS REPORTES
+			// *****************************************************************
+/*			JasperCompileManager.compileReportToFile("C:\\PROYECTO\\fulltime\\view\\reportes\\listaEmpleados.jrxml",request.getSession().getServletContext()
+					.getRealPath("/reportes/" + "listaEmpleados.jasper"));
+*/			
+			JasperCompileManager.compileReportToFile("C:\\PROYECTO\\fulltime\\view\\reportes\\asistenciaGeneral.jrxml",request.getSession().getServletContext()
+					.getRealPath("/reportes/" + "asistenciaGeneral.jasper"));			
+			
+			JasperCompileManager.compileReportToFile("C:\\PROYECTO\\fulltime\\view\\reportes\\asistenciaDetalle.jrxml",request.getSession().getServletContext()
+					.getRealPath("/reportes/" + "asistenciaDetalle.jasper"));			
+
+			JasperCompileManager.compileReportToFile("C:\\PROYECTO\\fulltime\\view\\reportes\\reporteAtrasos.jrxml",request.getSession().getServletContext()
+					.getRealPath("/reportes/" + "reporteAtrasos.jasper"));			
+
+			JasperCompileManager.compileReportToFile("C:\\PROYECTO\\fulltime\\view\\reportes\\reporteHorasExtras.jrxml",request.getSession().getServletContext()
+					.getRealPath("/reportes/" + "reporteHorasExtras.jasper"));			
+
+			
+			File reportFile = new File(request.getSession().getServletContext()
+					.getRealPath("/reportes/" + nombreReporte));
+			
+			JasperReport jasperReport = (JasperReport) JRLoader
+					.loadObject(reportFile.getPath());
+			
+			log.info("imprimiendo===> " + jasperReport.getQuery().getText());
+			
+			byte[] bytes = null;
+			
+			JasperPrint jasperPrint = JasperFillManager.fillReport(
+					jasperReport, parametros, conn);
+			
+			bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+			
+			this.executar(bytes, nombre);
+
+		} catch (Exception j) {
+			log.error("ReportesGlobalesBean.imprimirPdf Error:", j);
+		} finally {
+			try {
+				context.responseComplete();
+				conn.close();
+			} catch (SQLException e) {
+				log.error("ReportesGlobalesBean.imprimirPdf Error:", e);
+			}
+		}
+	}
+
+	public void executar(byte[] arreglo, String nombre) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		try {
+
+			HttpServletRequest request = (HttpServletRequest) context
+					.getExternalContext().getRequest();
+
+			if (arreglo != null) {
+				boolean flag = false;
+				HttpServletResponse response = (HttpServletResponse) context
+						.getExternalContext().getResponse();
+				flag = true;
+				log.info("==========>>>>Entro en pdf ");
+				response.setContentType("application/pdf");
+				if (flag) {
+					try {
+						log.info("==========>>>>Inicia baja archivo  ");
+						response.reset();
+						response.addHeader("Pragma", "public");
+						response.addHeader("Cache-Control", "");
+						response.addDateHeader("Expires", 0);
+						response.setContentLength(arreglo.length);
+						response.setHeader("Content-disposition",
+								"attachment; filename=" + nombre + ".pdf");
+						ServletOutputStream ouputStream = response
+								.getOutputStream();
+						byte[] buffer = new byte[128];
+						int bytesRead = 0;
+						InputStream stream = FileHandler
+								.getInputStreamFroByteArray(arreglo);
+						while ((bytesRead = stream.read(buffer, 0, 128)) != -1) {
+							ouputStream.write(buffer, 0, bytesRead);
+						}
+						ouputStream.flush();
+						ouputStream.close();
+						log.info("==========>>>>Termina baja archivo  ");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									Constantes.MSG_ARCHIVO_NS,
+									Constantes.MSG_ARCHIVO_NS));
+
+				}
+			} else {
+				log.info("El archivo es nulo");
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			context.responseComplete();
+		}
+	}
+
+	public void imprimirReporteEmpleado(EmpleadoList listaEmpleado) {
+		// empleadoLista=new EmpleadoList();
+		parametros = new HashMap<String, Object>();
+		try {
+			String logo = this.requestLogo.getSession().getServletContext()
+					.getRealPath(Constantes.LOGO);
+			
+			log.info("RUTA DE LOGO: "
+					+ this.requestLogo.getSession().getServletContext()
+							.getRealPath(Constantes.LOGO));
+			
+			String usuario = identity.getCredentials().getUsername();
+			String cedula = "";
+			String nombre = "";
+			String apellido = "";
+/*			String partida = "";
+			String partidaIndividual = "";
+			Date fechaInicio = null;
+			Date FechaSalida = null;
+*/
+			if (listaEmpleado != null) {
+				if (listaEmpleado.getEmpleado() != null) {
+					if (listaEmpleado.getEmpleado().getCedula() != null) {
+						cedula = listaEmpleado.getEmpleado().getCedula();
+					}
+
+					if (listaEmpleado.getEmpleado().getNombre() != null) {
+						nombre = listaEmpleado.getEmpleado().getNombre();
+					}
+
+					if (listaEmpleado.getEmpleado().getApellido() != null) {
+						apellido = listaEmpleado.getEmpleado().getApellido();
+					}
+
+/*					if (listaEmpleado.getEmpleado().getPartida() != null) {
+						partida = listaEmpleado.getEmpleado().getPartida();
+					}
+
+					if (listaEmpleado.getEmpleado().getPartidaIndividual() != null) {
+						partidaIndividual = listaEmpleado.getEmpleado()
+								.getPartidaIndividual();
+					}
+
+					if (listaEmpleado.getEmpleado().getFechaIngreso() != null) {
+						fechaInicio = listaEmpleado.getEmpleado()
+								.getFechaIngreso();
+					}
+
+					if (listaEmpleado.getEmpleado().getFechaSalida() != null) {
+						FechaSalida = listaEmpleado.getEmpleado()
+								.getFechaSalida();
+					}*/
+				}
+			}
+			parametros.put("logo", logo);
+			parametros.put("login", usuario);
+			parametros.put("cedula", cedula);
+			parametros.put("nombres", nombre);
+			parametros.put("apellidos", apellido);
+			this.imprimirPdfPopup("listaEmpleados.jasper", parametros, "",
+					"LISTA EMPLEADOS");
+		} catch (Exception e) {
+			// TODO: handle exception
+			// System.out.print("ERROR AL GENERAR EL REPORTE DE EMPLEADOS: "+e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public void imprimirReporteRegion(RegionList regionList) {
+
+		parametros = new HashMap<String, Object>();
+		
+		try {
+			String logo = this.requestLogo.getSession().getServletContext()
+					.getRealPath(Constantes.LOGO);
+			
+			String usuario = identity.getCredentials().getUsername();
+			String codigo = "";
+			String descripcion = "";
+			
+			if (regionList != null) {
+				 if (regionList.getRegion() != null) {
+					 if (regionList.getRegion().getCodigo() != null) {
+						 codigo = regionList.getRegion().getCodigo();
+					 }
+					 if (regionList.getRegion().getDescripcion() != null) {
+						 descripcion = regionList.getRegion().getDescripcion();
+					 }
+				 }
+			}
+			
+			parametros.put("logo", logo);
+			parametros.put("login", usuario);
+			parametros.put("codigo", codigo);
+			parametros.put("descripcion", descripcion);
+			
+			this.imprimirPdfPopup("reporteRegion.jasper", parametros, "",
+					"REPORTE REGIONES");
+		} catch (Exception e) {
+			// TODO: handle exception
+			// System.out.print("ERROR AL GENERAR EL REPORTE DE EMPLEADOS: "+e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public void imprimirAsistenciaGeneral(AsistenciaList listaAsistencia) {
+		parametros = new HashMap<String, Object>();
+		try {
+			String logo = this.requestLogo.getSession().getServletContext()
+					.getRealPath(Constantes.LOGO);
+			log.info("RUTA DE LOGO: "
+					+ this.requestLogo.getSession().getServletContext()
+							.getRealPath(Constantes.LOGO));
+			
+			String usuario = identity.getCredentials().getUsername();
+			String cedula = "";
+			String nombre = "";
+			String apellido = "";
+			String cargo = "";
+			String departamento = "";
+			Date fechaInicial = null;
+			Date fechaFinal = null;
+
+			if (listaAsistencia != null) {
+				if (listaAsistencia.getAsistencia() != null) {
+					if (listaAsistencia.getAsistencia().getEmpleado() != null) {
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getCedula() != null) {
+							cedula = listaAsistencia.getAsistencia()
+									.getEmpleado().getCedula();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getNombre() != null) {
+							nombre = listaAsistencia.getAsistencia()
+									.getEmpleado().getNombre();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getApellido() != null) {
+							apellido = listaAsistencia.getAsistencia()
+									.getEmpleado().getApellido();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getDepartamento() != null) {
+							if (listaAsistencia.getAsistencia().getEmpleado()
+									.getDepartamento().getDescripcion() != null) {
+								departamento = listaAsistencia.getAsistencia()
+										.getEmpleado().getDepartamento()
+										.getDescripcion();
+							}
+						}
+
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getCargo() != null) {
+							if (listaAsistencia.getAsistencia().getEmpleado()
+									.getCargo().getDescripcion() != null) {
+								cargo = listaAsistencia.getAsistencia()
+										.getEmpleado().getCargo()
+										.getDescripcion();
+							}
+						}
+						if (listaAsistencia.getAsistencia().getFechaDesde() != null) {
+							fechaInicial = listaAsistencia.getAsistencia()
+									.getFechaDesde();
+						}
+						if (listaAsistencia.getAsistencia().getFechaHasta() != null) {
+							fechaFinal = listaAsistencia.getAsistencia()
+									.getFechaHasta();
+						}
+					}
+				}
+			}
+
+			parametros.put("logo", logo);
+			parametros.put("login", usuario);
+			parametros.put("cedula", cedula);
+			parametros.put("nombres", nombre);
+			parametros.put("apellidos", apellido);
+			parametros.put("cargos", cargo);
+			parametros.put("departamento", departamento);
+			if (fechaInicial != null) {
+				parametros.put("fechaInicial", fechaInicial);
+			}
+			if (fechaFinal != null) {
+				parametros.put("fechaFinal", fechaFinal);
+			}
+			this.imprimirPdfPopup("asistenciaGeneral.jasper", parametros, "",
+					"REPORTE ASISTENCIA GENERAL");
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void imprimirAsistenciaDetalle(AsistenciaList listaAsistencia) {
+		parametros = new HashMap<String, Object>();
+		try {
+			String logo = this.requestLogo.getSession().getServletContext()
+					.getRealPath(Constantes.LOGO);
+			log.info("RUTA DE LOGO: "
+					+ this.requestLogo.getSession().getServletContext()
+							.getRealPath(Constantes.LOGO));
+			
+			String usuario = identity.getCredentials().getUsername();
+			String cedula = "";
+			String nombre = "";
+			String apellido = "";
+			String cargo = "";
+			String departamento = "";
+			Date fechaInicial = null;
+			Date fechaFinal = null;
+
+			if (listaAsistencia != null) {
+				if (listaAsistencia.getAsistencia() != null) {
+					if (listaAsistencia.getAsistencia().getEmpleado() != null) {
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getCedula() != null) {
+							cedula = listaAsistencia.getAsistencia()
+									.getEmpleado().getCedula();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getNombre() != null) {
+							nombre = listaAsistencia.getAsistencia()
+									.getEmpleado().getNombre();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getApellido() != null) {
+							apellido = listaAsistencia.getAsistencia()
+									.getEmpleado().getApellido();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getDepartamento() != null) {
+							if (listaAsistencia.getAsistencia().getEmpleado()
+									.getDepartamento().getDescripcion() != null) {
+								departamento = listaAsistencia.getAsistencia()
+										.getEmpleado().getDepartamento()
+										.getDescripcion();
+							}
+						}
+
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getCargo() != null) {
+							if (listaAsistencia.getAsistencia().getEmpleado()
+									.getCargo().getDescripcion() != null) {
+								cargo = listaAsistencia.getAsistencia()
+										.getEmpleado().getCargo()
+										.getDescripcion();
+							}
+						}
+						if (listaAsistencia.getAsistencia().getFechaDesde() != null) {
+							fechaInicial = listaAsistencia.getAsistencia()
+									.getFechaDesde();
+						}
+						if (listaAsistencia.getAsistencia().getFechaHasta() != null) {
+							fechaFinal = listaAsistencia.getAsistencia()
+									.getFechaHasta();
+						}
+					}
+				}
+			}
+
+			parametros.put("logo", logo);
+			parametros.put("login", usuario);
+			parametros.put("cedula", cedula);
+			parametros.put("nombres", nombre);
+			parametros.put("apellidos", apellido);
+			parametros.put("cargos", cargo);
+			parametros.put("departamento", departamento);
+			if (fechaInicial != null) {
+				parametros.put("fechaInicial", fechaInicial);
+			}
+			if (fechaFinal != null) {
+				parametros.put("fechaFinal", fechaFinal);
+			}
+			this.imprimirPdfPopup("asistenciaDetalle.jasper", parametros, "",
+					"REPORTE ASISTENCIA DETALLE");
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+		
+	}
+
+	public void imprimirAtrasos(AsistenciaList listaAsistencia) {
+		parametros = new HashMap<String, Object>();
+		try {
+			String logo = this.requestLogo.getSession().getServletContext()
+					.getRealPath(Constantes.LOGO);
+			log.info("RUTA DE LOGO: "
+					+ this.requestLogo.getSession().getServletContext()
+							.getRealPath(Constantes.LOGO));
+			
+			String usuario = identity.getCredentials().getUsername();
+			String cedula = "";
+			String nombre = "";
+			String apellido = "";
+			String cargo = "";
+			String departamento = "";
+			Date fechaInicial = null;
+			Date fechaFinal = null;
+
+			if (listaAsistencia != null) {
+				if (listaAsistencia.getAsistencia() != null) {
+					if (listaAsistencia.getAsistencia().getEmpleado() != null) {
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getCedula() != null) {
+							cedula = listaAsistencia.getAsistencia()
+									.getEmpleado().getCedula();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getNombre() != null) {
+							nombre = listaAsistencia.getAsistencia()
+									.getEmpleado().getNombre();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getApellido() != null) {
+							apellido = listaAsistencia.getAsistencia()
+									.getEmpleado().getApellido();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getDepartamento() != null) {
+							if (listaAsistencia.getAsistencia().getEmpleado()
+									.getDepartamento().getDescripcion() != null) {
+								departamento = listaAsistencia.getAsistencia()
+										.getEmpleado().getDepartamento()
+										.getDescripcion();
+							}
+						}
+
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getCargo() != null) {
+							if (listaAsistencia.getAsistencia().getEmpleado()
+									.getCargo().getDescripcion() != null) {
+								cargo = listaAsistencia.getAsistencia()
+										.getEmpleado().getCargo()
+										.getDescripcion();
+							}
+						}
+						if (listaAsistencia.getAsistencia().getFechaDesde() != null) {
+							fechaInicial = listaAsistencia.getAsistencia()
+									.getFechaDesde();
+						}
+						if (listaAsistencia.getAsistencia().getFechaHasta() != null) {
+							fechaFinal = listaAsistencia.getAsistencia()
+									.getFechaHasta();
+						}					}
+				}
+			}
+
+			parametros.put("logo", logo);
+			parametros.put("login", usuario);
+			parametros.put("cedula", cedula);
+			parametros.put("nombres", nombre);
+			parametros.put("apellidos", apellido);
+			parametros.put("cargos", cargo);
+			parametros.put("departamento", departamento);
+			if (fechaInicial != null) {
+				parametros.put("fechaInicial", fechaInicial);
+			}
+			if (fechaFinal != null) {
+				parametros.put("fechaFinal", fechaFinal);
+			}
+			this.imprimirPdfPopup("reporteAtrasos.jasper", parametros, "",
+					"REPORTE ATRASOS");
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
+	}
+
+	
+	@Override
+	public void imprimirHorasExtras(AsistenciaList listaAsistencia) {
+		parametros = new HashMap<String, Object>();
+		try {
+			String logo = this.requestLogo.getSession().getServletContext()
+					.getRealPath(Constantes.LOGO);
+			log.info("RUTA DE LOGO: "
+					+ this.requestLogo.getSession().getServletContext()
+							.getRealPath(Constantes.LOGO));
+			
+			String usuario = identity.getCredentials().getUsername();
+			String cedula = "";
+			String nombre = "";
+			String apellido = "";
+			String cargo = "";
+			String departamento = "";
+			Date fechaInicial = null;
+			Date fechaFinal = null;
+
+			if (listaAsistencia != null) {
+				if (listaAsistencia.getAsistencia() != null) {
+					if (listaAsistencia.getAsistencia().getEmpleado() != null) {
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getCedula() != null) {
+							cedula = listaAsistencia.getAsistencia()
+									.getEmpleado().getCedula();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getNombre() != null) {
+							nombre = listaAsistencia.getAsistencia()
+									.getEmpleado().getNombre();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getApellido() != null) {
+							apellido = listaAsistencia.getAsistencia()
+									.getEmpleado().getApellido();
+						}
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getDepartamento() != null) {
+							if (listaAsistencia.getAsistencia().getEmpleado()
+									.getDepartamento().getDescripcion() != null) {
+								departamento = listaAsistencia.getAsistencia()
+										.getEmpleado().getDepartamento()
+										.getDescripcion();
+							}
+						}
+
+						if (listaAsistencia.getAsistencia().getEmpleado()
+								.getCargo() != null) {
+							if (listaAsistencia.getAsistencia().getEmpleado()
+									.getCargo().getDescripcion() != null) {
+								cargo = listaAsistencia.getAsistencia()
+										.getEmpleado().getCargo()
+										.getDescripcion();
+							}
+						}
+						if (listaAsistencia.getAsistencia().getFechaDesde() != null) {
+							fechaInicial = listaAsistencia.getAsistencia()
+									.getFechaDesde();
+						}
+						if (listaAsistencia.getAsistencia().getFechaHasta() != null) {
+							fechaFinal = listaAsistencia.getAsistencia()
+									.getFechaHasta();
+						}					}
+				}
+			}
+
+			parametros.put("logo", logo);
+			parametros.put("login", usuario);
+			parametros.put("cedula", cedula);
+			parametros.put("nombres", nombre);
+			parametros.put("apellidos", apellido);
+			parametros.put("cargos", cargo);
+			parametros.put("departamento", departamento);
+			if (fechaInicial != null) {
+				parametros.put("fechaInicial", fechaInicial);
+			}
+			if (fechaFinal != null) {
+				parametros.put("fechaFinal", fechaFinal);
+			}
+						
+			this.imprimirPdfPopup("reporteHorasExtras.jasper", parametros, "",
+					"REPORTE HORAS EXTRAS");
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+}

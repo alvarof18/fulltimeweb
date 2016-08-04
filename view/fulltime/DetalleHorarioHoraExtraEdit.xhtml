@@ -1,0 +1,228 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="detalleHorarioHoraExtra" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{detalleHorarioHoraExtraHome.managed ? 'Editar' : 'A&#241;adir'} Detalle Horario - Hora Extra</f:facet>
+
+				<s:decorate id="detalleHorarioField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Detalle Horario</ui:define>
+					<h:selectOneMenu id="listaDetalleHorario" required="true"
+						value="#{detalleHorarioHoraExtraHome.instance.detalleHorario}">
+						<s:selectItems id="itemsDetalleHorario"
+							value="#{detalleHorarioList.listaDetalleHorarioSalida}" var="detalleHorario"
+							label="#{detalleHorario.horario.descripcion} - #{detalleHorario.hora}"
+							noSelectionLabel="Seleccione Hora ..." />
+						<s:convertEntity/>
+						<a:support id="detalleHorario" event="onchange"
+							reRender="detalleHorarioField,listaDetalleHorario"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="horaExtraField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Hora Extra</ui:define>
+					<h:selectOneMenu id="listaHoraExtras" required="true"
+						value="#{detalleHorarioHoraExtraHome.instance.horaExtra}">
+						<s:selectItems id="itemsHoraExtra"
+							value="#{horaExtraList.listaHoraExtra}" var="horaExtra"
+							label="#{horaExtra.descripcion} - #{horaExtra.desde} - #{horaExtra.hasta}"
+							noSelectionLabel="Seleccione Hora Extra..." />
+						<s:convertEntity />
+						<a:support id="horasExtras" event="onchange"
+							reRender="horaExtraField,listaHoraExtra"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+				
+				<s:decorate id="detalleGrupoContratadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Detalle Grupo Contratado</ui:define>
+					<h:selectOneMenu id="listaDetalleGrupoContratado" required="true"
+						value="#{detalleHorarioHoraExtraHome.instance.detalleGrupoContratado}">
+						<s:selectItems id="itemsDetalleGrupoContratado"
+							value="#{detalleGrupoContratadoList.listaDetalleGrupoContratado}" var="detalleGrupoContratado"
+							label="#{detalleGrupoContratado.descripcion}"
+							noSelectionLabel="Seleccione Detalle Grupo Contratado..." />
+						<s:convertEntity />
+						<a:support id="detalleGrupoContratados" event="onchange"
+							reRender="detalleGrupoContratadoField,listaDetalleGrupoContratado"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+				
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{detalleHorarioHoraExtraHome.persist}"
+                       disabled="#{!detalleHorarioHoraExtraHome.wired}"
+                       rendered="#{!detalleHorarioHoraExtraHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{detalleHorarioHoraExtraHome.update}"
+                       rendered="#{detalleHorarioHoraExtraHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{detalleHorarioHoraExtraHome.remove}"
+                      immediate="true"
+                       rendered="#{detalleHorarioHoraExtraHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/DetalleHorarioHoraExtra.xhtml"
+                rendered="#{detalleHorarioHoraExtraHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty detalleHorarioHoraExtraFrom ? 'DetalleHorarioHoraExtraList' : detalleHorarioHoraExtraFrom}.xhtml"
+                rendered="#{!detalleHorarioHoraExtraHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+	<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Detalle horario *" labelClass="required">
+    <div class="association" id="detalleHorarioParent">
+
+        <h:outputText value="There is no detalleHorario associated with this detalleHorarioHoraExtra."
+                   rendered="#{detalleHorarioHoraExtraHome.instance.detalleHorario == null}"/>
+
+        <rich:dataTable var="_detalleHorario"
+                   value="#{detalleHorarioHoraExtraHome.instance.detalleHorario}"
+                rendered="#{detalleHorarioHoraExtraHome.instance.detalleHorario != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="detalleHorarioTable">
+            <h:column>
+                <f:facet name="header">Deho id</f:facet>
+                <h:outputText value="#{_detalleHorario.dehoId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Entrada salida</f:facet>
+                <h:outputText value="#{_detalleHorario.entradaSalida}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Hora</f:facet>
+                <h:outputText value="#{_detalleHorario.hora}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Horario hora id</f:facet>
+                <h:outputText value="#{_detalleHorario.horario.horaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Max minuto</f:facet>
+                <h:outputText value="#{_detalleHorario.maxMinuto}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nocturno</f:facet>
+                <h:outputText value="#{_detalleHorario.nocturno}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Orden</f:facet>
+                <h:outputText value="#{_detalleHorario.orden}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{detalleHorarioHoraExtraHome.instance.detalleHorario != null ? 'Change' : 'Select'} detalleHorario"
+                       view="/DetalleHorarioList.xhtml">
+                <f:param name="from" value="DetalleHorarioHoraExtraEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Hora extra *" labelClass="required">
+    <div class="association" id="horaExtraParent">
+
+        <h:outputText value="There is no horaExtra associated with this detalleHorarioHoraExtra."
+                   rendered="#{detalleHorarioHoraExtraHome.instance.horaExtra == null}"/>
+
+        <rich:dataTable var="_horaExtra"
+                   value="#{detalleHorarioHoraExtraHome.instance.horaExtra}"
+                rendered="#{detalleHorarioHoraExtraHome.instance.horaExtra != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="horaExtraTable">
+            <h:column>
+                <f:facet name="header">Hora extra id</f:facet>
+                <h:outputText value="#{_horaExtra.horaExtraId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_horaExtra.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Desde</f:facet>
+                <h:outputText value="#{_horaExtra.desde}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Dia libre</f:facet>
+                <h:outputText value="#{_horaExtra.diaLibre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Hasta</f:facet>
+                <h:outputText value="#{_horaExtra.hasta}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Maximo dia</f:facet>
+                <h:outputText value="#{_horaExtra.maximoDia}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Maximo mes</f:facet>
+                <h:outputText value="#{_horaExtra.maximoMes}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Porcentaje</f:facet>
+                <h:outputText value="#{_horaExtra.porcentaje}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{detalleHorarioHoraExtraHome.instance.horaExtra != null ? 'Change' : 'Select'} horaExtra"
+                       view="/HoraExtraList.xhtml">
+                <f:param name="from" value="DetalleHorarioHoraExtraEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+-->
+</ui:define>
+
+</ui:composition>

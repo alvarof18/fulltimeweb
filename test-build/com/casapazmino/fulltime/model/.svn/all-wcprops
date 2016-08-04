@@ -1,0 +1,233 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model
+END
+Grupos.class
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Grupos.class
+END
+UsuariosRoles.class
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/UsuariosRoles.class
+END
+DeclaraBienes.class
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/DeclaraBienes.class
+END
+Region.class
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Region.class
+END
+Asistencia.class
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Asistencia.class
+END
+CiudadFeriado.class
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/CiudadFeriado.class
+END
+Departamento.class
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Departamento.class
+END
+Empleado.class
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Empleado.class
+END
+TipoParametro.class
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/TipoParametro.class
+END
+EmpleadoTitulo.class
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/EmpleadoTitulo.class
+END
+EmpleadoDeclaraBienes.class
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/EmpleadoDeclaraBienes.class
+END
+Atraso.class
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Atraso.class
+END
+Ciudad.class
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Ciudad.class
+END
+SolicitudVacaciones.class
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/SolicitudVacaciones.class
+END
+Cargo.class
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Cargo.class
+END
+Accion.class
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Accion.class
+END
+Subrrogacion.class
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Subrrogacion.class
+END
+SolicitudVacacion.class
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/SolicitudVacacion.class
+END
+Horario.class
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Horario.class
+END
+Feriado.class
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Feriado.class
+END
+Contacto.class
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Contacto.class
+END
+Usuarios.class
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Usuarios.class
+END
+Reloj.class
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Reloj.class
+END
+ItemsMenuRoles.class
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/ItemsMenuRoles.class
+END
+GrupoContratado.class
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/GrupoContratado.class
+END
+ProgramaVacacion.class
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/ProgramaVacacion.class
+END
+Permiso.class
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Permiso.class
+END
+Titulo.class
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Titulo.class
+END
+DetalleTipoParametro.class
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/DetalleTipoParametro.class
+END
+ItemMenu.class
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/ItemMenu.class
+END
+Roles.class
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Roles.class
+END
+PermisosMenu.class
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/PermisosMenu.class
+END
+TipoCargo.class
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/TipoCargo.class
+END
+Subgrupos.class
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Subgrupos.class
+END
+Discapacidad.class
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Discapacidad.class
+END
+Provincia.class
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/Provincia.class
+END
+DetalleHorario.class
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/DetalleHorario.class
+END
+DetalleGrupoContratado.class
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/fulltime/!svn/ver/21/test-build/com/casapazmino/fulltime/model/DetalleGrupoContratado.class
+END

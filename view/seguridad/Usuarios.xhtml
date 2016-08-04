@@ -1,0 +1,113 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Usuarios</f:facet>
+
+		<s:decorate id="rol" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Rol</ui:define>
+            <h:outputText value="#{usuariosHome.roles}"/>
+        </s:decorate>
+		
+		<s:decorate id="usuario" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Usuario</ui:define>
+            <h:outputText value="#{usuariosHome.instance.usuario}"/>
+        </s:decorate>
+        
+        <s:decorate id="estado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Estado</ui:define>
+            <h:outputText value="#{usuariosHome.estados}"/>
+        </s:decorate>
+
+        <s:decorate id="fechaCreacion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Creaci&#243;n</ui:define>
+            
+			<rich:calendar id="calFechaCreacion" disabled="true" 
+                          value="#{usuariosHome.instance.fechaCreacion}" datePattern="dd/MM/yyyy"/>
+
+        </s:decorate>
+
+        <s:decorate id="fechaVencimiento" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Vencimiento</ui:define>
+
+			<rich:calendar id="calFechaVencimiento" disabled="true" 
+                          value="#{usuariosHome.instance.fechaVencimiento}" datePattern="dd/MM/yyyy"/>            
+
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/seguridad/UsuariosEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/seguridad/#{empty usuariosFrom ? 'UsuariosList' : usuariosFrom}.xhtml"
+                    id="done"
+                 value="Salir"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Ciudades</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="usuarioCiudadsChildren">
+
+        <h:outputText value="No existen resultados"
+                   rendered="#{empty usuariosHome.usuarioCiudads}"/>
+
+        <rich:dataTable value="#{usuariosHome.usuarioCiudads}"
+                       var="_usuarioCiudad"
+                  rendered="#{not empty usuariosHome.usuarioCiudads}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="usuarioCiudadsTable">
+                        
+            <rich:column sortBy="#{_usuarioCiudad.ciudad.descripcion}">
+                <f:facet name="header">Ciudad</f:facet>
+                <h:outputText value="#{_usuarioCiudad.ciudad.descripcion}"/>
+            </rich:column>
+            
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectusuarioCiudad"
+                     value="Editar"
+                      view="/seguridad/UsuarioCiudadEdit.xhtml">
+                    <f:param name="usuarioCiudadUsuaCiudId"
+                            value="#{_usuarioCiudad.usuaCiudId}"/>
+                    <f:param name="usuarioCiudadFrom" value="Usuarios"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/seguridad/UsuarioCiudadEdit.xhtml">
+            <f:param name="usuariosId"
+                    value="#{usuariosHome.instance.id}"/>
+            <f:param name="usuarioCiudadFrom" value="Usuarios"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+
+</ui:define>
+
+</ui:composition>

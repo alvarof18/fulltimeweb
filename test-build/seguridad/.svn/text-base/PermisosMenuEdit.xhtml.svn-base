@@ -1,0 +1,180 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="permisosMenu" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{permisosMenuHome.managed ? 'Edit' : 'Add'} Permisos menu</f:facet>
+
+
+
+            <s:decorate id="crearField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Crear</ui:define>
+                <h:selectBooleanCheckbox id="crear"
+                                      value="#{permisosMenuHome.instance.crear}"/>
+            </s:decorate>
+
+
+            <s:decorate id="eliminarField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Eliminar</ui:define>
+                <h:selectBooleanCheckbox id="eliminar"
+                                      value="#{permisosMenuHome.instance.eliminar}"/>
+            </s:decorate>
+
+
+            <s:decorate id="imprimirField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Imprimir</ui:define>
+                <h:selectBooleanCheckbox id="imprimir"
+                                      value="#{permisosMenuHome.instance.imprimir}"/>
+            </s:decorate>
+
+
+
+            <s:decorate id="modificarField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Modificar</ui:define>
+                <h:selectBooleanCheckbox id="modificar"
+                                      value="#{permisosMenuHome.instance.modificar}"/>
+            </s:decorate>
+
+
+
+            <s:decorate id="verField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Ver</ui:define>
+                <h:selectBooleanCheckbox id="ver"
+                                      value="#{permisosMenuHome.instance.ver}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{permisosMenuHome.persist}"
+                       disabled="#{!permisosMenuHome.wired}"
+                       rendered="#{!permisosMenuHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{permisosMenuHome.update}"
+                       rendered="#{permisosMenuHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{permisosMenuHome.remove}"
+                      immediate="true"
+                       rendered="#{permisosMenuHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/seguridad/PermisosMenu.xhtml"
+                rendered="#{permisosMenuHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/seguridad/#{empty permisosMenuFrom ? 'PermisosMenuList' : permisosMenuFrom}.xhtml"
+                rendered="#{!permisosMenuHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Items menu roles">
+    <div class="association" id="itemsMenuRolesParent">
+
+        <h:outputText value="There is no itemsMenuRoles associated with this permisosMenu."
+                   rendered="#{permisosMenuHome.instance.itemsMenuRoles == null}"/>
+
+        <rich:dataTable var="_itemsMenuRoles"
+                   value="#{permisosMenuHome.instance.itemsMenuRoles}"
+                rendered="#{permisosMenuHome.instance.itemsMenuRoles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="itemsMenuRolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Grupos id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.grupos.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Item menu id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.itemMenu.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Roles id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Subgrupos id</f:facet>
+                <h:outputText value="#{_itemsMenuRoles.subgrupos.id}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{permisosMenuHome.instance.itemsMenuRoles != null ? 'Change' : 'Select'} itemsMenuRoles"
+                       view="/seguridad/ItemsMenuRolesList.xhtml">
+                <f:param name="from" value="PermisosMenuEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Roles">
+    <div class="association" id="rolesParent">
+
+        <h:outputText value="There is no roles associated with this permisosMenu."
+                   rendered="#{permisosMenuHome.instance.roles == null}"/>
+
+        <rich:dataTable var="_roles"
+                   value="#{permisosMenuHome.instance.roles}"
+                rendered="#{permisosMenuHome.instance.roles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripcion</f:facet>
+                <h:outputText value="#{_roles.descripcion}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Usuarios</f:facet>
+                <h:outputText value="#{_roles.usuarios}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="#{permisosMenuHome.instance.roles != null ? 'Change' : 'Select'} roles"
+                       view="/seguridad/RolesList.xhtml">
+                <f:param name="from" value="PermisosMenuEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

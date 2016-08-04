@@ -1,0 +1,151 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.log.Log;
+
+import com.casapazmino.fulltime.model.Ciudad;
+import com.casapazmino.fulltime.model.CiudadFeriado;
+import com.casapazmino.fulltime.model.Empleado;
+import com.casapazmino.fulltime.model.Provincia;
+import com.casapazmino.fulltime.seguridad.action.AuditoriaHome;
+
+//@Inter // Anotacion para Interceptor
+@Name("ciudadHome")
+public class CiudadHome extends EntityHome<Ciudad>{
+
+	private static final long serialVersionUID = 1L;
+	@Logger
+	Log log;
+	
+	@In(create = true)
+	ProvinciaHome provinciaHome;
+	
+	@In(create = true)
+	AuditoriaHome auditoriaHome;
+	
+	private String cadenaAnterior;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setCiudadCiudId(Long id) {
+		setId(id);
+	}
+
+	public Long getCiudadCiudId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected Ciudad createInstance() {
+		Ciudad ciudad = new Ciudad();
+		return ciudad;
+	}
+
+	public void wire() {
+		getInstance();
+		
+		//setCadenaAnterior(this.getInstance().cadenaDatos());
+		
+		Provincia provincia = provinciaHome.getDefinedInstance();
+		if (provincia != null) {
+			getInstance().setProvincia(provincia);
+		}
+	}
+
+	public boolean isWired() {
+//		if (getInstance().getProvincia() == null)
+//			return false;
+		return true;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Ciudad> listaCiudadXProvincia(Long prov)
+	{
+		try
+		{
+			log.info("ENTRO EN LISTA CIUDAD POR PROVINCIA");
+			log.info("VALOR DE PROVINCIA ID: "+prov);
+			String consulta="SELECT ciuda FROM Ciudad ciuda " +
+					"WHERE ciuda.provincia.provId=?1";
+			Query query=this.getEntityManager().createQuery(consulta);
+			query.setParameter(1,prov);
+			return query.getResultList();
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		return new ArrayList<Ciudad>();
+	}
+
+	@Override
+	@Transactional
+	public String update(){
+		super.update();
+		//FacesMessages.instance().clear();
+		//String cadena = this.getInstance().cadenaDatos();
+		
+		//auditoriaHome.asignarCampos("Ciudad", "Update", cadena, cadena);
+		//auditoriaHome.persist();
+		
+		return "updated";
+	}
+	
+	@Override
+	public String remove(){
+		try {
+			super.remove();
+		} catch (Exception e) {
+			// Coloca mensajes globalmente
+			// Si falla borrar aparecen elmensaje en la otra pantalla
+			FacesMessages.instance().add("Error al borrar registro");
+			
+			// Coloca mensajes localmente
+			// Si falla borrar aparecen elmensaje en la misma pagina, en la otra no sale nada
+			//facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error al borra Registro, Contiene empleados", null));
+		}
+		return "removed";
+	}
+	
+	/**
+	 * GETERS AND SETERS
+	 * @return
+	 */
+	public Ciudad getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	public List<CiudadFeriado> getCiudadFeriados() {
+		return getInstance() == null ? null : new ArrayList<CiudadFeriado>(
+				getInstance().getCiudadFeriados());
+	}
+
+	public List<Empleado> getEmpleados() {
+		return getInstance() == null ? null : new ArrayList<Empleado>(
+				getInstance().getEmpleados());
+	}
+
+	public String getCadenaAnterior() {
+		return cadenaAnterior;
+	}
+
+	public void setCadenaAnterior(String cadenaAnterior) {
+		this.cadenaAnterior = cadenaAnterior;
+	}
+}

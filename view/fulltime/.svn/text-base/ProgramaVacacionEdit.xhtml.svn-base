@@ -1,0 +1,107 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="programaVacacion" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{programaVacacionHome.managed ? 'Editar' : 'A&#241;adir'} Programa Vacaci&#243;n</f:facet>
+
+				<s:decorate id="empleadoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Empleado</ui:define>
+					<h:selectOneMenu id="listaEmpleados" required="true"
+						value="#{programaVacacionHome.instance.empleado}">
+						<s:selectItems id="itemsEmpleado"
+							value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}"
+							noSelectionLabel="Seleccione Empleado..." />
+						<s:convertEntity />
+						<a:support id="empleados" event="onchange"
+							reRender="empleadoField,listaEmpleados,empleados"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="periodoField"
+					template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<ui:define name="label">Periodo</ui:define>
+					<h:selectOneMenu id="listaDetalleTipoParametroPeriodo"
+						value="#{programaVacacionHome.instance.detalleTipoParametro}">
+						<s:selectItems id="itemsPeriodo"
+							value="#{detalleTipoParametroList.listaPeriodoVacacion}" var="detalleTipoParametroPeriodo"
+							label="#{detalleTipoParametroPeriodo.descripcion}"
+							noSelectionLabel="Seleccione Opci&#243;n..." />
+						<s:convertEntity />
+						<a:support id="periodo" event="onchange"
+							reRender="periodoField,listaDetalleTipoParametroPeriodo,periodo"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+            <s:decorate id="fechaInicioField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha inicio</ui:define>
+                <rich:calendar id="fechaInicio"
+                          value="#{programaVacacionHome.instance.fechaInicio}" datePattern="MM/dd/yyyy hh:mm a"/>
+            </s:decorate>
+
+
+            <s:decorate id="fechaFinField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha fin</ui:define>
+                <rich:calendar id="fechaFin"
+                          value="#{programaVacacionHome.instance.fechaFin}" datePattern="MM/dd/yyyy hh:mm a"/>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{programaVacacionHome.persist}"
+                       disabled="#{!programaVacacionHome.wired}"
+                       rendered="#{!programaVacacionHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{programaVacacionHome.update}"
+                       rendered="#{programaVacacionHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{programaVacacionHome.remove}"
+                      immediate="true"
+                       rendered="#{programaVacacionHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/ProgramaVacacion.xhtml"
+                rendered="#{programaVacacionHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty programaVacacionFrom ? 'ProgramaVacacionList' : programaVacacionFrom}.xhtml"
+                rendered="#{!programaVacacionHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

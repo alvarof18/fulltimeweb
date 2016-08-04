@@ -1,0 +1,109 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+<h:form id="form">
+        <h:panelGrid columns="2" columnClasses="top , top">
+            <rich:extendedDataTable 
+                value="#{empleadoList.empleadoDataModel}" var="empleado" id="table"
+                width="580px" height="400px"
+                sortMode="#{empleadoList.sortMode}"
+                selectionMode="#{empleadoList.selectionMode}"
+                selection="#{empleadoList.selection}">
+                <rich:column sortable="False" label="Apellido" id="col_1">
+                    <f:facet name="header">
+                        <h:outputText value="Apellido" id="apellido"/>
+                    </f:facet>
+                    <h:outputText value="#{empleado.apellido}" id="empApellido"/>
+                </rich:column>
+                <rich:column sortable="true" sortBy="#{empleado.nombre}" id="col_2"
+                    filterBy="#{empleado.nombre}" filterEvent="onkeyup" width="170px"
+                    label="Nombre">
+                    <f:facet name="header">
+                        <h:outputText value="Nombre" id="nombre"/>
+                    </f:facet>
+                    <h:outputText value="#{empleado.nombre}" id="empNombre"/>
+                </rich:column>
+                <rich:column sortable="true" sortBy="#{empleado.codigoEmpleado}" id="col_3"
+                    filterBy="#{empleado.codigoEmpleado}" filterEvent="onkeyup" width="170px"
+                    label="Codigo">
+                    <f:facet name="header">
+                        <h:outputText value="Codigo" id="codigo"/>
+                    </f:facet>
+                    <h:outputText value="#{empleado.codigoEmpleado}" id="empCodigo"/>
+                </rich:column>
+                <rich:column sortable="false" label="ES" id="col_4">
+                    <f:facet name="header">
+                        <h:outputText value="ES" id="es"/>
+                    </f:facet>
+                    <h:outputText value="#{empleado.entradaSalida}" id="emplEs"/>
+                </rich:column>
+                
+                <a:support reRender="selectiontable" id="extended_table_bean_take_selection"
+                    action="#{empleadoList.takeSelection}"
+                    event="onselectionchange" />
+
+				<f:facet name="footer">
+                	<rich:datascroller id="scroll"  maxPages="5" />
+                </f:facet>
+
+            </rich:extendedDataTable>
+
+            <h:panelGroup layout="block" style="width:250px">
+                <rich:panel>
+                    <f:facet name="header">
+                        <h:outputText value="Sort/Selection modes changing" />
+                    </f:facet>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Sort Mode:" />
+                        <h:selectOneMenu value="#{empleadoList.sortMode}">
+                            <f:selectItem itemLabel="Single" itemValue="single" />
+                            <f:selectItem itemLabel="Multi" itemValue="multi" />
+                            <a:support event="onchange" ajaxSingle="true" reRender="table" id="support_sort_onchange"/>
+                        </h:selectOneMenu>
+                        <h:outputText value="Selection Mode:" />
+                        <h:selectOneMenu value="#{empleadoList.selectionMode}">
+                            <a:support ajaxSingle="true" event="onchange" reRender="table" id="support_select_onchange"/>
+                            <f:selectItem itemLabel="Single" itemValue="single" />
+                            <f:selectItem itemLabel="Multi" itemValue="multi" />
+                            <f:selectItem itemLabel="None" itemValue="none" />
+                        </h:selectOneMenu>
+                    </h:panelGrid>
+                </rich:panel>
+                <rich:panel>
+                    <f:facet name="header">
+                        <h:outputText value="Fila Seleccionada" />
+                    </f:facet>
+                    <rich:dataTable value="#{empleadoList.selectedItems}"
+                        var="sel" id="selectiontable">
+                        <rich:column>
+                            <h:graphicImage value="#{sel.apellido}" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{sel.nombre}" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{sel.codigoEmpleado}" />
+                        </rich:column>
+                        <rich:column>
+                            <h:outputText value="#{sel.entradaSalida}" />
+                        </rich:column>
+                    </rich:dataTable>
+                </rich:panel>
+            </h:panelGroup>
+        </h:panelGrid>
+
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

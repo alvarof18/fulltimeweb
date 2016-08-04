@@ -1,0 +1,163 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="tipoPermiso" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{tipoPermisoHome.managed ? 'Editar' : 'A&#241;adir'} Tipo permiso</f:facet>
+
+
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion"
+                           requeired="true"
+                              value="#{tipoPermisoHome.instance.descripcion}"/>
+            </s:decorate>
+
+            <s:decorate id="descuentoField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descuento</ui:define>
+                <h:selectOneMenu value="#{tipoPermisoHome.instance.descuento}">
+					<s:selectItems value="#{enumeraciones.tipoDescuentoPermiso}" var="tipoDescuentoPermiso"
+						label="#{tipoDescuentoPermiso}" />
+					<s:convertEnum />
+					
+                </h:selectOneMenu>
+			</s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{tipoPermisoHome.persist}"
+                       disabled="#{!tipoPermisoHome.wired}"
+                       rendered="#{!tipoPermisoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{tipoPermisoHome.update}"
+                       rendered="#{tipoPermisoHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{tipoPermisoHome.remove}"
+                      immediate="true"
+                       rendered="#{tipoPermisoHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/TipoPermiso.xhtml"
+                rendered="#{tipoPermisoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty tipoPermisoFrom ? 'TipoPermisoList' : tipoPermisoFrom}.xhtml"
+                rendered="#{!tipoPermisoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Permisos">
+        <h:form styleClass="association" id="permisosChildren">
+
+            <h:outputText value="There are no permisos associated with this tipoPermiso."
+                       rendered="#{empty tipoPermisoHome.permisos}"/>
+
+            <rich:dataTable value="#{tipoPermisoHome.permisos}"
+                           var="_permiso"
+                      rendered="#{not empty tipoPermisoHome.permisos}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="permisosTable">
+                <rich:column sortBy="#{_permiso.permId}">
+                    <f:facet name="header">Perm id</f:facet>
+                    <h:outputText value="#{_permiso.permId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.dias}">
+                    <f:facet name="header">Dias</f:facet>
+                    <h:outputText value="#{_permiso.dias}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fecha}">
+                    <f:facet name="header">Fecha</f:facet>
+                    <h:outputText value="#{_permiso.fecha}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fechaDesde}">
+                    <f:facet name="header">Fecha desde</f:facet>
+                    <h:outputText value="#{_permiso.fechaDesde}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.fechaHasta}">
+                    <f:facet name="header">Fecha hasta</f:facet>
+                    <h:outputText value="#{_permiso.fechaHasta}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.horaRetorno}">
+                    <f:facet name="header">Hora retorno</f:facet>
+                    <h:outputText value="#{_permiso.horaRetorno}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.horaSalida}">
+                    <f:facet name="header">Hora salida</f:facet>
+                    <h:outputText value="#{_permiso.horaSalida}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.lugar}">
+                    <f:facet name="header">Lugar</f:facet>
+                    <h:outputText value="#{_permiso.lugar}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.numero}">
+                    <f:facet name="header">Numero</f:facet>
+                    <h:outputText value="#{_permiso.numero}"/>
+                </rich:column>
+                <rich:column sortBy="#{_permiso.numeroHoras}">
+                    <f:facet name="header">Numero horas</f:facet>
+                    <h:outputText value="#{_permiso.numeroHoras}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{tipoPermisoHome.managed}" id="permisos">
+        <div class="actionButtons">
+            <s:button id="addpermiso"
+                   value="Add permiso"
+                    view="/PermisoEdit.xhtml"
+             propagation="none">
+                 <f:param name="tipoPermisoTipeId"
+                         value="#{tipoPermisoHome.instance.tipeId}"/>
+                 <f:param name="permisoFrom" value="TipoPermiso"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+--></ui:define>
+
+</ui:composition>

@@ -1,0 +1,34 @@
+package com.casapazmino.fulltime.seguridad.action;
+
+import java.util.Arrays;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+
+import com.casapazmino.fulltime.seguridad.model.Auditoria;
+
+@Name("auditoriaList")
+public class AuditoriaList extends EntityQuery<Auditoria> {
+
+	private static final long serialVersionUID = -2781177780583305174L;
+
+	private static final String EJBQL = "select auditoria from Auditoria auditoria";
+
+	private static final String[] RESTRICTIONS = {
+			"lower(auditoria.cadenaActual) like concat(lower(#{auditoriaList.auditoria.cadenaActual}),'%')",
+			"lower(auditoria.cadenaAnterior) like concat(lower(#{auditoriaList.auditoria.cadenaAnterior}),'%')",
+			"lower(auditoria.operacion) like concat(lower(#{auditoriaList.auditoria.operacion}),'%')",
+			"lower(auditoria.tabla) like concat(lower(#{auditoriaList.auditoria.tabla}),'%')",};
+
+	private Auditoria auditoria = new Auditoria();
+
+	public AuditoriaList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(25);
+	}
+
+	public Auditoria getAuditoria() {
+		return auditoria;
+	}
+}

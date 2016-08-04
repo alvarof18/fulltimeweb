@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{declaraBienesList.firstResult}"/>
+   <param name="sort" value="#{declaraBienesList.orderColumn}"/>
+   <param name="dir" value="#{declaraBienesList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="lugarNotaria" value="#{declaraBienesList.declaraBienes.lugarNotaria}"/>
+   <param name="numeroNotaria" value="#{declaraBienesList.declaraBienes.numeroNotaria}"/>
+
+</page>

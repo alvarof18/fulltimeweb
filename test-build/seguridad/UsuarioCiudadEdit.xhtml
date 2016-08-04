@@ -1,0 +1,73 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="usuarioCiudad" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{usuarioCiudadHome.managed ? 'Editar' : 'A&#241;adir'} Usuario - Ciudad</f:facet>
+
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Ciudad</ui:define>
+					<h:selectOneMenu id="listaCiudades" required="true" value="#{usuarioCiudadHome.instance.ciudad}">
+						<s:selectItems id="itemsCiudad" value="#{ciudadList.listaCiudades}" var="ciudad"
+							label="#{ciudad.descripcion}" noSelectionLabel="Seleccione Ciudad..." />
+						<s:convertEntity />
+						<a:support id="ciudad" event="onchange" reRender="ciudadField,listaCiudades"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+			</s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos Requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{usuarioCiudadHome.persist}"
+                       disabled="#{!usuarioCiudadHome.wired}"
+                       rendered="#{!usuarioCiudadHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{usuarioCiudadHome.update}"
+                       rendered="#{usuarioCiudadHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{usuarioCiudadHome.remove}"
+                      immediate="true"
+                       rendered="#{usuarioCiudadHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/UsuarioCiudad.xhtml"
+                rendered="#{usuarioCiudadHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/#{empty usuarioCiudadFrom ? 'UsuarioCiudadList' : usuarioCiudadFrom}.xhtml"
+                rendered="#{!usuarioCiudadHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

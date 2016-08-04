@@ -1,0 +1,76 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Historia laboral</f:facet>
+
+	    <s:decorate id="codigoEmpleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo</ui:define>
+            <h:outputText value="#{empleadoHome.instance.codigoEmpleado}"/>
+        </s:decorate>
+
+        <s:decorate id="cedula" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#233;dula</ui:define>
+            <h:outputText value="#{empleadoHome.instance.cedula}"/>
+        </s:decorate>
+
+        <s:decorate id="apellido" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Apellido</ui:define>
+            <h:outputText value="#{empleadoHome.instance.apellido}"/>
+        </s:decorate>
+
+        <s:decorate id="nombre" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Nombre</ui:define>
+            <h:outputText value="#{empleadoHome.instance.nombre}"/>
+        </s:decorate>
+
+
+        <s:decorate id="fechaIngreso" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha Ingreso</ui:define>
+            
+            <rich:calendar id="fechaIngreso" disabled="true" 
+            	value="#{histLaboHome.instance.fechaIngreso}" datePattern="dd/MM/yyyy"/>
+        </s:decorate>
+
+        <s:decorate id="fechaSalida" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha salida</ui:define>
+            
+            <rich:calendar id="fechaIngreso" disabled="true" 
+            	value="#{histLaboHome.instance.fechaSalida}" datePattern="dd/MM/yyyy"/>
+        </s:decorate>
+        
+        <s:decorate id="estado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Estado</ui:define>
+            
+            <h:selectBooleanCheckbox value="#{histLaboHome.instance.estado}" disabled="true"/>
+        </s:decorate>
+        
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/HistLaboEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty histLaboFrom ? 'HistLaboList' : histLaboFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

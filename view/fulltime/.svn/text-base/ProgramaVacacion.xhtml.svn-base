@@ -1,0 +1,196 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Programaci&#243;n Vacaciones</f:facet>
+
+        <s:decorate id="empleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Empleado</ui:define>
+            <h:outputText value="#{programaVacacionHome.instance.empleado.apellido} - #{programaVacacionHome.instance.empleado.nombre}"  />
+        </s:decorate>
+
+        <s:decorate id="fechaInicio" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha inicio</ui:define>
+            <h:outputText value="#{programaVacacionHome.instance.fechaInicio}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="fechaFin" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Fecha fin</ui:define>
+            <h:outputText value="#{programaVacacionHome.instance.fechaFin}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/ProgramaVacacionEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty programaVacacionFrom ? 'ProgramaVacacionList' : programaVacacionFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+<!-- 
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Empleado</h:panelGroup>
+        </f:facet>
+    <div class="association" id="empleadoParent">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{programaVacacionHome.instance.empleado == null}"/>
+
+        <rich:dataTable var="_empleado"
+                   value="#{programaVacacionHome.instance.empleado}"
+                rendered="#{programaVacacionHome.instance.empleado != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="empleadoTable">
+            <h:column>
+                <f:facet name="header">Empl id</f:facet>
+                <h:outputText value="#{_empleado.emplId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Empleado empl id</f:facet>
+                <h:outputText value="#{_empleado.empleado.emplId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Cargo carg id</f:facet>
+                <h:outputText value="#{_empleado.cargo.cargId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Reloj relo id</f:facet>
+                <h:outputText value="#{_empleado.reloj.reloId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Departamento depa id</f:facet>
+                <h:outputText value="#{_empleado.departamento.depaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Detalle tipo parametro by estado civil dtpa id</f:facet>
+                <h:outputText value="#{_empleado.detalleTipoParametroByEstadoCivil.dtpaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Detalle tipo parametro by sexo dtpa id</f:facet>
+                <h:outputText value="#{_empleado.detalleTipoParametroBySexo.dtpaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Detalle tipo parametro by estado dtpa id</f:facet>
+                <h:outputText value="#{_empleado.detalleTipoParametroByEstado.dtpaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Horario hora id</f:facet>
+                <h:outputText value="#{_empleado.horario.horaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Detalle grupo contratado dgco id</f:facet>
+                <h:outputText value="#{_empleado.detalleGrupoContratado.dgcoId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ciudad ciud id</f:facet>
+                <h:outputText value="#{_empleado.ciudad.ciudId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Cedula</f:facet>
+                <h:outputText value="#{_empleado.cedula}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Apellido</f:facet>
+                <h:outputText value="#{_empleado.apellido}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nombre</f:facet>
+                <h:outputText value="#{_empleado.nombre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha nacimiento</f:facet>
+                <h:outputText value="#{_empleado.fechaNacimiento}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha ingreso</f:facet>
+                <h:outputText value="#{_empleado.fechaIngreso}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha salida</f:facet>
+                <h:outputText value="#{_empleado.fechaSalida}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha contrato</f:facet>
+                <h:outputText value="#{_empleado.fechaContrato}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha ult vacacion</f:facet>
+                <h:outputText value="#{_empleado.fechaUltVacacion}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Horas trabaja</f:facet>
+                <h:outputText value="#{_empleado.horasTrabaja}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Sueldo</f:facet>
+                <h:outputText value="#{_empleado.sueldo}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Partida</f:facet>
+                <h:outputText value="#{_empleado.partida}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Partida individual</f:facet>
+                <h:outputText value="#{_empleado.partidaIndividual}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Entrada salida</f:facet>
+                <h:outputText value="#{_empleado.entradaSalida}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Numero timbre</f:facet>
+                <h:outputText value="#{_empleado.numeroTimbre}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="viewempleado"
+                     value="View"
+                      view="/fulltime/Empleado.xhtml">
+                    <f:param name="empleadoEmplId"
+                           value="#{_empleado.emplId}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+ -->    
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

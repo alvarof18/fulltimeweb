@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      no-conversation-view-id="/UsuarioCiudadList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{usuarioCiudadHome.wire}"/>
+
+   <param name="usuarioCiudadFrom"/>
+   <param name="usuarioCiudadUsuaCiudId" value="#{usuarioCiudadHome.usuarioCiudadUsuaCiudId}"/>
+   <param name="ciudadFrom"/>
+   <param name="ciudadCiudId" value="#{ciudadHome.ciudadCiudId}"/>
+   <param name="provinciaFrom"/>
+   <param name="provinciaProvId" value="#{provinciaHome.provinciaProvId}"/>
+   <param name="regionFrom"/>
+   <param name="regionRegiId" value="#{regionHome.regionRegiId}"/>
+
+   <param name="usuariosFrom"/>
+   <param name="usuariosId" value="#{usuariosHome.usuariosId}"/>
+   <param name="detalleTipoParametroFrom"/>
+   <param name="detalleTipoParametroDtpaId" value="#{detalleTipoParametroHome.detalleTipoParametroDtpaId}"/>
+   <param name="tipoParametroFrom"/>
+   <param name="tipoParametroTipaId" value="#{tipoParametroHome.tipoParametroTipaId}"/>
+
+   <navigation from-action="#{usuarioCiudadHome.persist}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/seguridad/UsuarioCiudad.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{usuarioCiudadHome.update}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/seguridad/UsuarioCiudad.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{usuarioCiudadHome.remove}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/seguridad/UsuariosList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

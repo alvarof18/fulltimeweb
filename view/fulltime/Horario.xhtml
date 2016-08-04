@@ -1,0 +1,134 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Horario</f:facet>
+
+        <s:decorate id="codigo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">C&#243;digo</ui:define>
+            <h:outputText value="#{horarioHome.instance.codigo}"/>
+        </s:decorate>
+
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{horarioHome.instance.descripcion}"/>
+        </s:decorate>
+
+        <s:decorate id="minutosAlmuerzo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Minutos Alimentaci&#243;n</ui:define>
+            <h:outputText value="#{horarioHome.instance.almuerzoMinutos}"/>
+        </s:decorate>
+
+        <s:decorate id="horasTrabajo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas Trabajo</ui:define>
+            <h:outputText value="#{horarioHome.instance.horasTrabajo}"/>
+        </s:decorate>
+
+        <s:decorate id="estado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Estado</ui:define>
+            <h:outputText value="#{horarioHome.instance.estado}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/HorarioEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty horarioFrom ? 'HorarioList' : horarioFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Detalle Horario</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="detalleHorariosChildren">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{empty horarioHome.detalleHorarios}"/>
+
+        <rich:dataTable value="#{horarioHome.detalleHorarios}"
+                       var="_detalleHorario"
+                  rendered="#{not empty horarioHome.detalleHorarios}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="detalleHorariosTable">
+            <rich:column sortBy="#{_detalleHorario.hora}">
+                <f:facet name="header">Hora</f:facet>
+                <h:outputText value="#{_detalleHorario.hora}">
+                    <s:convertDateTime type="time" pattern="HH:mm"/>
+                </h:outputText>
+            </rich:column>
+                        
+            <rich:column sortBy="#{_detalleHorario.entradaSalida}">
+                <f:facet name="header">Entrada salida</f:facet>
+                <h:outputText value="#{_detalleHorario.entradaSalida}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleHorario.maxMinuto}">
+                <f:facet name="header">Tolerancia</f:facet>
+                <h:outputText value="#{_detalleHorario.maxMinuto}"/>
+            </rich:column>
+            <rich:column sortBy="#{_detalleHorario.orden}">
+                <f:facet name="header">Orden</f:facet>
+                <h:outputText value="#{_detalleHorario.orden}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_detalleHorario.nocturno}">
+                <f:facet name="header">Nocturno</f:facet>
+                <h:selectBooleanCheckbox value="#{_detalleHorario.nocturno}" disabled="true"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_detalleHorario.nocturno}">
+                <f:facet name="header">Especial</f:facet>
+                <h:selectBooleanCheckbox value="#{_detalleHorario.especial}" disabled="true"/>
+            </rich:column>
+            
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectdetalleHorario"
+                     value="Editar"
+                      view="/fulltime/DetalleHorarioEdit.xhtml">
+                    <f:param name="detalleHorarioDehoId"
+                            value="#{_detalleHorario.dehoId}"/>
+                    <f:param name="detalleHorarioFrom" value="Horario"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/DetalleHorarioEdit.xhtml"
+                rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            <f:param name="horarioHoraId"
+                    value="#{horarioHome.instance.horaId}"/>
+            <f:param name="detalleHorarioFrom" value="Horario"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+</rich:tabPanel>
+
+</ui:define>
+
+</ui:composition>

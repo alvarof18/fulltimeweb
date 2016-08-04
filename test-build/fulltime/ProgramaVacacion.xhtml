@@ -1,0 +1,557 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml"
+    xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+    
+<ui:define name="body">
+
+	<style>
+		.center{
+			text-align:center;
+		}
+		.texto_amarillo{
+			text-align:center;
+			color:#FFA500;
+			font-size:100%;
+		}
+		.texto_rojo{
+			text-align:center;
+			color:#FF0000;
+			font-size:100%;
+		}
+		.divPopUpRemove {
+   			height: 50px;
+   			width:  300px;
+   			font-family : Arial;
+    		font-size : 130%;
+  		}
+  		
+	</style>
+
+    <h:form id="planificacionSearch" styleClass="edit">		
+    
+        <rich:simpleTogglePanel label="Planificaci&#243;n de Vacaciones" switchType="ajax">
+        		
+			<h:panelGrid columns="1" > 
+		
+				<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Seleccione Par&#225;metros
+						
+					</ui:define>
+						<h:selectOneRadio id="listaParametros" value="#{programaVacacionMultiple.tipoReporte}" >
+	
+							<s:selectItems value="#{enumeraciones.tipoReporte}" var="tipoReporte"
+								label="#{tipoReporte}" />
+							<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,
+																departamentoField,listaDepartamento,itemsDepartamento,
+																detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+																empleadoField,listaEmpleado,itemsEmpleado,ciudadField,listaCiudades"
+							 ajaxSingle="true" />
+						</h:selectOneRadio>
+				</s:decorate>
+
+				<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+						<h:selectManyListbox id="listaCargo" value="#{programaVacacionMultiple.cargos}"
+							size="10" rendered="#{programaVacacionMultiple.tipoReporte != 'Departamento' and programaVacacionMultiple.tipoReporte != 'Grupo' and programaVacacionMultiple.tipoReporte != 'Empleado'}" >
+								<s:selectItems id="itemsCargo"  
+									value="#{cargoList.listaCargos}" var="cargo" 
+									label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+									itemValue="#{cargo.cargId}" >
+								</s:selectItems>
+								<f:convertNumber />
+							</h:selectManyListbox>
+				</s:decorate>
+	
+				<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/display.xhtml">
+						<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{programaVacacionMultiple.detalleGrupoContratados}"
+							size="10" rendered="#{programaVacacionMultiple.tipoReporte != 'Cargo' and programaVacacionMultiple.tipoReporte != 'Departamento' and programaVacacionMultiple.tipoReporte != 'Empleado'}">
+								<s:selectItems id="itemsDetalleGrupoContratado"  
+									value="#{detalleGrupoContratadoList.resultList}" 
+									var="detalleGrupoContratado" 
+									label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+									itemValue="#{detalleGrupoContratado.dgcoId}" >
+								</s:selectItems>
+								<f:convertNumber />
+							</h:selectManyListbox>
+				</s:decorate>
+	
+				<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+						<h:selectManyListbox id="listaDepartamento" value="#{programaVacacionMultiple.departamentos}"
+							size="10" rendered="#{programaVacacionMultiple.tipoReporte != 'Cargo' and programaVacacionMultiple.tipoReporte != 'Grupo' and programaVacacionMultiple.tipoReporte != 'Empleado'}">
+								<s:selectItems id="itemsDepartamento"  
+									value="#{departamentoList.listaDepartamentos}" 
+									var="departamento" 
+									label="#{departamento.descripcion}"
+									itemValue="#{departamento.depaId}" >
+								</s:selectItems>
+								<f:convertNumber />
+							</h:selectManyListbox>
+				</s:decorate>
+				
+				<s:decorate id="empleadoField"
+				template="#{requestScope.contextPath}/layout/edit.xhtml">
+						<h:selectManyListbox id="listaEmpleado" required="false" value="#{programaVacacionMultiple.empleados}"
+						size="10" rendered="#{programaVacacionMultiple.tipoReporte != 'Cargo' and programaVacacionMultiple.tipoReporte != 'Grupo' and programaVacacionMultiple.tipoReporte != 'Departamento'}">
+							<s:selectItems id="itemsEmpleado" value="#{empleadoList.listaEmpleadoProgramaVacacion}" var="empleado"
+								label="#{empleado.apellido} - #{empleado.nombre}" />
+							<s:convertEntity />
+						</h:selectManyListbox>					
+				</s:decorate>
+
+		</h:panelGrid>
+		<h:panelGrid columns="2" styleClass="vertical-align: top"> 
+		
+			<h:panelGrid columns="1" >	
+				
+				<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label" rendered="#{programaVacacionMultiple.tipoReporte != 'Empleado'}">Ciudad</ui:define>
+						<h:selectManyListbox id="listaCiudades" value="#{programaVacacionMultiple.ciudades}" size="10" required="true"> 
+							<s:selectItems id="itemsCiudad"
+								value="#{usuarioCiudadList.listaCiudadesUsuarios}" var="usuarioCiudad"
+								label="#{usuarioCiudad.ciudad.provincia.descripcion} -  #{usuarioCiudad.ciudad.descripcion}"
+								itemValue = "#{usuarioCiudad.ciudad.ciudId}"/>
+								<f:convertNumber />
+						</h:selectManyListbox>
+				</s:decorate>  
+				
+            	<s:decorate id="fechaHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+	                <ui:define name="label">Periodo</ui:define>
+	                <rich:calendar id="fechaHasta" required="true" showApplyButton="false" value="#{programaVacacionMultiple.periodo}" datePattern="yyyy">                          
+	                </rich:calendar>         
+            	</s:decorate>           
+				
+			</h:panelGrid>             		
+		</h:panelGrid>		
+	</rich:simpleTogglePanel>
+	
+	<div>	
+		<h:commandButton id="verif" value="Verificar" action="#{programaVacacionMultiple.verificaPlanificacion()}">
+			<a:support  event="onclick" reRender="planificavacacionList,planificacionVacaciones,guardarButton" ajaxSingle="true"/>
+		</h:commandButton>
+		<rich:spacer width="7"/>
+		
+		<h:commandButton id="generar" value="Autorizar" action="#{programaVacacionMultiple.crearPlanificacion()}"
+			disabled="#{programaVacacionMultiple.habilitar()}" rendered="#{programaVacacionMultiple.habilitarGeneraracion() and !empty programaVacacionMultiple.listaProgramaVacacion}">
+			<a:support  event="onclick" reRender="planificavacacionList,planificacionVacaciones" ajaxSingle="true"/>
+		</h:commandButton>		
+		<rich:spacer width="7" rendered="#{programaVacacionMultiple.habilitarGeneraracion() and !empty programaVacacionMultiple.listaProgramaVacacion}"/>
+		
+		<h:commandButton id="elimina" value="Eliminar" action="#{programaVacacionMultiple.eliminarPlanificacion()}"
+			rendered="#{programaVacacionMultiple.habilitarGeneraracion()}">
+			<a:support  event="onclick" reRender="planificavacacionList,planificacionVacaciones" ajaxSingle="true"/>
+		</h:commandButton>		
+		<rich:spacer width="7" rendered="#{programaVacacionMultiple.habilitarGeneraracion()}"/>
+		
+		<h:commandButton id="cancelar" value="Cancelar" action="#{programaVacacionMultiple.cancelar()}"/>
+		
+	</div>
+	
+	<rich:panel>    
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+        <h:outputText value="No existe resultados" rendered="#{empty programaVacacionMultiple.listaProgramaVacacion}"/>
+    	<div class="results" id="planificacionVacaciones">       
+    	 	   
+		    <rich:dataTable id="planificavacacionList" var="_planificacion" value="#{programaVacacionMultiple.listaProgramaVacacion}" 
+		    	rendered="#{!empty programaVacacionMultiple.listaProgramaVacacion}" columnClasses="center" rows="#{programaVacacionMultiple.numeroFilas}" reRender="ds">
+		           
+		        <f:facet name="header">
+                	<h:outputText value="Planificaci&#243;n de Vacaciones por Periodo"/>
+            	</f:facet>
+            	
+            	<rich:column id="ColNum">
+            		<div align="center">
+			        	<f:facet name="header">
+			            	<h:outputText value="N&#176;"/> 
+			            </f:facet>
+			            	
+			            <h:outputText id="idLink" value="#{_planificacion.numero}"/>
+			            	
+				        <br/>		                  	    
+				            
+		        	</div>    
+		   		</rich:column>
+            
+		    	<rich:column sortBy="#{_planificacion.empleado.apellido}" id="ColEmpl">
+		            <f:facet name="header">
+		            	<h:outputText value="Empleado"/> 
+		            </f:facet>
+		            <h:outputText value="#{_planificacion.empleado.apellido}  #{_planificacion.empleado.nombre}"/>
+		            
+		            <br></br>		            
+		            
+		            <h:graphicImage id="rangoFechas" value="/img/error.jpg" align="center" height="20" width="20" 
+		          		rendered="#{programaVacacionMultiple.FechaRepetidas(_planificacion.fechaInicio,_planificacion.fechaFin,_planificacion.fechaInicio1,_planificacion.fechaFin1,_planificacion.fechaInicio2,_planificacion.fechaFin2,_planificacion.fechaInicio3,_planificacion.fechaFin3)==-1}">
+		          		<h:outputText value="Los rangos de fecha no deben sobreponerse&#32;&#32;" styleClass="texto_rojo"/> 
+		          	</h:graphicImage>
+		            
+		   		</rich:column>
+		   		
+		   		<rich:column id="ColEdit">
+            		<div align="center">
+            		
+            			<f:facet name="header">
+			           		<h:outputText value=""/> 
+			          	</f:facet>
+            			
+            			<h:graphicImage id="idImageEdit" value="/img/edit.jpg" align="center" alt="Seam logo" 
+				       		height="20" width="20" reRender="guardarButton" onclick="updateFilaEdit(#{_planificacion.numero})">
+				       		<rich:componentControl for="popUpEdit" attachTo="idImageEdit" operation="show" event="onclick" />
+				       	</h:graphicImage> 
+				           	 
+            		</div>            		
+            	</rich:column>
+		   		
+		   		<rich:column id="colRemove">
+            		<div align="center">
+            			
+            			<f:facet name="header">
+			           		<h:outputText value=""/> 
+			           	</f:facet>
+            			
+            			<h:graphicImage id="idImageRemove" value="/img/elimina.png" align="center" alt="Seam logo" 
+				       		height="20" width="20" onclick="updateFilaRemove(#{_planificacion.numero})">
+				       		<rich:componentControl for="popUpRemove" attachTo="idImageRemove" operation="show" event="onclick" />
+				       	</h:graphicImage> 
+				           	 
+            			</div>            		
+            	</rich:column>           	
+            	
+            	<rich:column sortBy="#{_planificacion.periodo}" id="ColPer">
+		            <f:facet name="header">
+		            	<h:outputText value="Periodo"/>        	
+		            </f:facet>		
+		            <h:outputText id="periodo" value="#{empty _planificacion.periodo? '-' : _planificacion.periodo}"/>            
+		   		</rich:column>	 
+		   				   		
+		   		<rich:column id="ColDiasTomados">
+		   		 	<f:facet name="header">
+		            	<h:outputText value="D&#237;as Asignados"/> 
+		            </f:facet>
+		            <h:outputText id="diasTom" value="#{_planificacion.dias_vacacion}"/>
+		            	            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_planificacion.generado}" id="ColGen">
+		            <f:facet name="header">
+		            	<h:outputText value="Autorizado"/>          	
+		            </f:facet>	
+		            <h:outputText  id="generado" value="#{_planificacion.generado==1? 'SI' : 'NO'}"/>	            
+		   		</rich:column> 
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaInicio}" id="ColFecIni">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Inicial"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_inicial" disabled="true" value="#{_planificacion.fechaInicio}" datePattern="dd/MM/yyyy"/>	
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaFin}" id="ColFecFin">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Final"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_final" disabled="true" value="#{_planificacion.fechaFin}" datePattern="dd/MM/yyyy"/>		            
+		   		</rich:column> 
+		   		
+		   		<!-- fechas adicionales -->
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaInicio1}" id="ColFecIni1">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Inicial"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_inicial1" disabled="true" value="#{_planificacion.fechaInicio1}" datePattern="dd/MM/yyyy"/>	
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaFin1}" id="ColFecFin1">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Final"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_final1" disabled="true" value="#{_planificacion.fechaFin1}" datePattern="dd/MM/yyyy"/>		            
+		   		</rich:column> 
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaInicio2}" id="ColFecIni2">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Inicial"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_inicial2" disabled="true" value="#{_planificacion.fechaInicio2}" datePattern="dd/MM/yyyy"/>	
+		   		</rich:column>	   		
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaFin2}" id="ColFecFin2">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Final"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_final2" disabled="true" value="#{_planificacion.fechaFin2}" datePattern="dd/MM/yyyy"/>
+		   		</rich:column> 
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaInicio3}" id="ColFecIni3">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Inicial"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_inicial3" disabled="true" value="#{_planificacion.fechaInicio3}" datePattern="dd/MM/yyyy"/>
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_planificacion.fechaFin3}" id="ColFecFin3">
+		            <f:facet name="header">
+		            	<h:outputText value="Fecha Final"/>
+		            </f:facet>
+		            <rich:calendar id="fecha_final3" disabled="true" value="#{_planificacion.fechaFin3}" datePattern="dd/MM/yyyy"/>	            
+		   		</rich:column> 		   		
+		   		
+		   		<f:facet name="footer">
+                	<rich:datascroller id="ds"></rich:datascroller>
+            	</f:facet>
+            			           
+		   </rich:dataTable>
+		   
+		   <rich:dataTable rendered="#{programaVacacionMultiple.listaProgramaVacacion.size()>0}">
+	       		<f:facet name="header">	
+	        		<h:selectOneMenu value="#{programaVacacionMultiple.valueSelected}" valueChangeListener="#{programaVacacionMultiple.cambiarNumeroFilas}">
+		        	<f:selectItems value="#{programaVacacionMultiple.listaNumeroFilas}" />
+		            	<a:support event="onchange" reRender="planificavacacionList" bypassUpdates="true" ajaxSingle="true" />	
+		        	</h:selectOneMenu>
+	       		</f:facet>
+	       </rich:dataTable>
+		   
+	   </div>    
+	</rich:panel>
+	
+ </h:form>
+ 
+ 		<rich:modalPanel id="popUpRemove" autosized="true" resizeable="false"> 
+			<h:form>	
+				<div class="divPopUpRemove">
+					<p>
+						<h:outputText id="empleadoRemoveText" value="#{programaVacacionMultiple.empleadoRemove}"/>
+					</p>
+				</div>			
+				
+				<div class="actionButtons" align="center">
+			    	<a:commandButton value="Confirmar" action="#{programaVacacionMultiple.DescartarEmpleado()}" 
+			    		onclick="javascript:Richfaces.hideModalPanel('popUpRemove');" reRender="planificavacacionList,generar"/>	
+			    	
+			    	<rich:spacer width="30"/>	
+			    			    	
+			    	<a:commandButton value="Cancelar" onclick="javascript:Richfaces.hideModalPanel('popUpRemove');"/>     
+			    </div>
+			</h:form>	        
+	   	</rich:modalPanel> 
+	   	
+	   	<rich:modalPanel id="popUpEdit" autosized="true" resizeable="false"> 
+			<h:form>						
+				<rich:panel id="planificacionEmpleadoPanel" bodyClass="panelPopUpEdit" style="width:950px;">
+				    <f:facet name="header">
+				    	Planificaci&#243;n de Vacaciones por Empleado
+				    </f:facet>	
+				    
+				    <p>
+						<h:outputText id="empleadoEditText" value="#{programaVacacionMultiple.empleadoEdit}" style="font-size: x-large;" />
+					</p>	
+					
+					<b/>
+					
+					<h:outputText id="errorGeneral" value="#{programaVacacionMultiple.mensajeErrorGeneral}" styleClass="texto_rojo"/>    
+					
+					<h:panelGrid columns="6" id="panelProgEmp" >					
+					
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Rango 1</ui:define>	
+							
+							<h:outputText id="error" value="#{programaVacacionMultiple.mensajeError}" styleClass="texto_rojo"/>
+													
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Desde</ui:define>		
+							
+							<rich:calendar id="fecha_inicial" showApplyButton="false" value="#{programaVacacionMultiple.inicio}" datePattern="dd/MM/yyyy" >			            		
+			            		<a:support action="#{programaVacacionMultiple.diferencia}" event="onchanged" reRender="dias,saldo,error,errorGeneral,guardarButton,saldoPendiente" ajaxSingle="true" />		            		
+			            	</rich:calendar>		            	
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Hasta</ui:define>		
+							
+							<rich:calendar id="fecha_final" showApplyButton="false" value="#{programaVacacionMultiple.fin}" datePattern="dd/MM/yyyy">
+			            		<a:support action="#{programaVacacionMultiple.diferencia}" event="onchanged" reRender="dias,saldo,error,errorGeneral,guardarButton,saldoPendiente" ajaxSingle="true" />
+			            	</rich:calendar>
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">D&#237;as</ui:define>		
+							<h:outputText id="dias" value="#{programaVacacionMultiple.dias}"/>										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Saldo</ui:define>		
+							<h:outputText id="saldo" value="#{programaVacacionMultiple.saldo}"/>										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Saldo Restante</ui:define>		
+							<h:outputText id="saldoPendiente" value="#{programaVacacionMultiple.saldoPendiente}"/>										
+						</s:decorate>
+						
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Rango 2</ui:define>	
+							
+							<h:outputText id="error1" value="#{programaVacacionMultiple.mensajeError1}" styleClass="texto_rojo"/>	
+										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Desde</ui:define>		
+							
+							<rich:calendar id="fecha_inicial1" showApplyButton="false" value="#{programaVacacionMultiple.inicio1}" datePattern="dd/MM/yyyy">
+			            		<a:support action="#{programaVacacionMultiple.diferencia1}" event="onchanged" reRender="dias1,saldo1,error1,errorGeneral, guardarButton, saldoPendiente1" ajaxSingle="true" />
+			            	</rich:calendar>			            	
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Hasta</ui:define>		
+							
+							<rich:calendar id="fecha_final1" showApplyButton="false" value="#{programaVacacionMultiple.fin1}" datePattern="dd/MM/yyyy">
+			            		<a:support action="#{programaVacacionMultiple.diferencia1}" event="onchanged" reRender="dias1,saldo1,error1,errorGeneral, guardarButton, saldoPendiente1" ajaxSingle="true" />
+			            	</rich:calendar>
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">D&#237;as</ui:define>		
+							<h:outputText id="dias1" value="#{programaVacacionMultiple.dias1}"/>										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Saldo</ui:define>		
+							<h:outputText id="saldo1" value="#{programaVacacionMultiple.saldo1}"/>										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Saldo Pendiente</ui:define>		
+							<h:outputText id="saldoPendiente1" value="#{programaVacacionMultiple.saldoPendiente1}"/>										
+						</s:decorate>
+												
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Rango 3</ui:define>	
+							
+							<h:outputText id="error2" value="#{programaVacacionMultiple.mensajeError2}" styleClass="texto_rojo"/>
+									
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Desde</ui:define>		
+							
+							<rich:calendar id="fecha_inicial2" showApplyButton="false" value="#{programaVacacionMultiple.inicio2}" datePattern="dd/MM/yyyy">
+			            		<a:support action="#{programaVacacionMultiple.diferencia2}" event="onchanged" reRender="dias2,saldo2,error2,errorGeneral,guardarButton,saldoPendiente2" ajaxSingle="true" />
+			            	</rich:calendar>			            		
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Hasta</ui:define>		
+							
+							<rich:calendar id="fecha_final2" showApplyButton="false" value="#{programaVacacionMultiple.fin2}" datePattern="dd/MM/yyyy">
+			            		<a:support action="#{programaVacacionMultiple.diferencia2}" event="onchanged" reRender="dias2,saldo2,error2,errorGeneral,guardarButton,saldoPendiente2" ajaxSingle="true" />
+			            	</rich:calendar>
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">D&#237;as</ui:define>		
+							<h:outputText id="dias2" value="#{programaVacacionMultiple.dias2}"/>										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Saldo</ui:define>		
+							<h:outputText id="saldo2" value="#{programaVacacionMultiple.saldo2}"/>										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Saldo Pendiente</ui:define>		
+							<h:outputText id="saldoPendiente2" value="#{programaVacacionMultiple.saldoPendiente2}"/>										
+						</s:decorate>
+						
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Rango 4</ui:define>	
+							
+							<h:outputText id="error3" value="#{programaVacacionMultiple.mensajeError3}" styleClass="texto_rojo"/>	
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Desde</ui:define>		
+							
+							<rich:calendar id="fecha_inicial3" showApplyButton="false" value="#{programaVacacionMultiple.inicio3}" datePattern="dd/MM/yyyy">
+			            		<a:support action="#{programaVacacionMultiple.diferencia3}" event="onchanged" reRender="dias3,saldo3,error3,errorGeneral,guardarButton,saldoPendiente3" ajaxSingle="true" />
+			            	</rich:calendar>		            		
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Hasta</ui:define>		
+							
+							<rich:calendar id="fecha_final3" showApplyButton="false" value="#{programaVacacionMultiple.fin3}" datePattern="dd/MM/yyyy">
+			            		<a:support action="#{programaVacacionMultiple.diferencia3}" event="onchanged" reRender="dias3,saldo3,error3,errorGeneral, guardarButton, saldoPendiente3" ajaxSingle="true" />
+			            	</rich:calendar>
+											
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">D&#237;as</ui:define>		
+							<h:outputText id="dias3" value="#{programaVacacionMultiple.dias3}"/>										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Saldo</ui:define>		
+							<h:outputText id="saldo3" value="#{programaVacacionMultiple.saldo3}"/>										
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/edit.xhtml">
+							<ui:define name="label">Saldo Pendiente</ui:define>		
+							<h:outputText id="saldoPendiente3" value="#{programaVacacionMultiple.saldoPendiente3}"/>										
+						</s:decorate>
+						
+					</h:panelGrid>
+					
+					<rich:spacer height="30"/>	
+				    
+				    <div class="actionButtons" align="center">
+				    	<a:commandButton id="guardarButton" value="Guardar" action="#{programaVacacionMultiple.GuardarRegistrosEmpleado()}" 
+				    		onclick="#{programaVacacionMultiple.RetornarMensaje()}" reRender="planificavacacionList,generar"
+				    		disabled="#{programaVacacionMultiple.habilitarGuardar}"
+				    		/>
+				    	
+				    	<rich:spacer width="30"/>
+				    				    	
+				    	<a:commandButton value="Cancelar" onclick="javascript:Richfaces.hideModalPanel('popUpEdit');"/>     
+			    	</div>				    
+				</rich:panel>	
+			</h:form>
+		</rich:modalPanel>			
+ 
+ 		<a:form>    	
+        	<a:jsFunction name="updateFilaRemove" reRender="empleadoRemoveText">
+            	<a:actionparam name="param1" assignTo="#{programaVacacionMultiple.filaRemove}"  />                  
+        	</a:jsFunction>
+    	</a:form>  
+    	
+    	<a:form>    	
+        	<a:jsFunction name="updateFilaEdit" reRender="empleadoEditText,panelProgEmp,fecha_inicial,fecha_inicial1,fecha_inicial2,fecha_inicial3,fecha_final,
+        	fecha_final1,fecha_final2,fecha_final3,saldo,saldo1,saldo2,saldo3,dias,dias1,dias2,dias3,errorGeneral">
+            	<a:actionparam name="param1" assignTo="#{programaVacacionMultiple.filaEdit}"  />                  
+        	</a:jsFunction>
+    	</a:form>  
+    	
+ 
+</ui:define>
+</ui:composition>

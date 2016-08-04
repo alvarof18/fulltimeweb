@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{accionList.firstResult}"/>
+   <param name="sort" value="#{accionList.orderColumn}"/>
+   <param name="dir" value="#{accionList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="explicacion" value="#{accionList.accion.explicacion}"/>
+   <param name="direccion1" value="#{accionList.accion.direccion1}"/>
+   <param name="proceso1" value="#{accionList.accion.proceso1}"/>
+   <param name="subproceso1" value="#{accionList.accion.subproceso1}"/>
+   <param name="puesto" value="#{accionList.accion.puesto}"/>
+   <param name="lugarTrabajo" value="#{accionList.accion.lugarTrabajo}"/>
+   <param name="remuneracion" value="#{accionList.accion.remuneracion}"/>
+   <param name="partida" value="#{accionList.accion.partida}"/>
+   <param name="direccion2" value="#{accionList.accion.direccion2}"/>
+   <param name="proceso2" value="#{accionList.accion.proceso2}"/>
+   <param name="subproceso2" value="#{accionList.accion.subproceso2}"/>
+   <param name="puesto2" value="#{accionList.accion.puesto2}"/>
+   <param name="lugarTrabajo2" value="#{accionList.accion.lugarTrabajo2}"/>
+   <param name="renumeracion2" value="#{accionList.accion.renumeracion2}"/>
+   <param name="partida2" value="#{accionList.accion.partida2}"/>
+   <param name="coordinador" value="#{accionList.accion.coordinador}"/>
+   <param name="director" value="#{accionList.accion.director}"/>
+
+</page>

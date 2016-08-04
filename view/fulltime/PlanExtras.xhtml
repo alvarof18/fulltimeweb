@@ -1,0 +1,198 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+ 	<h:form id="asistenciaSearch" styleClass="edit">
+
+    <rich:panel>
+        <f:facet name="header">Planificaci&#243;n de Horas Extras</f:facet>
+
+        <s:decorate id="empleado" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Empleado</ui:define>
+            <h:outputText value="#{planExtrasHome.instance.empleado.apellido}  #{planExtrasHome.instance.empleado.nombre}"/>
+        </s:decorate>
+        
+        <s:decorate id="mes" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Mes</ui:define>
+            <h:outputText value="#{planExtrasHome.instance.mes}"/>
+        </s:decorate>
+        
+        <s:decorate id="anio" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">A&#241;o</ui:define>
+            <h:outputText value="#{planExtrasHome.instance.anio}"/>
+        </s:decorate>
+        
+        <s:decorate id="LaborableField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas Laborables</ui:define>
+            <h:outputText value="#{planExtrasHome.instance.total_horas_laborales}"/>
+        </s:decorate>
+        
+        <s:decorate id="SupleField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas Suplementarias</ui:define>
+            <h:outputText value="#{planExtrasHome.instance.total_horas_suplementarias}"/>
+        </s:decorate>
+        
+        <s:decorate id="ExtraorField" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Horas Extraordinarias</ui:define>
+            <h:outputText value="#{planExtrasHome.instance.total_horas_extraordinarias}"/>
+        </s:decorate>
+        
+        <s:decorate id="MsgField" template="#{requestScope.contextPath}/layout/display.xhtml" style="color:red;">
+       		<ui:define name="label">
+            <h:outputText value="#{funcionesHome.init_saldos_laborables(planExtrasHome.instance.paexId,planExtrasHome.instance.total_horas_laborales)}"/>
+            </ui:define>
+        </s:decorate>
+        
+         <div style="foreground-color:red;">    	
+    	</div>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+    
+	    <table width="100%">
+					<tr>
+						<td width="70%">
+	
+			        <s:button view="/fulltime/PlanExtrasEdit.xhtml"
+			                    id="edit"			                   
+			                 value="Editar"/>
+			
+			        <s:button view="/fulltime/#{empty planExtrasFrom ? 'PlanExtrasList' : planExtrasFrom}.xhtml"
+			                    id="done" action="#{planExtrasList.reset()}" 
+			                 value="Aceptar"/>
+			                 
+					<h:commandButton id="Downloads" value="Descargar" action="#{reportesFulltime.reportePlanHorasExtras}" rendered="#{planExtrasHome.instance.autorizado == 3}"/>            		
+			            		<rich:spacer width="10"/>
+	          </td>						
+					<td align="right" >	  		
+            		
+	            		<label>Autorizar</label>
+							<h:commandButton id="autorizar"
+					                          value="Sí"
+					                           immediate="true"
+					                         action="#{planExtrasHome.autorizar()}"					                        
+					                       rendered="#{planExtrasHome.visualizar_autorizacion()}" />
+					                       				
+					         <h:commandButton id="no-autorizar"
+					                          value="No"				                          
+					                         action="#{planExtrasHome.no_autorizar(planExtrasHome.instance.paexId)}"
+					                       rendered="#{planExtrasHome.visualizar_autorizacion()}" 					                    
+					                       />
+            		</td>
+				</tr>
+			</table> 
+    </div>
+     
+    </h:form>
+        
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Funciones</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="Funciones_Lista">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{empty planExtrasHome.funciones}"/>                   
+
+        <rich:dataTable value="#{planExtrasHome.funciones}"
+                       var="_func"
+                  rendered="#{not empty planExtrasHome.funciones}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="funcTable">
+                                   
+            <rich:column sortBy="#{_func.func_resp}">
+                <f:facet name="header">Funci&#243;n</f:facet>
+                <h:outputText value="#{_func.func_resp}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_func.actividad}">
+                <f:facet name="header">Actividad</f:facet>
+                <h:outputText value="#{_func.actividad}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_func.horas_laborales}">
+                <f:facet name="header">Horas Laborales</f:facet>
+                <h:outputText value="#{_func.horas_laborales}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_func.horas_suplementarias}">
+                <f:facet name="header">Horas Suplementarias</f:facet>
+                <h:outputText value="#{_func.horas_suplementarias}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_func.horas_extraordinarias}">
+                <f:facet name="header">Horas Extraordinarias</f:facet>
+                <h:outputText value="#{_func.horas_extraordinarias}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_func.justificacion}">
+                <f:facet name="header">Justificaci&#243;n</f:facet>
+                <h:outputText value="#{_func.justificacion}">
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_func.fecha}" rendered="false">
+                <f:facet name="header">Fecha</f:facet>
+               		<rich:calendar id="fecha" value="#{_func.fecha}" datePattern="dd/MM/yyyy" disabled="true">
+                    <f:convertDateTime />
+                    </rich:calendar>                
+            </rich:column>  
+            <rich:column sortBy="#{_func.desde}" rendered="false">
+                <f:facet name="header">Desde</f:facet>
+                <h:outputText value="#{_func.desde}">
+                    <f:convertDateTime pattern="hh:mm"/>
+                </h:outputText>
+            </rich:column>   
+            <rich:column sortBy="#{_func.hasta}" rendered="false">
+                <f:facet name="header">Hasta</f:facet>
+                <h:outputText value="#{_func.hasta}">
+                    <f:convertDateTime pattern="hh:mm"/>
+                </h:outputText>
+            </rich:column>     
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectcargo"
+                     value="Editar"
+                      view="/fulltime/FuncionesEdit.xhtml">
+                    <f:param name="funcionFuncId"
+                            value="#{_func.func_id}"/>
+                    <f:param name="funcionFrom" value="PlanExtras"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/FuncionesEdit.xhtml"
+                rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            <f:param name="planExtrasPaexId"
+                    value="#{planExtrasHome.instance.paexId}"/>
+            <f:param name="funcionesFrom" value="PlanExtras"/>
+        </s:button>
+    </div>   
+    </rich:tab>
+</rich:tabPanel>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,208 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="#{requestScope.contextPath}/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="tipoCargoSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Planificaci&#243;n de Horas Extras"
+				switchType="ajax">				
+				
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Cédula</ui:define>
+					<h:inputText id="cedula"
+						value="#{planExtrasList.planExtras.empleado.cedula}" />
+				</s:decorate>
+				
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Código</ui:define>
+					<h:inputText id="codigo"
+						value="#{planExtrasList.planExtras.empleado.codigoEmpleado}" />
+				</s:decorate>
+				
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Apellidos</ui:define>
+					<h:inputText id="apellidos"
+						value="#{planExtrasList.planExtras.empleado.apellido}" />
+				</s:decorate>
+				
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Nombres</ui:define>
+					<h:inputText id="nombres"
+						value="#{planExtrasList.planExtras.empleado.nombre}" />
+				</s:decorate>
+						
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Mes</ui:define>
+					<h:inputText id="mounth"
+						value="#{planExtrasList.planExtras.mes}" />
+				</s:decorate>
+				
+				<s:decorate
+					template="#{requestScope.contextPath}/layout/display.xhtml">
+					<ui:define name="label">Año</ui:define>
+					<h:inputText id="year"
+						value="#{planExtrasList.planExtras.anio}" />
+				</s:decorate>
+				
+				<s:decorate id="autorizado" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Autorizado</ui:define>
+					<h:selectOneRadio id="listaAutorizado" value="#{planExtrasList.autorizado}" >
+						<f:selectItem itemValue="4" itemLabel="No" />
+   						<f:selectItem itemValue="3" itemLabel="Sí" />
+					</h:selectOneRadio>
+				</s:decorate>    
+
+
+			</rich:simpleTogglePanel>
+
+			<table width="100%">
+				<tr>
+					<td width="70%"><s:div styleClass="actionButtons"
+						rendered="#{empty from}">
+						<s:button view="/fulltime/PlanExtrasEdit.xhtml" id="create"
+							propagation="none" value="Crear"
+							rendered="#{contexts.applicationContext.get('permisoCrear')}">
+							<f:param name="tipoCargoTicaId" />
+						</s:button>
+						<h:commandButton id="search" value="Buscar"
+							action="/fulltime/PlanExtrasList.xhtml" />
+						<s:button id="reset" value="Cancelar" includePageParams="false" />
+					</s:div></td>					
+				</tr>
+			</table>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">Resultados B&#250;squeda</f:facet>
+			<div class="results" id="planExtrasList"><h:outputText
+				value="No existe resultados"
+				rendered="#{empty planExtrasList.empleados()}" /> <rich:dataTable
+				id="pplanExtrasList" var="_planExtras"
+				value="#{planExtrasList.empleados()}"
+				rendered="#{not empty planExtrasList.empleados()}">
+
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{planExtrasList}" />
+							<ui:param name="propertyLabel" value="Empleado" />
+							<ui:param name="propertyPath" value="planExtras.empleado" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_planExtras.empleado.apellido} - #{_planExtras.empleado.nombre}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{planExtrasList}" />
+							<ui:param name="propertyLabel" value="Mes" />
+							<ui:param name="propertyPath" value="planExtras.mes" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_planExtras.mes}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{planExtrasList}" />
+							<ui:param name="propertyLabel" value="Año" />
+							<ui:param name="propertyPath" value="planExtras.anio" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_planExtras.anio}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{planExtrasList}" />
+							<ui:param name="propertyLabel" value="Horas Laborables" />
+							<ui:param name="propertyPath" value="planExtras.horas_laborables" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_planExtras.total_horas_laborales}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{planExtrasList}" />
+							<ui:param name="propertyLabel" value="Horas Suplementarias" />
+							<ui:param name="propertyPath" value="planExtras.horas_suplementarias" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_planExtras.total_horas_suplementarias}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{planExtrasList}" />
+							<ui:param name="propertyLabel" value="Horas Extraordinarias" />
+							<ui:param name="propertyPath" value="planExtras.total_extraordinarias" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_planExtras.total_horas_extraordinarias}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+							<ui:param name="entityList" value="#{planExtrasList}" />
+							<ui:param name="propertyLabel" value="Autorizado" />
+							<ui:param name="propertyPath" value="planExtras." />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_planExtras.autorizado==4? 'No': 'Sí'}" />
+				</h:column>
+				<rich:column styleClass="action">
+					<f:facet name="header">Acci&#243;n</f:facet>
+					<s:link view="/fulltime/#{empty from ? 'PlanExtras' : from}.xhtml"
+						value="#{empty from ? 'Ver' : 'Seleccionar'}"
+						propagation="#{empty from ? 'none' : 'default'}" id="planExtras"
+						rendered="#{contexts.applicationContext.get('permisoVer')}">
+						<f:param name="planExtrasPaexId" value="#{_planExtras.paexId}" />
+					</s:link>
+            #{' '}
+            <s:link view="/fulltime/PlanExtrasEdit.xhtml" value="Editar"
+						propagation="none" id="planExtrasEdit" rendered="#{empty from}">
+						<f:param name="planExtrasPaexId" value="#{_planExtras.paexId}" />
+					</s:link>
+				</rich:column>
+			</rich:dataTable></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link
+			view="/fulltime/PlanExtrasList.xhtml"
+			rendered="#{planExtrasList.previousExists}"
+			value="#{messages.left}#{messages.left} Primera P&#225;gina" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/fulltime/PlanExtrasList.xhtml"
+			rendered="#{planExtrasList.previousExists}"
+			value="#{messages.left} P&#225;gina Anterior" id="previousPage">
+			<f:param name="firstResult"
+				value="#{planExtrasList.previousFirstResult}" />
+		</s:link> <s:link view="/fulltime/PlanExtrasList.xhtml"
+			rendered="#{planExtrasList.nextExists}"
+			value="P&#225;gina Siguiente #{messages.right}" id="nextPage">
+			<f:param name="firstResult" value="#{planExtras.nextFirstResult}" />
+		</s:link> <s:link view="/fulltime/PlanExtrasList.xhtml"
+			rendered="#{planExtrasList.nextExists}"
+			value="Ultima P&#225;gina #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult" value="#{planExtrasList.lastFirstResult}" />
+		</s:link></div>
+
+
+	</ui:define>
+
+</ui:composition>

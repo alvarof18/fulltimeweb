@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteAtrasosCargo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="23"/>
+	<template><![CDATA["C:\\PROYECTO\\fulltime\\view\\reportes\\estiloFulltimeNormal.jrtx"]]></template>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="fechaInicial" class="java.util.Date"/>
+	<parameter name="fechaFinal" class="java.util.Date"/>
+	<parameter name="cargos" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{rutaPlantilla}.substring( 0,($P{rutaPlantilla}.length() - 25) )]]></defaultValueExpression>
+	</parameter>
+	<parameter name="empresa" class="java.lang.String"/>
+	<parameter name="ciudades" class="java.lang.String"/>
+	<parameter name="jefeId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     empleado.CEDULA AS empleado_CEDULA,
+     empleado.APELLIDO AS empleado_APELLIDO,
+     empleado.NOMBRE AS empleado_NOMBRE,
+     asistencia.FECHA_HORA_HORARIO AS asistencia_FECHA_HORA_HORARIO,
+     asistencia.FECHA_HORA_TIMBRE AS asistencia_FECHA_HORA_TIMBRE,
+     asistencia.ENTRADA_SALIDA AS asistencia_ENTRADA_SALIDA,
+     asistencia.ASIS_ORDEN AS asistencia_ASIS_ORDEN,
+     asistencia.ESTADO AS asistencia_ESTADO,
+     cargo.DESCRIPCION AS cargo_DESCRIPCION,
+     tipo_cargo.DESCRIPCION AS tipo_cargo_DESCRIPCION,
+     empleado.EMPL_ID AS empleado_EMPL_ID,
+     empleado.HORAS_TRABAJA AS empleado_HORAS_TRABAJA,
+     ciudad.DESCRIPCION AS ciudad_DESCRIPCION,
+     empleado.CODIGO_EMPLEADO AS empleado_CODIGO_EMPLEADO
+FROM
+     empleado empleado INNER JOIN asistencia asistencia ON empleado.EMPL_ID = asistencia.EMPL_ID
+     INNER JOIN cargo cargo ON empleado.CARG_ID = cargo.CARG_ID
+     INNER JOIN ciudad ciudad ON empleado.CIUD_ID = ciudad.CIUD_ID
+     INNER JOIN tipo_cargo tipo_cargo ON cargo.TICA_ID = tipo_cargo.TICA_ID
+WHERE
+     date(asistencia.FECHA_HORA_HORARIO) BETWEEN $P{fechaInicial} AND $P{fechaFinal}
+ AND empleado.CARG_ID IN ($P!{cargos})
+ AND empleado.CIUD_ID IN ($P!{ciudades})
+ AND asistencia.ENTRADA_SALIDA = 'E'
+ AND asistencia.ESTADO NOT IN ('FD','L','V')
+ AND asistencia.FECHA_HORA_TIMBRE > asistencia.FECHA_HORA_HORARIO
+ AND (empleado.EMP_EMPL_ID like $P{jefeId} OR empleado.EMPL_ID like $P{jefeId})
+ORDER BY
+     empleado.APELLIDO ASC,
+     asistencia.FECHA_HORA_HORARIO ASC]]>
+	</queryString>
+	<field name="empleado_CEDULA" class="java.lang.String"/>
+	<field name="empleado_APELLIDO" class="java.lang.String"/>
+	<field name="empleado_NOMBRE" class="java.lang.String"/>
+	<field name="asistencia_FECHA_HORA_HORARIO" class="java.sql.Timestamp"/>
+	<field name="asistencia_FECHA_HORA_TIMBRE" class="java.sql.Timestamp"/>
+	<field name="asistencia_ENTRADA_SALIDA" class="java.lang.String"/>
+	<field name="asistencia_ASIS_ORDEN" class="java.lang.Integer"/>
+	<field name="asistencia_ESTADO" class="java.lang.String"/>
+	<field name="cargo_DESCRIPCION" class="java.lang.String"/>
+	<field name="tipo_cargo_DESCRIPCION" class="java.lang.String"/>
+	<field name="empleado_EMPL_ID" class="java.lang.Integer"/>
+	<field name="ciudad_DESCRIPCION" class="java.lang.String"/>
+	<field name="empleado_CODIGO_EMPLEADO" class="java.lang.String"/>
+	<variable name="contRegi" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{contRegi}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer (1)]]></initialValueExpression>
+	</variable>
+	<variable name="sumAtrasoEmpleado" class="java.lang.Long" resetType="Group" resetGroup="empleado" calculation="Sum">
+		<variableExpression><![CDATA[($F{asistencia_FECHA_HORA_TIMBRE}.getTime() - $F{asistencia_FECHA_HORA_HORARIO}.getTime()) / 60000]]></variableExpression>
+	</variable>
+	<variable name="atrasoPermiso" class="java.lang.Integer" resetType="Group" resetGroup="empleado" incrementType="Report">
+		<variableExpression><![CDATA[$V{atrasoPermiso}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="atraso" class="java.lang.Long">
+		<variableExpression><![CDATA[($F{asistencia_FECHA_HORA_TIMBRE}.getTime() - $F{asistencia_FECHA_HORA_HORARIO}.getTime()) / 60000]]></variableExpression>
+	</variable>
+	<variable name="sumAtrasoPermiso" class="java.lang.Integer" resetType="Group" resetGroup="empleado">
+		<variableExpression><![CDATA[$V{sumAtrasoPermiso}]]></variableExpression>
+	</variable>
+	<group name="CIUDAD" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{ciudad_DESCRIPCION}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[CIUDAD]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="103" y="0" width="452" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{ciudad_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="tipoCargo" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{tipo_cargo_DESCRIPCION}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement style="gh1Campo" x="103" y="0" width="452" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{tipo_cargo_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[TIPO CARGO]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="cargo" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{cargo_DESCRIPCION}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement style="gh2Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[CARGO]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="gh2Campo" x="103" y="0" width="452" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{cargo_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20"/>
+		</groupFooter>
+	</group>
+	<group name="empleado">
+		<groupExpression><![CDATA[$F{empleado_EMPL_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<staticText>
+					<reportElement style="gh1Etiqueta" mode="Transparent" x="0" y="0" width="103" height="20"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[EMPLEADO]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="gh1Campo" x="103" y="1" width="287" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_APELLIDO} + " " + $F{empleado_NOMBRE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="gh1Campo" x="395" y="1" width="80" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_CEDULA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="gh1Campo" x="475" y="1" width="80" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{empleado_CODIGO_EMPLEADO}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="63">
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="59" y="2" width="144" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[SUBTOTAL ATRASOS]]></text>
+				</staticText>
+				<line>
+					<reportElement style="linea" x="0" y="2" width="553" height="1"/>
+				</line>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="59" y="22" width="144" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[- JUSTIFICACIONES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="gf1Etiqueta" mode="Transparent" x="59" y="42" width="144" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+					<text><![CDATA[TOTAL ATRASOS]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="333" y="3" width="53" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{sumAtrasoEmpleado}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="333" y="23" width="53" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[($V{sumAtrasoPermiso} == null ? 0 : $V{sumAtrasoPermiso})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="333" y="42" width="53" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{sumAtrasoEmpleado} - ($V{sumAtrasoPermiso} == null ? 0 : $V{sumAtrasoPermiso})]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="396" y="3" width="80" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[($V{sumAtrasoEmpleado} /60).intValue() +":"+ Math.round(  (($V{sumAtrasoEmpleado}/60 - ($V{sumAtrasoEmpleado}/60).intValue()) * 60))]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="396" y="23" width="80" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(($V{sumAtrasoPermiso} == null ? 0 : $V{sumAtrasoPermiso}) /60).intValue() +":"+ Math.round( ((($V{sumAtrasoPermiso} == null ? 0 : $V{sumAtrasoPermiso})/60 - (($V{sumAtrasoPermiso} == null ? 0 : $V{sumAtrasoPermiso})/60).intValue()) * 60))]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="396" y="43" width="80" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(($V{sumAtrasoEmpleado} - ($V{sumAtrasoPermiso} == null ? 0 : $V{sumAtrasoPermiso})) /60).intValue() +":"+ Math.round(((($V{sumAtrasoEmpleado} - ($V{sumAtrasoPermiso} == null ? 0 : $V{sumAtrasoPermiso}))/60 - (($V{sumAtrasoEmpleado} - ($V{sumAtrasoPermiso} == null ? 0 : $V{sumAtrasoPermiso}))/60).intValue()) * 60))]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="70" height="70"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement style="tNombreEmpresa" x="70" y="0" width="485" height="35"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{empresa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="tNombreReporte" x="70" y="35" width="485" height="35"/>
+				<textElement/>
+				<text><![CDATA[Reporte - Atrasos]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Opaque" x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Transparent" x="103" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[HORARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Transparent" x="213" y="0" width="56" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[TIMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Transparent" x="395" y="0" width="81" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[ATRASO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="chEtiqueta" mode="Transparent" x="269" y="0" width="56" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[AUT]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField pattern="HH.mm">
+				<reportElement style="dCampo" x="213" y="0" width="56" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{asistencia_FECHA_HORA_TIMBRE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm">
+				<reportElement style="dCampo" x="103" y="0" width="100" height="20"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asistencia_FECHA_HORA_HORARIO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement style="dCampo" x="330" y="0" width="56" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{atraso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[($V{atraso} /60).intValue() +":"+ Math.round(  (($V{atraso}/60 - ($V{atraso}/60).intValue()) * 60))]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="21">
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="2" y="0" width="384" height="20"/>
+				<subreportParameter name="emplId">
+					<subreportParameterExpression><![CDATA[$F{empleado_EMPL_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fechaDesde">
+					<subreportParameterExpression><![CDATA[$F{asistencia_FECHA_HORA_HORARIO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="atrasoPermiso" toVariable="atrasoPermiso"/>
+				<returnValue subreportVariable="sumAtrasoPermiso" toVariable="sumAtrasoPermiso" calculation="Sum"/>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "subPermisoAtraso.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="18" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement style="pfEtiqueta" x="2" y="3" width="78" height="20" forecolor="#000000"/>
+				<textElement markup="none">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Impreso por:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pfParametro" x="78" y="3" width="168" height="20" forecolor="#000000"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="pfEtiqueta" x="333" y="3" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pfEtiqueta" x="250" y="3" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pag "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh.mm">
+				<reportElement style="pfEtiqueta" x="424" y="3" width="131" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement style="linea" x="2" y="2" width="553" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="sVarNumRegistros" x="80" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{contRegi}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="sVarNumRegistros" x="2" y="0" width="79" height="20"/>
+				<textElement/>
+				<text><![CDATA[No. Registros:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

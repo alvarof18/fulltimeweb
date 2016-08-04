@@ -1,0 +1,127 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Detalle Ciudad Feriado </f:facet>
+
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/CiudadFeriadoEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty ciudadFeriadoFrom ? 'CiudadFeriadoList' : ciudadFeriadoFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+
+    <!--<rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Feriado</h:panelGroup>
+        </f:facet>
+    <div class="association" id="feriadoParent">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{ciudadFeriadoHome.instance.feriado == null}"/>
+
+        <rich:dataTable var="_feriado"
+                   value="#{ciudadFeriadoHome.instance.feriado}"
+                rendered="#{ciudadFeriadoHome.instance.feriado != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="feriadoTable">
+            <h:column>
+                <f:facet name="header">Feri id</f:facet>
+                <h:outputText value="#{_feriado.feriId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Detalle tipo parametro dtpa id</f:facet>
+                <h:outputText value="#{_feriado.detalleTipoParametro.dtpaId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fecha</f:facet>
+                <h:outputText value="#{_feriado.fecha}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_feriado.descripcion}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="viewferiado"
+                     value="View"
+                      view="/fulltime/Feriado.xhtml">
+                    <f:param name="feriadoFeriId"
+                           value="#{_feriado.feriId}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Ciudad</h:panelGroup>
+        </f:facet>
+    <div class="association" id="ciudadParent">
+
+        <h:outputText value="No existen registros relacionados"
+                   rendered="#{ciudadFeriadoHome.instance.ciudad == null}"/>
+
+        <rich:dataTable var="_ciudad"
+                   value="#{ciudadFeriadoHome.instance.ciudad}"
+                rendered="#{ciudadFeriadoHome.instance.ciudad != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="ciudadTable">
+            <h:column>
+                <f:facet name="header">Ciud id</f:facet>
+                <h:outputText value="#{_ciudad.ciudId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Provincia prov id</f:facet>
+                <h:outputText value="#{_ciudad.provincia.provId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">C&#243;digo</f:facet>
+                <h:outputText value="#{_ciudad.codigo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descripci&#243;n</f:facet>
+                <h:outputText value="#{_ciudad.descripcion}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="viewciudad"
+                     value="View"
+                      view="/fulltime/Ciudad.xhtml">
+                    <f:param name="ciudadCiudId"
+                           value="#{_ciudad.ciudId}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+--></ui:define>
+
+</ui:composition>

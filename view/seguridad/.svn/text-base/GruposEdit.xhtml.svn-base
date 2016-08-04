@@ -1,0 +1,243 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="grupos" styleClass="edit">
+    
+    	<h1 id="segmotmanalce" align="center">#{gruposHome.managed ? 'Editarar' : 'A&#241;adir'} Men&#250;</h1>
+
+        <rich:panel>
+            <f:facet name="header">#{gruposHome.managed ? 'Editarar' : 'A&#241;adir'} Men&#250;</f:facet>
+
+
+			<s:decorate id="nombreField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">C&#243;digo</ui:define>
+                <h:inputText id="nombre" size="50" maxlength="50" value="#{gruposHome.instance.nombre}" required="true">
+                    <a:support event="onblur" reRender="nombreField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="etiquetaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Etiqueta</ui:define>
+                <h:inputText id="etiqueta" size="30" maxlength="30" value="#{gruposHome.instance.etiqueta}" required="true">
+                    <a:support event="onblur" reRender="etiquetaField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100" maxlength="100" value="#{gruposHome.instance.descripcion}" required="true">
+                    <a:support event="onblur" reRender="descripcionField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+			
+			<s:decorate id="ordenField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Orden</ui:define>
+                <h:inputText id="orden" value="#{gruposHome.instance.orden}" required="true">
+                    <a:support event="onblur" reRender="ordenField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <!--<s:decorate id="expandibleField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Expandible</ui:define>
+                <h:selectBooleanCheckbox id="expandible" value="#{gruposHome.instance.expandible}"/>
+            </s:decorate>
+
+            --><div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Guardar"
+                         action="#{gruposHome.persist}"
+                       disabled="#{!gruposHome.wired}"
+                       rendered="#{!gruposHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{gruposHome.update}"
+                       rendered="#{gruposHome.managed and contexts.applicationContext.get('permisoEditar')}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{gruposHome.remove}"
+                      immediate="true"
+                       rendered="#{gruposHome.managed and contexts.applicationContext.get('permisoEliminar')}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/Grupos.xhtml"
+                rendered="#{gruposHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/seguridad/#{empty gruposFrom ? 'GruposList' : gruposFrom}.xhtml"
+                rendered="#{!gruposHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!-- <rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Item menus">
+        <h:form styleClass="association" id="itemMenusChildren">
+
+            <h:outputText value="There are no itemMenus associated with this grupos."
+                       rendered="#{empty gruposHome.itemMenus}"/>
+
+            <rich:dataTable value="#{gruposHome.itemMenus}"
+                           var="_itemMenu"
+                      rendered="#{not empty gruposHome.itemMenus}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="itemMenusTable">
+                <rich:column sortBy="#{_itemMenu.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_itemMenu.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_itemMenu.descripcion}">
+                    <f:facet name="header">Descripcion</f:facet>
+                    <h:outputText value="#{_itemMenu.descripcion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_itemMenu.etiqueta}">
+                    <f:facet name="header">Etiqueta</f:facet>
+                    <h:outputText value="#{_itemMenu.etiqueta}"/>
+                </rich:column>
+                <rich:column sortBy="#{_itemMenu.expandible}">
+                    <f:facet name="header">Expandible</f:facet>
+                    <h:outputText value="#{_itemMenu.expandible}"/>
+                </rich:column>
+                <rich:column sortBy="#{_itemMenu.link}">
+                    <f:facet name="header">Link</f:facet>
+                    <h:outputText value="#{_itemMenu.link}"/>
+                </rich:column>
+                <rich:column sortBy="#{_itemMenu.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_itemMenu.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_itemMenu.orden}">
+                    <f:facet name="header">Orden</f:facet>
+                    <h:outputText value="#{_itemMenu.orden}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{gruposHome.managed}" id="itemMenus">
+        <div class="actionButtons">
+            <s:button id="additemMenu"
+                   value="Add itemMenu"
+                    view="/seguridad/ItemMenuEdit.xhtml"
+             propagation="none">
+                 <f:param name="gruposId"
+                         value="#{gruposHome.instance.id}"/>
+                 <f:param name="itemMenuFrom" value="Grupos"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Items menu roleses">
+        <h:form styleClass="association" id="itemsMenuRolesesChildren">
+
+            <h:outputText value="There are no itemsMenuRoleses associated with this grupos."
+                       rendered="#{empty gruposHome.itemsMenuRoleses}"/>
+
+            <rich:dataTable value="#{gruposHome.itemsMenuRoleses}"
+                           var="_itemsMenuRoles"
+                      rendered="#{not empty gruposHome.itemsMenuRoleses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="itemsMenuRolesesTable">
+                <rich:column sortBy="#{_itemsMenuRoles.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_itemsMenuRoles.id}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{gruposHome.managed}" id="itemsMenuRoleses">
+        <div class="actionButtons">
+            <s:button id="additemsMenuRoles"
+                   value="Add itemsMenuRoles"
+                    view="/seguridad/ItemsMenuRolesEdit.xhtml"
+             propagation="none">
+                 <f:param name="gruposId"
+                         value="#{gruposHome.instance.id}"/>
+                 <f:param name="itemsMenuRolesFrom" value="Grupos"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Subgruposes">
+        <h:form styleClass="association" id="subgruposesChildren">
+
+            <h:outputText value="There are no subgruposes associated with this grupos."
+                       rendered="#{empty gruposHome.subgruposes}"/>
+
+            <rich:dataTable value="#{gruposHome.subgruposes}"
+                           var="_subgrupos"
+                      rendered="#{not empty gruposHome.subgruposes}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="subgruposesTable">
+                <rich:column sortBy="#{_subgrupos.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_subgrupos.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_subgrupos.descripcion}">
+                    <f:facet name="header">Descripcion</f:facet>
+                    <h:outputText value="#{_subgrupos.descripcion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_subgrupos.etiqueta}">
+                    <f:facet name="header">Etiqueta</f:facet>
+                    <h:outputText value="#{_subgrupos.etiqueta}"/>
+                </rich:column>
+                <rich:column sortBy="#{_subgrupos.expandible}">
+                    <f:facet name="header">Expandible</f:facet>
+                    <h:outputText value="#{_subgrupos.expandible}"/>
+                </rich:column>
+                <rich:column sortBy="#{_subgrupos.nombre}">
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{_subgrupos.nombre}"/>
+                </rich:column>
+                <rich:column sortBy="#{_subgrupos.orden}">
+                    <f:facet name="header">Orden</f:facet>
+                    <h:outputText value="#{_subgrupos.orden}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{gruposHome.managed}" id="subgruposes">
+        <div class="actionButtons">
+            <s:button id="addsubgrupos"
+                   value="Add subgrupos"
+                    view="/seguridad/SubgruposEdit.xhtml"
+             propagation="none">
+                 <f:param name="gruposId"
+                         value="#{gruposHome.instance.id}"/>
+                 <f:param name="subgruposFrom" value="Grupos"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel> -->
+</ui:define>
+
+</ui:composition>

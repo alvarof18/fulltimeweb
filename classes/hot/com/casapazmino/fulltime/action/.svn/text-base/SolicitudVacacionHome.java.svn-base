@@ -1,0 +1,236 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.log.Log;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.comun.Fechas;
+import com.casapazmino.fulltime.model.Asistencia;
+import com.casapazmino.fulltime.model.DetalleHorario;
+import com.casapazmino.fulltime.model.DetalleTipoParametro;
+import com.casapazmino.fulltime.model.Empleado;
+import com.casapazmino.fulltime.model.Horario;
+import com.casapazmino.fulltime.model.SolicitudVacacion;
+
+@Name("solicitudVacacionHome")
+public class SolicitudVacacionHome extends EntityHome<SolicitudVacacion> {
+
+	private static final long serialVersionUID = 1L;
+
+	@Logger
+	Log log;
+
+	@In(create = true)
+	DetalleTipoParametroHome detalleTipoParametroHome;
+	@In(create = true)
+	EmpleadoHome empleadoHome;
+	@In(create = true)
+	AsistenciaList asistenciaList;
+	@In(create = true)
+	AsistenciaHome asistenciaHome;
+
+	private Horario horario;
+	private List<DetalleHorario> detalleHorarios;
+
+	Fechas fechas = new Fechas();
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+	public void setSolicitudVacacionSova(Long id) {
+		setId(id);
+	}
+
+	public Long getSolicitudVacacionSova() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected SolicitudVacacion createInstance() {
+		SolicitudVacacion solicitudVacacion = new SolicitudVacacion();
+		return solicitudVacacion;
+	}
+
+	public void wire() {
+		getInstance();
+		DetalleTipoParametro detalleTipoParametroByAutorizado = detalleTipoParametroHome
+				.getDefinedInstance();
+		if (detalleTipoParametroByAutorizado != null) {
+			getInstance().setDetalleTipoParametroByAutorizado(
+					detalleTipoParametroByAutorizado);
+		}
+		DetalleTipoParametro detalleTipoParametroByPeriodo = detalleTipoParametroHome
+				.getDefinedInstance();
+		if (detalleTipoParametroByPeriodo != null) {
+			getInstance().setDetalleTipoParametroByPeriodo(
+					detalleTipoParametroByPeriodo);
+		}
+		Empleado empleado = empleadoHome.getDefinedInstance();
+		if (empleado != null) {
+			getInstance().setEmpleado(empleado);
+		}
+	}
+	public boolean isWired() {
+		// if (getInstance().getDetalleTipoParametro() == null)
+		// return false;
+		// if (getInstance().getEmpleado() == null)
+		// return false;
+		return true;
+	}
+
+	public SolicitudVacacion getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	public List<Asistencia> consultarAsistencia() {
+
+		// PARAMETROS PARA LA CONSULTA EN LA TABLA ASISTENCIA
+		asistenciaList.getAsistencia().getEmpleado().setCodigoEmpleado(
+				this.getInstance().getEmpleado().getCodigoEmpleado());
+		asistenciaList.getAsistencia().setFechaDesde(
+				this.getInstance().getFechaDesde());
+		asistenciaList.getAsistencia().setFechaHasta(
+				this.getInstance().getFechaHasta());
+
+		AsistenciaList asistencias = new AsistenciaList();
+		return asistencias.getListaAsistencias();
+	}
+
+	public int validarFechas() {
+		List<Asistencia> listaAsistencia = consultarAsistencia();
+		if (listaAsistencia.size() != 0) {
+			List<Asistencia> listaRegistrada = verificarRegistros(listaAsistencia);
+			// SI LA LISTA ES IGUAL A 1 
+			// QUIERE DECIR QUE CONTIENE REGISTROS TIMBRADOS, VACACIONES O PERMISOS
+			// ENTONCES RETORNA 0
+			if (listaRegistrada.size() == 0) {
+				return 1;
+			} else
+				return 0;
+		} else {
+			return 2;
+		}
+	}
+
+	public String procesarSolicitud() {
+		int ret = validarFechas();
+		switch (ret) {
+		case 1:
+			eliminarAsistencia();
+			crearAsistencia();
+			break;
+		case 2:
+			crearAsistencia();
+			break;
+		default:
+			FacesMessages.instance().add(
+					// no hace nada;
+					"Fechas seleccionadas contienen registros de asistencia");
+			break;
+		}
+		return null;
+	}
+
+	public void crearAsistencia() {
+		List<Calendar> fechas = new ArrayList<Calendar>();
+		List<Empleado> empleados = new ArrayList<Empleado>();
+		// RECUPERA DETALLE HORARIO DE ACUERDO AL HORARIO SELECCIONADO
+		getDetalleHorarios().addAll(horario.getDetalleHorarios());
+		
+		fechas = crearListFechas();
+		empleados.add(this.getInstance().getEmpleado());
+
+		asistenciaHome.insertarAsistencia(empleados, fechas,
+				getDetalleHorarios(), Constantes.ASISTENCIA_VACACIONES);
+		fechas.clear();
+		getDetalleHorarios().clear();
+		empleados.clear();
+
+	}
+
+	public void eliminarAsistencia() {
+		List<Asistencia> listaAsistencia = consultarAsistencia();
+		asistenciaHome.eliminarAsistencias(listaAsistencia);
+
+		/*
+		for (Asistencia asistencia : listaAsistencia) {
+			asistenciaHome.setInstance(asistencia);
+			asistenciaHome.remove();
+		}
+		*/
+	}
+
+/*	public void actualizarAsistencia() {
+		for (Asistencia asistencia : listaAsistencia) {
+			asistencia.setEstado(Constantes.ASISTENCIA_VACACIONES);
+			asistenciaHome.update();
+		}
+	}
+*/
+	public List<Calendar> crearListFechas() {
+		List<Calendar> listaFechas = new ArrayList<Calendar>();
+
+		Calendar fechaDesde = Calendar.getInstance();
+		fechaDesde.setTime(this.getInstance().getFechaDesde());
+
+		Calendar fechaHasta = Calendar.getInstance();
+		fechaHasta.setTime(this.getInstance().getFechaHasta());
+
+		for (Calendar c = fechaDesde; c.compareTo(fechaHasta) <= 0; c.add(
+				Calendar.DATE, 1)) {
+			Calendar fechaSiguiente = Calendar.getInstance();
+			fechaSiguiente.setTime(fechaDesde.getTime());
+			listaFechas.add(fechaSiguiente);
+		}
+
+		return listaFechas;
+	}
+
+	public List<Asistencia> verificarRegistros(List<Asistencia> listaAsistencia) {
+		List<Asistencia> listaRegistrados = new ArrayList<Asistencia>();
+
+		for (Asistencia asistencia : listaAsistencia) {
+			if (asistencia.getEstado() != Constantes.ASISTENCIA_FALTA) {
+				listaRegistrados.add(asistencia);
+			}
+		}
+		return listaRegistrados;
+	}
+
+	public Horario getHorario() {
+		if (horario == null) {
+			horario = new Horario();
+		}
+
+		return horario;
+	}
+
+	public void setHorario(Horario horario) {
+		this.horario = horario;
+	}
+
+	public List<DetalleHorario> getDetalleHorarios() {
+		if (detalleHorarios == null) {
+			detalleHorarios = new ArrayList<DetalleHorario>();
+		}
+
+		return detalleHorarios;
+	}
+
+	public void setDetalleHorarios(List<DetalleHorario> detalleHorarios) {
+		this.detalleHorarios = detalleHorarios;
+	}
+}

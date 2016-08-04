@@ -1,0 +1,337 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="#{requestScope.contextPath}/layout/template.xhtml"
+    xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+    
+	<ui:define name="body">
+	
+		<style type="text/css">
+			.panelAprobacion {   					
+   					overflow: auto;
+  					}
+		
+  			.panelPopUpEdit {
+   					height: 100px;   					
+   					overflow: auto;
+  					}
+  					
+  			.divPopUpRemove {
+   					height: 50px;
+   					width:  300px;
+   					font-family : Arial;
+    				font-size : 130%;
+  					}
+  					
+  			.panelPopUpEditHorario {
+   					height: 120px;   					
+   					overflow: auto;
+  					}
+  					
+  			.rich-filter-input{
+            		width:50px;
+        			}
+		</style> 
+		
+    	<h:form id="aprobacionSearch" styleClass="edit" bodyClass="panelAprobacion" style="width:1157px;">
+    		    
+        	<rich:simpleTogglePanel label="Aprobaci&#243;n M&#250;ltiple" switchType="ajax">        		
+				<h:panelGrid columns="1" > 		
+					<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+						<ui:define name="label">
+							Seleccione Par&#225;metros				
+						</ui:define>
+							<h:selectOneRadio id="listaParametros" value="#{aprobacionMultiple.tipoGrupo}">
+								<s:selectItems value="#{enumeraciones.tipoReporte2}" var="tipoReporte" label="#{tipoReporte}" />						
+								<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,departamentoField,listaDepartamento,itemsDepartamento,
+															detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+															ciudadField,listaCiudades"
+								ajaxSingle="true" />
+							</h:selectOneRadio>
+					</s:decorate>
+
+					<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+						<h:selectManyListbox id="listaCargo" value="#{aprobacionMultiple.cargos}"
+							size="10" rendered="#{aprobacionMultiple.tipoGrupo != 'Departamento' and aprobacionMultiple.tipoGrupo != 'Grupo'}" >
+							<s:selectItems id="itemsCargo"  
+								value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+								itemValue="#{cargo.cargId}" >
+							</s:selectItems>
+							<f:convertNumber/>
+						</h:selectManyListbox>
+					</s:decorate>
+					
+					<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+						<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{aprobacionMultiple.detalleGrupoContratados}"
+							size="10" rendered="#{aprobacionMultiple.tipoGrupo != 'Departamento' and aprobacionMultiple.tipoGrupo != 'Cargo'}" >
+								<s:selectItems id="itemsDetalleGrupoContratado"  
+									value="#{detalleGrupoContratadoList.resultList}" 
+									var="detalleGrupoContratado" 
+									label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+									itemValue="#{detalleGrupoContratado.dgcoId}" >
+								</s:selectItems>
+								<f:convertNumber />
+							</h:selectManyListbox>
+					</s:decorate>
+					
+					<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/display.xhtml"  >
+						<h:selectManyListbox id="listaDepartamento" value="#{aprobacionMultiple.departamentos}"
+								size="10" rendered="#{aprobacionMultiple.tipoGrupo != 'Cargo' and aprobacionMultiple.tipoGrupo != 'Grupo'}">
+								<s:selectItems id="itemsDepartamento" value="#{departamentoList.listaDepartamentos}" var="departamento" label="#{departamento.descripcion}" itemValue="#{departamento.depaId}"/>
+								<f:convertNumber />
+						</h:selectManyListbox>
+					</s:decorate>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2" styleClass="vertical-align: top">		
+					<h:panelGrid columns="1" >			
+						<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/display.xhtml">
+							<ui:define name="label" rendered="#{aprobacionMultiple.tipoGrupo != 'Empleado'}">Ciudad</ui:define>
+								<h:selectManyListbox id="listaCiudades" value="#{aprobacionMultiple.ciudades}" size="10" > 
+									<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad" 
+										value="#{usuarioCiudadList.listaCiudadesUsuarios}" 
+										var="usuarioCiudad" 
+										label="#{usuarioCiudad.ciudad.provincia.descripcion} - #{usuarioCiudad.ciudad.descripcion}"
+										itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+									<f:convertNumber />
+							</h:selectManyListbox>
+						</s:decorate>
+						
+						<s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                			<ui:define name="label">Fecha Desde</ui:define>
+                			<rich:calendar id="fechaDesde" value="#{aprobacionMultiple.fechaDesde}" datePattern="dd/MM/yyyy"/>
+            			</s:decorate>
+						
+						<s:decorate id="tipoSolicitudField" template="#{requestScope.contextPath}/layout/display.xhtml">
+							<ui:define name="label">Tipo de Solicitud</ui:define>
+								<h:selectOneRadio id="tipoSolicitud" value="#{aprobacionMultiple.tipoSolicitud}" >
+									<f:selectItem itemValue="0" itemLabel="Permisos" />
+			   						<f:selectItem itemValue="1" itemLabel="Vacaciones" /> 
+								</h:selectOneRadio>
+						</s:decorate>
+						
+						<s:decorate id="autorizacionField" template="#{requestScope.contextPath}/layout/display.xhtml">
+							<ui:define name="label">Autorizacion</ui:define>
+								<h:selectOneRadio id="autorizacion" value="#{aprobacionMultiple.autorizacion}" >
+									<f:selectItem itemValue="0" itemLabel="Pendiente" />
+   									<f:selectItem itemValue="1" itemLabel="Pre-Autorizado" />
+   									<f:selectItem itemValue="2" itemLabel="Autorizado" />
+   									<f:selectItem itemValue="3" itemLabel="No-Autorizado" /> 
+								</h:selectOneRadio>
+						</s:decorate>
+					</h:panelGrid>
+				</h:panelGrid>
+			</rich:simpleTogglePanel>
+			
+			<div>		
+				<table width="100%">				
+					<tr>
+						<td width="70%">
+							
+							<h:commandButton id="verificar" value="Verificar" action="#{aprobacionMultiple.VerificarSolicitudes()}"/>
+				
+							<rich:spacer width="7"/>					
+							
+							<h:commandButton id="procesar" value="Procesar" action="#{aprobacionMultiple.procesar}" 
+											 rendered = "#{aprobacionMultiple.botonProcesar}"/>						
+							<rich:spacer width="7"/>	
+									
+							<h:commandButton id="cancelar" value="Cancelar"	action="#{aprobacionMultiple.Cancelar()}"/>
+						
+						</td>
+					</tr>				
+				</table>			
+			</div>
+			
+			<!-- Permisos  -->
+			
+			<rich:panel bodyClass="panelAprobacion" style="width:1157px;" rendered="#{aprobacionMultiple.tipoSolicitud == '0'}">
+				<f:facet name="header">Resultados B&#250;squeda</f:facet> 
+				<h:outputText value="No existe resultados" rendered="#{empty aprobacionMultiple.listaPermiso}" />
+				<div class="results" id="ResultadoPermiso">
+			
+				<rich:dataTable id="SolPermisos" var="_permisos" value="#{aprobacionMultiple.listaPermiso}"
+						rendered="#{!empty aprobacionMultiple.listaPermiso}" columnClasses="center" rows="10" reRender="ds">
+					
+					<f:facet name="header">
+	                	<h:outputText value="Solicitudes de Permisos"/>
+	            	</f:facet>
+	       			 	
+	            	<rich:column>
+		            	<f:facet name="header">
+		            		<h:outputText value="N-per"/> 
+		           		</f:facet>
+		            	<h:outputText value="#{_permisos.permId}"/>		            
+		   			</rich:column>
+		   			 
+		   			<rich:column id="ColEmpl">
+		            	<f:facet name="header">
+		            		<h:outputText value="Empleado"/> 
+		            	</f:facet>
+		            	<h:outputText value="#{_permisos.empleadoByEmplId.apellido}  #{_permisos.empleadoByEmplId.nombre}"/>		            
+		   			</rich:column>
+		   			
+		   			<rich:column id="ColTip">
+			            <f:facet name="header"> 
+			            	<h:outputText value="Tipo permiso"/> 
+			            </f:facet>
+			            <h:outputText value="#{_permisos.tipoPermiso.descripcion}"/>		            
+		   			</rich:column>
+					
+					<rich:column sortBy="#{_permisos.fecha}" id="FecSol">
+			            <f:facet name="header">
+			            	<h:outputText value="Fecha Solicitud"/> 
+			            </f:facet>
+			           <rich:calendar id="fecha" disabled="true" value="#{_permisos.fecha}" datePattern="dd/MM/yyyy HH:mm"/> 	            
+		   			</rich:column>
+					
+					<rich:column sortBy="#{_permisos.fechaDesde}" id="FecDes">
+			            <f:facet name="header">
+			            	<h:outputText value="Desde"/> 
+			            </f:facet>
+			           <rich:calendar id="fechaDesde" disabled="true" value="#{_permisos.fechaDesde}" datePattern="dd/MM/yyyy HH:mm"/> 	            
+		   			</rich:column>
+		   		
+		   			<rich:column sortBy="#{_permisos.fechaHasta}" id="FecHas">
+			            <f:facet name="header">
+			            	<h:outputText value="Hasta"/> 
+			            </f:facet>
+			          <rich:calendar id="fechaHasta" disabled="true" value="#{_permisos.fechaHasta}" datePattern="dd/MM/yyyy HH:mm"/>     	            
+		   			</rich:column>
+		   			
+		   			<rich:column sortBy="#{_permisos.nivelRequerido}" id="NivReq">
+			            <f:facet name="header">
+			            	<h:outputText value="N-Req"/> 
+			            </f:facet>
+			          <h:outputLabel value="#{_permisos.nivelRequerido}"/>    	            
+		   			</rich:column>
+		   		
+			   		<rich:column sortBy="#{_permisos.aprobacion}" id="NivApr">
+			            <f:facet name="header">
+			            	<h:outputText value="N-Apr"/> 
+			            </f:facet>
+			          <h:outputLabel value="#{_permisos.aprobacion}"/>    	            
+			   		</rich:column>
+		   		
+		   			<rich:column sortBy="#{_permisos.detalleTipoParametro.descripcion}" id="Aut">
+			           	<f:facet name="header">
+			            	<h:outputText value="Autorizado"/> 
+			            </f:facet>
+			          <h:outputLabel value="#{_permisos.detalleTipoParametro.descripcion}"/>    	            
+		   			</rich:column>
+		   			
+		   			<rich:column id="Apro" rendered = "#{aprobacionMultiple.acciones}">
+			           	<f:facet name="header">
+			            	<h:outputText value="Aprobacion"/> 
+			            </f:facet>        
+			          <h:selectOneRadio id = "desicionField" value="#{aprobacionMultiple.autorizar}" valueChangeListener="#{aprobacionMultiple.SeleccionaOpcion}">
+									<f:selectItem itemValue="0" itemLabel="Autorizar"  />
+   									<f:selectItem itemValue="1" itemLabel="No-Autorizar" />
+   									<a:support id="cambios" event="onclick"
+									bypassUpdates="true" ajaxSingle="true" action="#{aprobacionMultiple.grabarOpcion(_permisos.permId)}"/>
+						</h:selectOneRadio>    	            
+		   			</rich:column>
+		   			
+		   			<f:facet name="footer">
+                	<rich:datascroller id="ds"></rich:datascroller>
+            	</f:facet>
+
+				</rich:dataTable>
+				</div>
+			</rich:panel>
+			
+			
+			<!-- Vacaciones  -->
+			
+			<rich:panel rendered="#{aprobacionMultiple.tipoSolicitud == '1'}" >
+			<f:facet name="header">Resultados B&#250;squeda</f:facet>
+			<h:outputText value="No existe resultados Vacaciones" rendered="#{empty aprobacionMultiple.listaSolicitudVacacion}"/>
+			<div class="results" id="ResultadoSolicitudVacacion">
+		
+		<rich:dataTable id="SolVacaciones" var="_solicitudVacacion" value="#{aprobacionMultiple.listaSolicitudVacacion}"
+				rendered="#{!empty aprobacionMultiple.listaSolicitudVacacion}" columnClasses="center" rows="10" reRender="ds">
+				
+				<f:facet name="header">
+                	<h:outputText value="Solicitudes de Vacaciones"/>
+            	</f:facet>
+            	
+            	<rich:column sortBy="#{_solicitudVacacion.sova}" id="nroSol">
+		            <f:facet name="header">
+		            	<h:outputText value="N-Sol"/> 
+		            </f:facet>
+		          <h:outputLabel value="#{_solicitudVacacion.sova}"/>    	            
+		   		</rich:column>
+            	 
+            	<rich:column sortBy="#{_solicitudVacacion.empleadoByEmplId.apellido}" id="ColEmpl">
+		            <f:facet name="header">
+		            	<h:outputText value="Empleado"/> 
+		            </f:facet>
+		            <h:outputText value="#{_solicitudVacacion.empleadoByEmplId.apellido}  #{_solicitudVacacion.empleadoByEmplId.nombre}"/>		            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_solicitudVacacion.fechaDesde}" id="ColFecDes">
+		            <f:facet name="header">
+		            	<h:outputText value="Desde"/> 
+		            </f:facet>
+		           <rich:calendar id="calfechaDesde" disabled="true" value="#{_solicitudVacacion.fechaDesde}" datePattern="dd/MM/yyyy"/>  		            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_solicitudVacacion.fechaHasta}" id="ColFecHas">
+		            <f:facet name="header">
+		            	<h:outputText value="Hasta"/> 
+		            </f:facet>
+		           <rich:calendar id="calfechaHasta" disabled="true" value="#{_solicitudVacacion.fechaHasta}" datePattern="dd/MM/yyyy"/>  		            
+		   		</rich:column>	
+		   		
+		   		<rich:column sortBy="#{_solicitudVacacion.nivelRequerido}" id="NivReq">
+		            <f:facet name="header">
+		            	<h:outputText value="N-Req"/> 
+		            </f:facet>
+		          <h:outputLabel value="#{_solicitudVacacion.nivelRequerido}"/>    	            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_solicitudVacacion.aprobacion}" id="NivApr">
+		            <f:facet name="header">
+		            	<h:outputText value="N-Apr"/> 
+		            </f:facet>
+		          <h:outputLabel value="#{_solicitudVacacion.aprobacion}"/>    	            
+		   		</rich:column>
+		   		
+		   		<rich:column sortBy="#{_solicitudVacacion.detalleTipoParametro.descripcion}" id="Aut">
+		            <f:facet name="header">
+		            	<h:outputText value="Autorizado"/> 
+		            </f:facet>
+		          <h:outputLabel value="#{_solicitudVacacion.detalleTipoParametro.descripcion}"/>    	            
+		   		</rich:column>
+		   		
+		   		<rich:column id="Apro" rendered = "#{aprobacionMultiple.acciones}">
+			           	<f:facet name="header">
+			            	<h:outputText value="Aprobacion"/> 
+			            </f:facet>        
+			          <h:selectOneRadio id = "desicionField" value="#{aprobacionMultiple.autorizar}" valueChangeListener="#{aprobacionMultiple.SeleccionaOpcion}">
+									<f:selectItem itemValue="0" itemLabel="Autorizar"  />
+   									<f:selectItem itemValue="1" itemLabel="No-Autorizar" />
+   									<a:support id="cambios" event="onclick"
+									bypassUpdates="true" ajaxSingle="true" action="#{aprobacionMultiple.grabarOpcion(_solicitudVacacion.sova)}"/>
+						</h:selectOneRadio>    	            
+		   			</rich:column>
+		   		
+		   		
+		   		<f:facet name="footer">
+                	<rich:datascroller id="ds"></rich:datascroller>
+            	</f:facet>
+				
+			</rich:dataTable>
+			</div>
+		</rich:panel>	
+					
+		</h:form>			
+	</ui:define>
+</ui:composition>

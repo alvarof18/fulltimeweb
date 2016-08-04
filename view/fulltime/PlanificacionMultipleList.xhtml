@@ -1,0 +1,588 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+	template="#{requestScope.contextPath}/layout/template.xhtml"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+<ui:define name="body">
+
+    <h:form id="planificacionSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Planificaci&#243;n Multiple" switchType="ajax">
+        		
+		<h:panelGrid columns="1" > 
+		
+			<s:decorate id="parametros" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Seleccione Par&#225;metros</ui:define>
+					<h:selectOneRadio id="listaParametros" value="#{planificacionMultiple.tipoReporte}" >
+
+						<s:selectItems value="#{enumeraciones.tipoReporte}" var="tipoReporte"
+							label="#{tipoReporte}" />
+						<a:support event="onchange" reRender="cargoField,listaCargo,itemsCargo,
+															departamentoField,listaDepartamento,itemsDepartamento,
+															detalleGrupoContratadoField,listaDetalleGrupoContratado,itemsDetalleGrupoContratado,
+															empleadoField,listaEmpleado,itemsEmpleado,ciudadField,listaCiudades"
+						 ajaxSingle="true" />
+					</h:selectOneRadio>
+			</s:decorate>
+ 
+
+			<s:decorate id="cargoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+					<h:selectManyListbox id="listaCargo" value="#{planificacionMultiple.cargos}"
+						size="10" rendered="#{planificacionMultiple.tipoReporte != 'Departamento' and planificacionMultiple.tipoReporte != 'Grupo' and planificacionMultiple.tipoReporte != 'Empleado'}" >
+							<s:selectItems id="itemsCargo"  
+								value="#{cargoList.listaCargos}" var="cargo" 
+								label="#{cargo.tipoCargo.descripcion} - #{cargo.descripcion}"
+								itemValue="#{cargo.cargId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="detalleGrupoContratadoField" template="#{requestScope.contextPath}/layout/display.xhtml" >
+					<h:selectManyListbox id="listaDetalleGrupoContratado" value="#{planificacionMultiple.detalleGrupoContratados}"
+						size="10" rendered="#{planificacionMultiple.tipoReporte != 'Cargo' and planificacionMultiple.tipoReporte != 'Departamento' and planificacionMultiple.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDetalleGrupoContratado"  
+								value="#{detalleGrupoContratadoList.resultList}" 
+								var="detalleGrupoContratado" 
+								label="#{detalleGrupoContratado.grupoContratado.descripcion} - #{detalleGrupoContratado.descripcion}"
+								itemValue="#{detalleGrupoContratado.dgcoId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+
+			<s:decorate id="departamentoField" template="#{requestScope.contextPath}/layout/display.xhtml"  >
+					<h:selectManyListbox id="listaDepartamento" value="#{planificacionMultiple.departamentos}"
+						size="10" rendered="#{planificacionMultiple.tipoReporte != 'Cargo' and planificacionMultiple.tipoReporte != 'Grupo' and planificacionMultiple.tipoReporte != 'Empleado'}">
+							<s:selectItems id="itemsDepartamento"  
+								value="#{departamentoList.listaDepartamentos}" 
+								var="departamento" 
+								label="#{departamento.descripcion}"
+								itemValue="#{departamento.depaId}" >
+							</s:selectItems>
+							<f:convertNumber />
+						</h:selectManyListbox>
+			</s:decorate>
+			
+			<s:decorate id="empleadoField"
+			template="#{requestScope.contextPath}/layout/edit.xhtml">
+					<h:selectManyListbox id="listaEmpleado" required="false" value="#{planificacionMultiple.empleados}"
+					rendered="#{planificacionMultiple.tipoReporte != 'Cargo' and planificacionMultiple.tipoReporte != 'Grupo' and planificacionMultiple.tipoReporte != 'Departamento'}">
+						<s:selectItems id="itemsEmpleado" noSelectionLabel="Seleccione Empleado..." value="#{empleadoList.listaEmpleado}" var="empleado"
+							label="#{empleado.apellido} - #{empleado.nombre}" />
+						<s:convertEntity />
+					</h:selectManyListbox>					
+			</s:decorate>
+
+</h:panelGrid>
+		<h:panelGrid columns="2" styleClass="vertical-align: top"> 
+		<h:panelGrid columns="1" >
+		<!--  
+		<s:decorate 
+			template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Horario</ui:define>					
+					<h:selectOneMenu id="horario" required="false" value="#{planificacionMultiple.horarioseleccionado}">
+						<s:selectItems id="itemsHorario" value="#{horarioList.listaHorario}" var="horario" 
+						label="#{horario.descripcion}" />
+						<s:convertEntity />
+					</h:selectOneMenu>					
+			</s:decorate>
+			-->
+			<s:decorate id="ciudadField" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label" rendered="#{planificacionMultiple.tipoReporte != 'Empleado'}">Ciudad</ui:define>
+					<h:selectManyListbox id="listaCiudades" value="#{planificacionMultiple.ciudades}" size="10" > 
+						<s:selectItems id="itemsCiudad" noSelectionLabel="Seleccione Ciudad..." 
+							value="#{usuarioCiudadList.listaCiudadesUsuarios}" var="usuarioCiudad"
+							label="#{usuarioCiudad.ciudad.provincia.descripcion} -  #{usuarioCiudad.ciudad.descripcion}"
+							itemValue = "#{usuarioCiudad.ciudad.ciudId}" />
+							<f:convertNumber />
+					</h:selectManyListbox>
+			</s:decorate>
+			
+				<s:decorate id="fechaDesdeField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Desde</ui:define>
+                <rich:calendar id="fechaDesde" 
+                       required="true" showApplyButton="false"  
+                          value="#{planificacionMultiple.fechaDesde}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            	</s:decorate>		
+            
+            <s:decorate id="fechaHastaField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Fecha Hasta</ui:define>
+                <rich:calendar id="fechaHasta"
+                       required="true" showApplyButton="false"  
+                          value="#{planificacionMultiple.fechaHasta}" datePattern="dd/MM/yyyy">                          
+                </rich:calendar>         
+            </s:decorate>
+            
+				
+	</h:panelGrid>
+             		
+		</h:panelGrid>
+		
+		
+</rich:simpleTogglePanel>
+				<div>
+				<h:commandButton id="crear" value="crear"
+					action="#{planificacionMultiple.crearPlanificacion()}" rendered="true" >
+				</h:commandButton>
+				
+			<rich:spacer width="7"/>
+			<h:commandButton id="procesar" value="procesar" 
+				action="#{planificacionMultiple.construirAsistencia}"/>
+				<rich:spacer width="7"/>
+			<h:commandButton id="cargar" value="Buscar"
+				action="#{planificacionMultiple.buscarPlanificacion}"/>
+			<rich:spacer width="7"/>
+					
+				<rich:spacer width="30"/>		
+
+						
+				<h:outputText value="Registros Procesados " />
+				<rich:spacer />
+				<h:outputText value="#{asistenciaHome.fechasProcesadas}" />
+				<rich:spacer width="15"/>
+				<h:outputText value="Registros No Procesados " />
+				<rich:spacer />
+				<h:outputText value="#{asistenciaHome.fechasNoProcesadas}" />
+				
+				</div>
+				<div></div>
+       
+
+    
+
+        
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Resultados B&#250;squeda</f:facet>
+    <div class="results" id="planificacionList">
+
+    <rich:dataTable id="planificacionList"
+                var="_planificacion"
+              value="#{planificacionMultiple.listPlanificacion}"
+           rendered="true"
+           >
+           
+           <a:support event="onclick" action="#{planificacionMultiple.buscarPlanificacion()}"/>
+           
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/fulltime/#{empty from ? 'PlanificacionMultiple' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Editar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="planificacionInicio">
+                <f:param name="planificacionId"
+                        value="#{_planificacion.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/fulltime/PlanificacionMultipleEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="planificacionEditInicio"
+                rendered="#{empty from}">
+                <f:param name="planificacionId"
+                        value="#{_planificacion.id}"/>
+            </s:link>
+        </rich:column>           
+
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="Empleado"/>
+                    <ui:param name="propertyPath" value="planificacion.empleadoByEmplId.apellido"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.empleadoByEmplId.apellido}  #{_planificacion.empleadoByEmplId.nombre}"/>
+        </h:column>
+                
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="1"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora1Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora1Id.descripcion}"/>
+        </h:column>
+
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="2"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora2Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora2Id.descripcion}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="3"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora3Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora3Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="4"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora4Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora4Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="5"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora5Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora5Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="6"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora6Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora6Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="7"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora7Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora7Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="8"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora8Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora8Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="9"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora9Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora9Id.descripcion}"/>
+        </h:column>
+
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="10"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora10Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora10Id.descripcion}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="11"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora11Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora11Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="12"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora12Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora12Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="13"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora13Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora13Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="14"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora14Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora14Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="15"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora15Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora15Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="16"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora16Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora16Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="17"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora17Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora17Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="18"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora18Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora18Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="19"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora19Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora19Id.descripcion}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="20"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora20Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora20Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="21"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora21Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora21Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="22"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora22Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora22Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="23"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora23Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora23Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="24"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora24Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora24Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="25"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora25Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora25Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="26"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora26Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora26Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="27"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora27Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora27Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="28"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora28Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora28Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="29"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora29Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora29Id.descripcion}"/>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="30"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora30Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora30Id.descripcion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{planificacionList}"/>
+                    <ui:param name="propertyLabel" value="31"/>
+                    <ui:param name="propertyPath" value="planificacion.horarioByHora31Id.descripcion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_planificacion.horarioByHora31Id.descripcion}"/>
+        </h:column>
+        
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/fulltime/#{empty from ? 'PlanificacionMultiple' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Editar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="planificacion">
+                <f:param name="planificacionId"
+                        value="#{_planificacion.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/fulltime/PlanificacionMultipleEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="planificacionEdit"
+                rendered="#{empty from}">
+                <f:param name="planificacionId"
+                        value="#{_planificacion.id}"/>
+            </s:link>
+        </rich:column>           
+
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/fulltime/PlanificacionMultipleList.xhtml"
+            rendered="#{planificacionList.previousExists}"
+               value="#{messages.left}#{messages.left} Primera P&#225;gina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/fulltime/PlanificacionMultipleList.xhtml"
+            rendered="#{planificacionList.previousExists}"
+               value="#{messages.left} P&#225;gina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{planificacionList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/PlanificacionMultipleList.xhtml"
+            rendered="#{planificacionList.nextExists}"
+               value="Siguiente P&#225;gina #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{planificacionList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/PlanificacionMultipleList.xhtml"
+            rendered="#{planificacionList.nextExists}"
+               value="Anterio P&#225;gina #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{planificacionList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+</ui:define>
+
+</ui:composition>

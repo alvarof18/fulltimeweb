@@ -1,0 +1,270 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+
+    <rich:panel>
+        <f:facet name="header">Tipo Permiso</f:facet>
+
+        <s:decorate id="descripcion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descripci&#243;n</ui:define>
+            <h:outputText value="#{tipoPermisoHome.instance.descripcion}"/>
+        </s:decorate>
+
+<!--         <s:decorate id="factorHoras" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Factor Horas</ui:define>
+            <h:outputText value="#{tipoPermisoHome.instance.factorHoras}">
+                <f:convertNumber/>
+            </h:outputText>
+        </s:decorate>
+ -->
+
+        <s:decorate id="maximoDias" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">M&#225;ximo D&#237;as</ui:define>
+            <h:outputText value="#{tipoPermisoHome.instance.maximoDias}"/>
+        </s:decorate>
+        
+        <s:decorate id="maximoHoras" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">M&#225;ximo Horas</ui:define>
+            <h:outputText value="#{tipoPermisoHome.instance.maximoHoras}"/>
+        </s:decorate>
+
+        <s:decorate id="diasJustificacion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">D&#237;as Justificaci&#243;n</ui:define>
+            <h:outputText value="#{tipoPermisoHome.instance.diasJustificacion}"/>
+        </s:decorate>
+        
+        <s:decorate id="nivelJustificacion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Niveles</ui:define>
+            <h:outputText value="#{tipoPermisoHome.instance.nivel}"/>
+        </s:decorate>         
+
+        <s:decorate id="descuento" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Descuento</ui:define>
+            <h:outputText value="#{tipoPermisoHome.instance.descuento}"/>
+        </s:decorate>
+                               
+        <s:decorate id="afectaFechaVacacion" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Afecta Fecha Vacaci&#243;n</ui:define>
+            <h:selectBooleanCheckbox value="#{tipoPermisoHome.instance.afectaFechaVacacion}" disabled="true"/>
+        </s:decorate>
+        
+        <s:decorate id="acumulaAnios" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Acumula A&#241;os</ui:define>
+            <h:selectBooleanCheckbox value="#{tipoPermisoHome.instance.acumulaAnios}" disabled="true"/>
+        </s:decorate>
+
+		<!--
+        <s:decorate id="correo" template="#{requestScope.contextPath}/layout/display.xhtml">
+            <ui:define name="label">Correo</ui:define>
+            <h:selectBooleanCheckbox value="#{tipoPermisoHome.instance.correo}" disabled="true"/>
+        </s:decorate>
+        -->
+        
+            <s:decorate id="generaJust" template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Genera Justificaci&#243;n</ui:define>
+                <h:selectBooleanCheckbox value="#{tipoPermisoHome.instance.generaJust}" disabled="true"/>
+            </s:decorate>
+            
+            <s:decorate id="validaFechas" template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Controla Fechas</ui:define>
+                <h:selectBooleanCheckbox value="#{tipoPermisoHome.instance.validaFechas}" disabled="true"/>
+            </s:decorate>
+            
+             <s:decorate id="incluirAlmuerzo" template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Descuento Almuerzo</ui:define>
+                <h:selectBooleanCheckbox value="#{tipoPermisoHome.instance.incluirAlmuerzo}" disabled="true"/>
+            </s:decorate>
+<!--             
+            <s:decorate id="controlaTimbre" template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Controla Timbre</ui:define>
+                <h:selectBooleanCheckbox value="#{tipoPermisoHome.instance.timbra}" disabled="true"/>
+            </s:decorate>
+ -->            
+ 
+ 
+ 		
+ 
+ 		<rich:dataTable id="gestionCorreo" var="_gc" value="#{tipoPermisoHome.listaGestionaCorreo}">
+				
+				<f:facet name="header">
+                	<h:outputText value="Notificaciones de Correo Electr&#243;nico"/>
+            	</f:facet>
+            	
+            	<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Crear"/> 
+			            </f:facet>
+			           <h:selectBooleanCheckbox id="cre" value="#{_gc.crear}" disabled="true"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Actualizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="act" value="#{_gc.actualizar}" disabled="true"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Eliminar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="eli" value="#{_gc.eliminar}" disabled="true"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Pre-Autorizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="pre" value="#{_gc.preAutorizar}" disabled="true"/>	
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="No-Autorizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="not" value="#{_gc.noAutorizar}" disabled="true"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Autorizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="aut" value="#{_gc.autorizar}" disabled="true"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   		<rich:column>
+            		<div align="center">
+			            <f:facet name="header">
+			            	<h:outputText value="Legalizar"/> 
+			            </f:facet>
+			            <h:selectBooleanCheckbox id="leg" value="#{_gc.legalizar}" disabled="true"/>
+		            </div>            
+		   		</rich:column>
+		   		
+		   	</rich:dataTable>
+		   
+		  
+ 
+            <s:decorate id="acesoEmpleados" template="#{requestScope.contextPath}/layout/display.xhtml">
+				<ui:define name="label">Acceso Empleados</ui:define>
+					<h:selectOneRadio id="listaAcceso" value="#{tipoPermisoHome.instance.accesoEmpleados}" disabled="true">
+						<f:selectItem itemValue="1" itemLabel="Si" />
+   						<f:selectItem itemValue="0" itemLabel="No" />
+					</h:selectOneRadio>
+			</s:decorate>
+                                           	                                   	
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/fulltime/TipoPermisoEdit.xhtml"
+                    id="edit"
+                 value="Editar"/>
+
+        <s:button view="/fulltime/#{empty tipoPermisoFrom ? 'TipoPermisoList' : tipoPermisoFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"/>
+
+    </div>
+    
+    
+
+    
+     <rich:tabPanel>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Detalle Tipo Permiso</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="detalleTipoPermiso">
+
+        <h:outputText value="No existe resultados"
+                   rendered="#{empty tipoPermisoHome.detalleTipoPermiso}"/>
+
+        <rich:dataTable value="#{tipoPermisoHome.detalleTipoPermiso}"
+                       var="_detalleTipoPermiso"
+                  rendered="#{not empty tipoPermisoHome.detalleTipoPermiso}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="detalleTipoPermisoTable">
+                        
+            <rich:column >
+                <f:facet name="header">Desde</f:facet>
+                <h:outputText value="#{_detalleTipoPermiso.inicio}">
+                </h:outputText>
+            </rich:column>
+                        
+            <rich:column >
+                <f:facet name="header">Hasta</f:facet>
+                <h:outputText value="#{_detalleTipoPermiso.fin}">
+                </h:outputText>
+            </rich:column>
+            
+            <rich:column >
+                <f:facet name="header">Tipo</f:facet>
+                <h:outputText value="#{_detalleTipoPermiso.tipo}">
+                </h:outputText>
+            </rich:column>
+            
+            <rich:column >
+                <f:facet name="header">Nivel</f:facet>
+                <h:outputText value="#{_detalleTipoPermiso.nivel}">
+                </h:outputText>
+            </rich:column>
+            
+            <h:column>
+                <f:facet name="header">Acci&#243;n</f:facet>
+                <s:link id="selectdetalleHorario"
+                     value="Editar"
+                      view="/fulltime/DetalleTipoPermisoEdit.xhtml">
+                    <f:param name="detalleTipoPermisoDtpeId"
+                            value="#{_detalleTipoPermiso.dtpeId}"/>
+                    <f:param name="detalleTipoPermisoFrom" value="TipoPermiso"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Crear"
+                view="/fulltime/DetalleTipoPermisoEdit.xhtml"
+                rendered="#{contexts.applicationContext.get('permisoCrear')}">
+            <f:param name="tipoPermisoId"
+                    value="#{tipoPermisoHome.instance.tipeId}"/>
+            <f:param name="tipoPermisoFrom" value="TipoPermiso"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+	</rich:tabPanel>
+    
+    
+    
+</ui:define>
+
+</ui:composition>

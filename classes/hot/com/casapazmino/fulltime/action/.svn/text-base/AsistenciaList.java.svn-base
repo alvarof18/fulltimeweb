@@ -1,0 +1,134 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.Asistencia;
+
+@Name("asistenciaList")
+public class AsistenciaList extends EntityQuery<Asistencia> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String EJBQL = "select asistencia from Asistencia asistencia";
+
+	private static final String[] RESTRICTIONS = {
+		"lower(asistencia.empleado.codigoEmpleado) like concat(lower(#{asistenciaList.asistencia.empleado.codigoEmpleado}),'%')",
+		"lower(asistencia.empleado.cedula) like concat(lower(#{asistenciaList.asistencia.empleado.cedula}),'%')",
+		"lower(asistencia.empleado.nombre) like concat(lower(#{asistenciaList.asistencia.empleado.nombre}),'%')",
+		"lower(asistencia.empleado.apellido) like concat(lower(#{asistenciaList.asistencia.empleado.apellido}),'%')",
+		"lower(asistencia.empleado.departamento.descripcion) = lower(#{asistenciaList.asistencia.empleado.departamento.descripcion})",
+		"lower(asistencia.empleado.cargo.descripcion) = lower(#{asistenciaList.asistencia.empleado.cargo.descripcion})",
+		"lower(asistencia.entradaSalida) like concat(lower(#{asistenciaList.asistencia.entradaSalida}),'%')",
+		"date(asistencia.fechaHoraHorario) >= #{asistenciaList.asistencia.fechaDesde}",
+		"date(asistencia.fechaHoraHorario) <= #{asistenciaList.asistencia.fechaHasta}",
+		"date(asistencia.fechaHoraHorario) = #{asistenciaList.fechaAsistencia}",
+		"asistencia.estado != #{asistenciaList.asistencia.estado}",
+		};
+	
+	private String extensionArchivo;
+	
+	private Long[] ciudades;
+	private Long[] cargos;
+	private Long[] detalleGrupoContratados;
+	private Long[] departamentos;
+	private String tipoReporte;
+	
+	private Asistencia asistencia = new Asistencia();
+	
+//	private Date fechaInicio; 
+//	private Date fechaFin;
+	private Date fechaAsistencia;
+	
+	public AsistenciaList() {
+		setExtensionArchivo("Pdf");
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+	}
+
+	public Asistencia getAsistencia() {
+		return asistencia;
+	}
+	
+	// Este proceso no va en el construtor se invoca desde el page.xlm
+	public void asignarCargo(){
+		
+		System.out.println("====================================== entro en asignar cargo  " + this.getTipoReporte());
+		if(this.getTipoReporte().equals("")){
+			this.setTipoReporte("Cargo");
+		} 
+			
+	}
+
+	public List<Asistencia> getListaAsistencias(){
+		setMaxResults(null);
+		return this.getResultList();
+	}
+		
+	public Date getFechaAsistencia() {
+		return fechaAsistencia;
+	}
+
+	public void setFechaAsistencia(Date fechaAsistencia) {
+		this.fechaAsistencia = fechaAsistencia;
+	}
+
+	public String getExtensionArchivo() {
+		return extensionArchivo;
+	}
+
+	public void setExtensionArchivo(String extensionArchivo) {
+		this.extensionArchivo = extensionArchivo;
+	}
+
+	public Long[] getCargos() {
+		return cargos;
+	}
+
+	public void setCargos(Long[] cargos) {
+		this.cargos = cargos;
+	}
+
+	public String getTipoReporte() {
+		if (tipoReporte == null){
+			tipoReporte = new String();	
+		}
+		
+		return tipoReporte;
+	}
+
+	public void setTipoReporte(String tipoReporte) {
+		this.tipoReporte = tipoReporte;
+	}
+
+	public Long[] getDetalleGrupoContratados() {
+		return detalleGrupoContratados;
+	}
+
+	public void setDetalleGrupoContratados(Long[] detalleGrupoContratados) {
+		this.detalleGrupoContratados = detalleGrupoContratados;
+	}
+
+	public Long[] getCiudades() {
+		return ciudades;
+	}
+
+	public void setCiudades(Long[] ciudades) {
+		this.ciudades = ciudades;
+	}
+
+	public Long[] getDepartamentos() {
+		return departamentos;
+	}
+
+	public void setDepartamentos(Long[] departamentos) {
+		this.departamentos = departamentos;
+	}
+}

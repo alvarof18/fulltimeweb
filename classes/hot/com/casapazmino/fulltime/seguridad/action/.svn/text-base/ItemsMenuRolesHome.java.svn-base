@@ -1,0 +1,92 @@
+package com.casapazmino.fulltime.seguridad.action;
+
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions;
+import org.jboss.seam.framework.EntityHome;
+
+import com.casapazmino.fulltime.seguridad.model.Grupos;
+import com.casapazmino.fulltime.seguridad.model.ItemMenu;
+import com.casapazmino.fulltime.seguridad.model.ItemsMenuRoles;
+import com.casapazmino.fulltime.seguridad.model.Roles;
+import com.casapazmino.fulltime.seguridad.model.Subgrupos;
+
+@Name("itemsMenuRolesHome")
+public class ItemsMenuRolesHome extends EntityHome<ItemsMenuRoles> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@In(create = true)
+	GruposHome gruposHome;
+	@In(create = true)
+	ItemMenuHome itemMenuHome;
+	@In(create = true)
+	RolesHome rolesHome;
+	@In(create = true)
+	SubgruposHome subgruposHome;
+
+	@Override
+	protected void initDefaultMessages() {
+		Expressions expressions = new Expressions();
+		if (getCreatedMessage() == null) { setCreatedMessage(expressions.createValueExpression("#{messages['mensaje.grabar']}")); }
+		if (getUpdatedMessage() == null) { setUpdatedMessage(expressions.createValueExpression("#{messages['mensaje.actualizar']}")); }
+		if (getDeletedMessage() == null) { setDeletedMessage(expressions.createValueExpression("#{messages['mensaje.eliminar']}")); }
+	}
+
+	public void setItemsMenuRolesId(Long id) {
+		setId(id);
+	}
+
+	public Long getItemsMenuRolesId() {
+		return (Long) getId();
+	}
+
+	@Override
+	protected ItemsMenuRoles createInstance() {
+		ItemsMenuRoles itemsMenuRoles = new ItemsMenuRoles();
+		return itemsMenuRoles;
+	}
+
+	public void wire() {
+		getInstance();
+		Grupos grupos = gruposHome.getDefinedInstance();
+		if (grupos != null) {
+			getInstance().setGrupos(grupos);
+		}
+		ItemMenu itemMenu = itemMenuHome.getDefinedInstance();
+		if (itemMenu != null) {
+			getInstance().setItemMenu(itemMenu);
+		}
+		Roles roles = rolesHome.getDefinedInstance();
+		if (roles != null) {
+			getInstance().setRoles(roles);
+		}
+		Subgrupos subgrupos = subgruposHome.getDefinedInstance();
+		if (subgrupos != null) {
+			getInstance().setSubgrupos(subgrupos);
+		}
+	}
+
+	public boolean isWired() {
+		if (getInstance().getGrupos() == null)
+			return false;
+		if (getInstance().getItemMenu() == null)
+			return false;
+		if (getInstance().getRoles() == null)
+			return false;
+		if (getInstance().getSubgrupos() == null)
+			return false;
+		return true;
+	}
+
+	public ItemsMenuRoles getDefinedInstance() {
+		return isIdDefined() ? getInstance() : null;
+	}
+
+	/*public List<PermisosMenu> getPermisosMenus() {
+		return getInstance() == null ? null : new ArrayList<PermisosMenu>(
+				getInstance().getPermisosMenus());
+	}*/
+}

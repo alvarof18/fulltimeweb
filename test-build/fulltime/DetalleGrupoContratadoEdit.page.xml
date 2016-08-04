@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      no-conversation-view-id="/fulltime/DetalleGrupoContratadoList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{detalleGrupoContratadoHome.wire}"/>
+
+   <param name="detalleGrupoContratadoFrom"/>
+   <param name="detalleGrupoContratadoDgcoId" value="#{detalleGrupoContratadoHome.detalleGrupoContratadoDgcoId}"/>
+   <param name="grupoContratadoFrom"/>
+   <param name="grupoContratadoGrcoId" value="#{grupoContratadoHome.grupoContratadoGrcoId}"/>
+
+
+
+   <navigation from-action="#{detalleGrupoContratadoHome.persist}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/DetalleGrupoContratado.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{detalleGrupoContratadoHome.update}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/DetalleGrupoContratado.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{detalleGrupoContratadoHome.remove}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/fulltime/GrupoContratadoList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd"
+      login-required="true">
+      
+	<restrict>#{true}</restrict>  <!-- true Permite el ingreso false Prohibe el ingreso -->
+<!--
+   <param name="firstResult" value="#{asistenciaList.firstResult}"/>
+   <param name="sort" value="#{asistenciaList.orderColumn}"/>
+   <param name="dir" value="#{asistenciaList.orderDirection}"/>
+ 
+   <param name="from"/>
+   <param name="cedula" value="#{empleadoList.empleado.cedula}"/>
+   <param name="apellido" value="#{planificacion.empleado.apellido}"/>
+   <param name="nombre" value="#{planificacion.empleado.nombre}"/>
+   <param name="listaDepartamento" value="#{planificacion.empleado.departamento.descripcion}"/>
+   <param name="listaCargo" value="#{planificacion.empleado.cargo.descripcion}"/>
+   <param name="horario" value="#{planificacion.horario.horaId}"/>
+ -->   
+</page>

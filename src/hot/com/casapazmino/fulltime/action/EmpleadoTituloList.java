@@ -1,0 +1,42 @@
+package com.casapazmino.fulltime.action;
+
+import java.util.Arrays;
+
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+
+import com.casapazmino.fulltime.comun.Constantes;
+import com.casapazmino.fulltime.model.EmpleadoTitulo;
+
+@Name("empleadoTituloList")
+public class EmpleadoTituloList extends EntityQuery<EmpleadoTitulo> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String EJBQL = "select empleadoTitulo from EmpleadoTitulo empleadoTitulo";
+
+	private static final String[] RESTRICTIONS = {};
+
+	private String extensionArchivo;
+	
+	private EmpleadoTitulo empleadoTitulo = new EmpleadoTitulo();
+
+	public EmpleadoTituloList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(Constantes.MAX_RESULTS);
+		setExtensionArchivo(Constantes.PDF);
+	}
+
+	public EmpleadoTitulo getEmpleadoTitulo() {
+		return empleadoTitulo;
+	}
+
+	public String getExtensionArchivo() {
+		return extensionArchivo;
+	}
+
+	public void setExtensionArchivo(String extensionArchivo) {
+		this.extensionArchivo = extensionArchivo;
+	}
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.1.xsd" 
+      login-required="true">
+
+   <action execute="#{planExtrasList.asignarCargo}"/>
+   
+   <param name="firstResult" value="#{planExtrasList.firstResult}"/>
+   <param name="sort" value="#{planExtrasList.orderColumn}"/>
+   <param name="dir" value="#{planExtrasList.orderDirection}"/>
+
+   <param name="from"/>
+   <param name="codigo" value="#{planExtrasList.planExtras.empleado.codigoEmpleado}"/>   
+   <param name="cedula" value="#{planExtrasList.planExtras.empleado.cedula}"/>   
+   <param name="apellido" value="#{planExtrasList.planExtras.empleado.apellido}"/>
+   <param name="nombre" value="#{planExtrasList.planExtras.empleado.nombre}"/>
+   <param name="listaDepartamento" value="#{planExtrasList.planExtras.empleado.departamento.descripcion}"/>
+   <param name="listaCargo" value="#{planExtrasList.planExtras.empleado.cargo.descripcion}"/>
+   <param name="partida" value="#{planExtrasList.planExtras.empleado.partida}"/>
+   <param name="partidaIndividual" value="#{planExtrasList.planExtras.empleado.partidaIndividual}"/>
+   <param name="fechaDesde" value="#{planExtrasList.fechaDesde}" converterId="org.jboss.seam.ui.DateTimeConverter"/>
+   <param name="fechaHasta" value="#{planExtrasList.fechaHasta}" converterId="org.jboss.seam.ui.DateTimeConverter"/>   
+
+</page>

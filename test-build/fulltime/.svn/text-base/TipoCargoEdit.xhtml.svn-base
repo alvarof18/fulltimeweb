@@ -1,0 +1,121 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="tipoCargo" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{tipoCargoHome.managed ? 'Editar' : 'A&#241;adir'} Tipo cargo</f:facet>
+
+
+
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Descripci&#243;n</ui:define>
+                <h:inputText id="descripcion" size="100"
+                           required="true"
+                              value="#{tipoCargoHome.instance.descripcion}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{tipoCargoHome.persist}"
+                       disabled="#{!tipoCargoHome.wired}"
+                       rendered="#{!tipoCargoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Grabar"
+                         action="#{tipoCargoHome.update}"
+                       rendered="#{tipoCargoHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{tipoCargoHome.remove}"
+                      immediate="true"
+                       rendered="#{tipoCargoHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/TipoCargo.xhtml"
+                rendered="#{tipoCargoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty tipoCargoFrom ? 'TipoCargoList' : tipoCargoFrom}.xhtml"
+                rendered="#{!tipoCargoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<!--
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Cargos">
+        <h:form styleClass="association" id="cargosChildren">
+
+            <h:outputText value="No existen registros relacionados"
+                       rendered="#{empty tipoCargoHome.cargos}"/>
+
+            <rich:dataTable value="#{tipoCargoHome.cargos}"
+                           var="_cargo"
+                      rendered="#{not empty tipoCargoHome.cargos}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="cargosTable">
+                <rich:column sortBy="#{_cargo.cargId}">
+                    <f:facet name="header">Carg id</f:facet>
+                    <h:outputText value="#{_cargo.cargId}"/>
+                </rich:column>
+                <rich:column sortBy="#{_cargo.descripcion}">
+                    <f:facet name="header">Descripci&#243;n</f:facet>
+                    <h:outputText value="#{_cargo.descripcion}"/>
+                </rich:column>
+                <rich:column sortBy="#{_cargo.sueldo}">
+                    <f:facet name="header">Sueldo</f:facet>
+                    <h:outputText value="#{_cargo.sueldo}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{tipoCargoHome.managed}" id="cargos">
+        <div class="actionButtons">
+            <s:button id="addcargo"
+                   value="Crear"
+                    view="/fulltime/CargoEdit.xhtml"
+             propagation="none">
+                 <f:param name="tipoCargoTicaId"
+                         value="#{tipoCargoHome.instance.ticaId}"/>
+                 <f:param name="cargoFrom" value="TipoCargo"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+
+-->
+
+</ui:define>
+
+</ui:composition>

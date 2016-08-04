@@ -1,0 +1,383 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="accionSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Accion Search Filter" switchType="ajax">
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Explicacion</ui:define>
+                <h:inputText id="explicacion" value="#{accionList.accion.explicacion}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Direccion1</ui:define>
+                <h:inputText id="direccion1" value="#{accionList.accion.direccion1}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Proceso1</ui:define>
+                <h:inputText id="proceso1" value="#{accionList.accion.proceso1}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Subproceso1</ui:define>
+                <h:inputText id="subproceso1" value="#{accionList.accion.subproceso1}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Puesto</ui:define>
+                <h:inputText id="puesto" value="#{accionList.accion.puesto}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Lugar trabajo</ui:define>
+                <h:inputText id="lugarTrabajo" value="#{accionList.accion.lugarTrabajo}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Remuneracion</ui:define>
+                <h:inputText id="remuneracion" value="#{accionList.accion.remuneracion}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Partida</ui:define>
+                <h:inputText id="partida" value="#{accionList.accion.partida}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Direccion2</ui:define>
+                <h:inputText id="direccion2" value="#{accionList.accion.direccion2}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Proceso2</ui:define>
+                <h:inputText id="proceso2" value="#{accionList.accion.proceso2}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Subproceso2</ui:define>
+                <h:inputText id="subproceso2" value="#{accionList.accion.subproceso2}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Puesto2</ui:define>
+                <h:inputText id="puesto2" value="#{accionList.accion.puesto2}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Lugar trabajo2</ui:define>
+                <h:inputText id="lugarTrabajo2" value="#{accionList.accion.lugarTrabajo2}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Renumeracion2</ui:define>
+                <h:inputText id="renumeracion2" value="#{accionList.accion.renumeracion2}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Partida2</ui:define>
+                <h:inputText id="partida2" value="#{accionList.accion.partida2}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Coordinador</ui:define>
+                <h:inputText id="coordinador" value="#{accionList.accion.coordinador}"/>
+            </s:decorate>
+
+            <s:decorate template="#{requestScope.contextPath}/layout/display.xhtml">
+                <ui:define name="label">Director</ui:define>
+                <h:inputText id="director" value="#{accionList.accion.director}"/>
+            </s:decorate>
+
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="/fulltime/AccionList.xhtml"/>
+            <s:button id="reset" value="Reset" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Accion Search Results</f:facet>
+    <div class="results" id="accionList">
+
+    <h:outputText value="The accion search returned no results."
+               rendered="#{empty accionList.resultList}"/>
+
+    <rich:dataTable id="accionList"
+                var="_accion"
+              value="#{accionList.resultList}"
+           rendered="#{not empty accionList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Acci id"/>
+                    <ui:param name="propertyPath" value="accion.acciId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.acciId}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Empleado empl id"/>
+                    <ui:param name="propertyPath" value="accion.empleado.emplId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.empleado.emplId}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Explicacion"/>
+                    <ui:param name="propertyPath" value="accion.explicacion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.explicacion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Direccion1"/>
+                    <ui:param name="propertyPath" value="accion.direccion1"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.direccion1}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Proceso1"/>
+                    <ui:param name="propertyPath" value="accion.proceso1"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.proceso1}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Subproceso1"/>
+                    <ui:param name="propertyPath" value="accion.subproceso1"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.subproceso1}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Puesto"/>
+                    <ui:param name="propertyPath" value="accion.puesto"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.puesto}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Lugar trabajo"/>
+                    <ui:param name="propertyPath" value="accion.lugarTrabajo"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.lugarTrabajo}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Remuneracion"/>
+                    <ui:param name="propertyPath" value="accion.remuneracion"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.remuneracion}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Partida"/>
+                    <ui:param name="propertyPath" value="accion.partida"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.partida}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Direccion2"/>
+                    <ui:param name="propertyPath" value="accion.direccion2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.direccion2}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Proceso2"/>
+                    <ui:param name="propertyPath" value="accion.proceso2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.proceso2}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Subproceso2"/>
+                    <ui:param name="propertyPath" value="accion.subproceso2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.subproceso2}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Puesto2"/>
+                    <ui:param name="propertyPath" value="accion.puesto2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.puesto2}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Lugar trabajo2"/>
+                    <ui:param name="propertyPath" value="accion.lugarTrabajo2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.lugarTrabajo2}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Renumeracion2"/>
+                    <ui:param name="propertyPath" value="accion.renumeracion2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.renumeracion2}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Partida2"/>
+                    <ui:param name="propertyPath" value="accion.partida2"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.partida2}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Coordinador"/>
+                    <ui:param name="propertyPath" value="accion.coordinador"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.coordinador}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="#{requestScope.contextPath}/layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{accionList}"/>
+                    <ui:param name="propertyLabel" value="Director"/>
+                    <ui:param name="propertyPath" value="accion.director"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_accion.director}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Acci&#243;n</f:facet>
+            <s:link view="/fulltime/#{empty from ? 'Accion' : from}.xhtml"
+                   value="#{empty from ? 'View' : 'Select'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="accion">
+                <f:param name="accionAcciId"
+                        value="#{_accion.acciId}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/fulltime/AccionEdit.xhtml"
+                   value="Editar"
+             propagation="none"
+                      id="accionEdit"
+                rendered="#{empty from}">
+                <f:param name="accionAcciId"
+                        value="#{_accion.acciId}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/fulltime/AccionList.xhtml"
+            rendered="#{accionList.previousExists}"
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/fulltime/AccionList.xhtml"
+            rendered="#{accionList.previousExists}"
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{accionList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/AccionList.xhtml"
+            rendered="#{accionList.nextExists}"
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{accionList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/fulltime/AccionList.xhtml"
+            rendered="#{accionList.nextExists}"
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{accionList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/fulltime/AccionEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Create accion">
+            <f:param name="accionAcciId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

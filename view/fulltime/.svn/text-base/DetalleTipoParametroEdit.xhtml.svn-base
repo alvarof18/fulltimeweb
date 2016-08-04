@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="#{requestScope.contextPath}/layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="detalleTipoParametro" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{detalleTipoParametroHome.managed ? 'Editar' : 'A&#241;adir'} Detalle tipo parametro</f:facet>
+	
+			<s:decorate id="detalleTipoParametroField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+				<ui:define name="label">Par&#225;metro</ui:define>
+					<h:selectOneMenu id="listaTipoParametro" required="true" value="#{detalleTipoParametroHome.instance.tipoParametro}">
+						<s:selectItems id="itemsTipoParametro" value="#{tipoParametroList.listaTipoParametro}" var="tipoParametro"
+							label="#{tipoParametro.descripcion}" noSelectionLabel="Seleccione Tipo Par&#225;metro..." />
+						<s:convertEntity />
+						<a:support event="onchange" reRender="detalleTipoParametro,valor1Field,valor1,valor2Field"/>
+					</h:selectOneMenu>
+			</s:decorate>
+			
+            <s:decorate id="descripcionField" template="#{requestScope.contextPath}/layout/edit.xhtml">
+                <ui:define name="label">Constante 1</ui:define>
+                <h:inputText id="descripcion" size="100" required="false" value="#{detalleTipoParametroHome.instance.descripcion}"/>
+            </s:decorate>
+
+            <s:decorate id="valor1Field" template="#{requestScope.contextPath}/layout/edit.xhtml"
+            rendered="#{detalleTipoParametroHome.instance.tipoParametro.tipaId=='8'}">
+                <ui:define name="label">Constante 2</ui:define>
+                <h:inputText id="valor1" value="#{detalleTipoParametroHome.instance.valor1}" size="15" />
+            </s:decorate>
+
+            <!--<s:decorate id="valor2Field" template="#{requestScope.contextPath}/layout/edit.xhtml"
+            rendered="#{detalleTipoParametroHome.instance.tipoParametro.tipaId=='8'}">
+                <ui:define name="label">Valor2</ui:define>
+                <h:inputText id="valor2" value="#{detalleTipoParametroHome.instance.valor2}" size="15" />
+            </s:decorate>
+
+            <s:decorate id="valor3Field" template="#{requestScope.contextPath}/layout/edit.xhtml"
+            rendered="#{detalleTipoParametroHome.instance.tipoParametro.tipaId=='8'}">
+                <ui:define name="label">Valor3</ui:define>
+                <h:inputText id="valor3" value="#{detalleTipoParametroHome.instance.valor3}" size="15" />
+            </s:decorate>
+
+            <s:decorate id="valor4Field" template="#{requestScope.contextPath}/layout/edit.xhtml" 
+            rendered="#{detalleTipoParametroHome.instance.tipoParametro.tipaId=='8'}">
+                <ui:define name="label">Valor4</ui:define>
+                <h:inputText id="valor4" value="#{detalleTipoParametroHome.instance.valor4}" size="15" />
+            </s:decorate>
+
+            --><div style="clear:both">
+                <span class="required">*</span>
+                Campos requeridos
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Grabar"
+                         action="#{detalleTipoParametroHome.persist}"
+                       disabled="#{!detalleTipoParametroHome.wired}"
+                       rendered="#{!detalleTipoParametroHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Actualizar"
+                         action="#{detalleTipoParametroHome.update}"
+                       rendered="#{detalleTipoParametroHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Eliminar"
+                         action="#{detalleTipoParametroHome.remove}"
+                      immediate="true"
+                       rendered="false"/>
+                       <!-- rendered="#{detalleTipoParametroHome.managed}" -->
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/DetalleTipoParametro.xhtml"
+                rendered="#{detalleTipoParametroHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/fulltime/#{empty detalleTipoParametroFrom ? 'DetalleTipoParametroList' : detalleTipoParametroFrom}.xhtml"
+                rendered="#{!detalleTipoParametroHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>
